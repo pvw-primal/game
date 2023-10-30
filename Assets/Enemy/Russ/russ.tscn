@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://bignrlww1vgfv"]
+
+[ext_resource type="PackedScene" uid="uid://b5wu7jxuhefgl" path="res://Assets/Enemy/Russ/Russ.glb" id="1_ek567"]
+[ext_resource type="Script" path="res://Scripts/Entities/Animator.gd" id="2_ny30o"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_r4xjw"]
+animation = &"Attack"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_12fwy"]
+fadeout_time = 0.2
+autorestart_delay = 0.0
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_t2d61"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3t5xl"]
+animation = &"Damaged"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_ia8wg"]
+fadeout_time = 0.2
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5nmv2"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jh4wo"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_s1hf5"]
+graph_offset = Vector2(-167.325, -2.97985)
+nodes/Attack/node = SubResource("AnimationNodeAnimation_r4xjw")
+nodes/Attack/position = Vector2(240, 220)
+nodes/AttackOS/node = SubResource("AnimationNodeOneShot_12fwy")
+nodes/AttackOS/position = Vector2(375, 50)
+nodes/BIW/node = SubResource("AnimationNodeBlend2_t2d61")
+nodes/BIW/position = Vector2(40, 120)
+nodes/Damaged/node = SubResource("AnimationNodeAnimation_3t5xl")
+nodes/Damaged/position = Vector2(400, 460)
+nodes/DamagedOS/node = SubResource("AnimationNodeOneShot_ia8wg")
+nodes/DamagedOS/position = Vector2(540, 340)
+nodes/Idle/node = SubResource("AnimationNodeAnimation_5nmv2")
+nodes/Idle/position = Vector2(-140, 100)
+nodes/Walk/node = SubResource("AnimationNodeAnimation_jh4wo")
+nodes/Walk/position = Vector2(-140, 240)
+nodes/output/position = Vector2(780, 260)
+node_connections = [&"output", 0, &"DamagedOS", &"AttackOS", 0, &"BIW", &"AttackOS", 1, &"Attack", &"BIW", 0, &"Idle", &"BIW", 1, &"Walk", &"DamagedOS", 0, &"AttackOS", &"DamagedOS", 1, &"Damaged"]
+
+[node name="Russ" instance=ExtResource("1_ek567")]
+transform = Transform3D(0.13, 0, 0, 0, 0.13, 0, 0, 0, 0.13, 0, 0, 0)
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/0/position = Vector3(-0.788465, 2.40815, 0)
+bones/0/rotation = Quaternion(0.510626, 0.510626, 0.489143, -0.489143)
+bones/4/rotation = Quaternion(0.63378, 0.273552, -0.661487, -0.293135)
+bones/5/rotation = Quaternion(0.0130062, -0.00685925, -0.624207, 0.781121)
+bones/6/rotation = Quaternion(-0.00865907, -0.0129373, -0.465265, 0.885034)
+bones/7/rotation = Quaternion(0.630176, 0.281861, -0.657481, -0.301913)
+bones/8/rotation = Quaternion(0.0125283, -0.00682344, -0.604425, 0.796534)
+bones/9/rotation = Quaternion(-0.00834408, -0.0124666, -0.475722, 0.879468)
+bones/10/rotation = Quaternion(0.645891, -0.763198, -0.0180727, 0.00526124)
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2"]
+tree_root = SubResource("AnimationNodeBlendTree_s1hf5")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/AttackOS/active = false
+parameters/AttackOS/internal_active = false
+parameters/AttackOS/request = 0
+parameters/BIW/blend_amount = 0.0
+parameters/DamagedOS/active = false
+parameters/DamagedOS/internal_active = false
+parameters/DamagedOS/request = 0
+script = ExtResource("2_ny30o")

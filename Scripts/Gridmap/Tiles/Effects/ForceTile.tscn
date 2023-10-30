@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://dqov58k47ctb7"]
+
+[ext_resource type="Texture2D" uid="uid://cmxoi4eixs2wq" path="res://Assets/Environment/Force.png" id="1_i4jvv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ki30p"]
+atlas = ExtResource("1_i4jvv")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2u1bp"]
+atlas = ExtResource("1_i4jvv")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3oayp"]
+atlas = ExtResource("1_i4jvv")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvonp"]
+atlas = ExtResource("1_i4jvv")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xr34r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ki30p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2u1bp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3oayp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvonp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q7sck"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.5, 0.5)
+direction = Vector3(0, -1, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ta3n"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.454902)
+
+[sub_resource type="QuadMesh" id="QuadMesh_wbmk5"]
+material = SubResource("StandardMaterial3D_6ta3n")
+size = Vector2(0.03, 0.03)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, -1.09278e-07, 2.5, 0, -2.5, -1.09278e-07, 0, 0.01, 0)
+modulate = Color(1, 1, 1, 0.721569)
+double_sided = false
+alpha_cut = 2
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_xr34r")
+autoplay = "default"
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.246645, 0)
+amount = 4
+lifetime = 0.15
+speed_scale = 2.0
+randomness = 1.0
+fixed_fps = 20
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_q7sck")
+draw_pass_1 = SubResource("QuadMesh_wbmk5")

@@ -1,0 +1,21 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://c6lcjyg56bap4"]
+
+[ext_resource type="FontFile" uid="uid://bt0kndx58ndvl" path="res://Assets/SHPinscher-Regular.otf" id="1_fypoo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7wist"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc8pl"]
+bg_color = Color(0.364706, 0.364706, 0.364706, 0.615686)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oetqq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7msx8"]
+bg_color = Color(0, 0, 0, 0.8)
+
+[resource]
+default_font = ExtResource("1_fypoo")
+default_font_size = 35
+ItemList/styles/focus = SubResource("StyleBoxEmpty_7wist")
+ItemList/styles/panel = SubResource("StyleBoxFlat_yc8pl")
+ProgressBar/styles/background = SubResource("StyleBoxEmpty_oetqq")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_7msx8")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyean7i6nnrei"]
+
+[ext_resource type="Script" path="res://Scripts/Gridmap/Tiles/TileEffect.gd" id="1_gi2i1"]
+
+[node name="TileEffect" type="Node3D"]
+script = ExtResource("1_gi2i1")

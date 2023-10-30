@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3 uid="uid://dxx4cob7sllcp"]
+
+[ext_resource type="ArrayMesh" uid="uid://cm1culfbbh4hk" path="res://Assets/Environment/Wall.obj" id="1_esqdg"]
+[ext_resource type="ArrayMesh" uid="uid://cscriof1ksr7l" path="res://Assets/Environment/Wall2.obj" id="2_nfe5y"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qqmi6"]
+emission_shape = 3
+emission_box_extents = Vector3(0.4, 0.01, 0.4)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.03
+scale_max = 0.05
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5u78k"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.01, 0.5)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5axd4"]
+transparency = 1
+albedo_color = Color(0.32549, 0.215686, 0.109804, 1)
+metallic = 0.4
+
+[sub_resource type="QuadMesh" id="QuadMesh_sijse"]
+material = SubResource("StandardMaterial3D_5axd4")
+size = Vector2(0.05, 0.05)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.32, 0, 0, 0, 0.02, 0, 0, 0, 0.064, 0, -0.0261663, 0.512747)
+visible = false
+mesh = ExtResource("1_esqdg")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.32, 0, 0, 0, 0.02, 0, 0, 0, 0.064, 0, -0.0261663, -0.478453)
+visible = false
+mesh = ExtResource("1_esqdg")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.39876e-08, 0, 0.064, 0, 0.02, 0, -0.32, 0, -2.79753e-09, -0.523996, -0.0261663, 0.0350597)
+visible = false
+mesh = ExtResource("1_esqdg")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.39876e-08, 0, 0.064, 0, 0.02, 0, -0.32, 0, -2.79753e-09, 0.475962, -0.0261663, 0.0350597)
+visible = false
+mesh = ExtResource("1_esqdg")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00609648, -0.0182621, 0.0242789)
+amount = 12
+lifetime = 3.0
+explosiveness = 0.8
+fixed_fps = 10
+interpolate = false
+process_material = SubResource("ParticleProcessMaterial_qqmi6")
+draw_pass_1 = ExtResource("2_nfe5y")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+amount = 15
+speed_scale = 0.1
+explosiveness = 0.5
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_5u78k")
+draw_pass_1 = SubResource("QuadMesh_sijse")

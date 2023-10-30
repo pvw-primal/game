@@ -1,0 +1,126 @@
+[gd_scene load_steps=13 format=3 uid="uid://b8a5fy7ypwd64"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u6tty"]
+lifetime_randomness = 0.25
+emission_shape = 3
+emission_box_extents = Vector3(0.1, 0.1, 0.5)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxdy3"]
+transparency = 1
+albedo_color = Color(1, 0.282353, 0, 0.505882)
+
+[sub_resource type="QuadMesh" id="QuadMesh_xcy5b"]
+lightmap_size_hint = Vector2i(2, 2)
+material = SubResource("StandardMaterial3D_dxdy3")
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tqe7c"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.1, 0.1)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b6lv8"]
+transparency = 1
+albedo_color = Color(1, 0.282353, 0, 0.505882)
+
+[sub_resource type="QuadMesh" id="QuadMesh_y3spg"]
+material = SubResource("StandardMaterial3D_b6lv8")
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aql2a"]
+emission_shape = 3
+emission_box_extents = Vector3(0.4, 0.01, 0.4)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_npayd"]
+transparency = 1
+albedo_color = Color(1, 0.282353, 0, 0.505882)
+
+[sub_resource type="QuadMesh" id="QuadMesh_58eq2"]
+material = SubResource("StandardMaterial3D_npayd")
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_0f1kq"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.1, 0.5)
+gravity = Vector3(0, 2, 0)
+scale_min = 0.25
+scale_max = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bbpnt"]
+transparency = 1
+albedo_color = Color(0.180392, 0.0980392, 0.0156863, 0.807843)
+
+[sub_resource type="QuadMesh" id="QuadMesh_6ril8"]
+material = SubResource("StandardMaterial3D_bbpnt")
+size = Vector2(0.05, 0.05)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.1, 0)
+cast_shadow = 0
+amount = 15
+lifetime = 0.5
+fixed_fps = 20
+interpolate = false
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_u6tty")
+draw_pass_1 = SubResource("QuadMesh_xcy5b")
+
+[node name="Fire2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.1, 0)
+cast_shadow = 0
+amount = 15
+lifetime = 0.5
+fixed_fps = 20
+interpolate = false
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_u6tty")
+draw_pass_1 = SubResource("QuadMesh_xcy5b")
+
+[node name="Fire3" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.4)
+amount = 15
+lifetime = 0.5
+fixed_fps = 20
+interpolate = false
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_tqe7c")
+draw_pass_1 = SubResource("QuadMesh_y3spg")
+
+[node name="Fire4" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.4)
+amount = 15
+lifetime = 0.5
+fixed_fps = 20
+interpolate = false
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_tqe7c")
+draw_pass_1 = SubResource("QuadMesh_y3spg")
+
+[node name="FireCenter" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+amount = 10
+speed_scale = 0.1
+explosiveness = 0.5
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_aql2a")
+draw_pass_1 = SubResource("QuadMesh_58eq2")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+amount = 25
+lifetime = 0.8
+speed_scale = 0.25
+explosiveness = 0.25
+interpolate = false
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_0f1kq")
+draw_pass_1 = SubResource("QuadMesh_6ril8")
