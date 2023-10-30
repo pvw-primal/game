@@ -12,14 +12,15 @@ var numEnemies : int = 7
 var statDistribution : int = 2
 var spawnChance : float = 0
 
-#func _process(_delta):
-#	if Input.is_action_just_pressed("Test"):
-#		await NextLevel()
+func _process(_delta):
+	if Input.is_action_just_pressed("Test"):
+		await NextLevel()
 		
 func NextLevel():
 	level += 1
 	IncreaseDifficulty()
-	await Start("GREEN ASS FUCKING FOREST\nBF" + str(level))
+	await Start("GREEN FOREST\nBF" + str(level))
+	
 	var player : Player = turnhandler.Entities[turnhandler.player]
 	player.text.label.text = "\n\n\n\n"
 	turnhandler.Reset()
@@ -31,7 +32,9 @@ func NextLevel():
 	turnhandler.AddEntity(player)
 	entityhandler._ready(player, numEnemies, statDistribution)
 	
+	await transitionscreen.Wait(.5)
 	await Stop()
+	
 	turnhandler._ready(spawnChance)
 
 func IncreaseDifficulty():
