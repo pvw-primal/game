@@ -7,8 +7,8 @@ extends Node
 @onready var option : OptionMenu = get_node("/root/Root/OptionUI")
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
-@onready var PlayerScene = preload("res://RussPlayer.tscn")
-@onready var EnemyScene = preload("res://RussEnemy.tscn")
+@onready var PlayerScene = preload("res://Scripts/Entities/Player/Player.tscn")
+@onready var EnemyScene = preload("res://Scripts/Entities/AI/Enemy.tscn")
 
 var player : Player
 var entityNum = 0

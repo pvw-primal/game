@@ -44,16 +44,20 @@ var inventorySize : int = 12
 var equipped : int = -1
 var equippedTool : int = -1
 
+@onready var meshScene = preload("res://Assets/Enemy/Russ/russ.tscn")
+var mesh
+var animator : Animator
 
-@onready var mesh : Node3D = get_node("Mesh")
-@onready var skeleton : Skeleton3D = get_node("Mesh/Armature/Skeleton3D")
 @onready var timer : Timer = get_node("Timer")
-@onready var animator : Animator = get_node("Mesh/AnimationTree")
 @onready var gridmap : MapGenerator = get_node("/root/Root/GridMap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var text : TextScroll = get_node("/root/Root/Log/ScrollContainer")
 
 func Initialize():
+	mesh = meshScene.instantiate()
+	add_child(mesh)
+	animator = get_node("Mesh/AnimationTree")
+	
 	turnhandler.AddEntity(self)
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)
