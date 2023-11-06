@@ -44,8 +44,8 @@ var inventorySize : int = 12
 var equipped : int = -1
 var equippedTool : int = -1
 
-@onready var meshScene = preload("res://Assets/Enemy/Russ/russ.tscn")
-var mesh
+@onready var meshScene = preload("res://Assets/Enemy/Russ/RussShaded.tscn")
+var mesh : Node3D
 var animator : Animator
 
 @onready var timer : Timer = get_node("Timer")
@@ -62,6 +62,7 @@ func Initialize():
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)
 	Spawn(startingPos)
+	SetColor(Color.GREEN_YELLOW, Color.GREEN, Color.ORANGE_RED)
 
 func Update(delta):
 	if Type != "Player":
@@ -219,6 +220,16 @@ func AdjacentTiles():
 		if gridmap.GetMapPos(dir + gridPos) != -2:
 			adj.append(dir + gridPos)
 	return adj
+
+func SetColor(cR : Color, cG : Color, cB: Color):
+	for child in mesh.get_node("Armature/Skeleton3D").get_children():
+		var m = child.mesh.surface_get_material(0)
+		if !m.is_class("ShaderMaterial"):
+			continue
+		child.set_instance_shader_parameter("replaceR", cR)
+		child.set_instance_shader_parameter("replaceG", cG)
+		child.set_instance_shader_parameter("replaceB", cB)
+			
 
 func UpdateStats():
 	var statcopy = originalStats.Copy()

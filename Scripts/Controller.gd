@@ -28,7 +28,8 @@ func NextLevel():
 	mapgenerator.Reset()
 	
 	mapgenerator._ready()
-	player.endTurn.disconnect(turnhandler.HandleNextTurn)
+	if player.turn:
+		player.endTurn.disconnect(turnhandler.HandleNextTurn)
 	turnhandler.AddEntity(player)
 	entityhandler._ready(player, numEnemies, statDistribution)
 	

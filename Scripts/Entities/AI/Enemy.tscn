@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbqe2wau680n6"]
+
+[ext_resource type="Script" path="res://Scripts/Entities/AI/AI.gd" id="1_dbi6m"]
+
+[node name="Enemy" type="Node3D"]
+transform = Transform3D(1, 2.77396e-10, 0, 7.77618e-11, 1, 0, 0, 0, 1, 0, 0.05, 0)
+script = ExtResource("1_dbi6m")
+
+[node name="Timer" type="Timer" parent="."]

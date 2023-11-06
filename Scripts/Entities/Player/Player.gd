@@ -20,6 +20,7 @@ func _ready():
 	move.connect(gridmap.ExitCheck)
 	gridmap.minimap.OnMove(gridPos, Vector2i.ZERO)
 	allies = []
+	SetColor(Color.AQUA, Color.BLUE, Color.WHITE)
 	
 func init(pos : Vector2i, num : int):
 	Type = "Player"

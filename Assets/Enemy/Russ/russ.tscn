@@ -25,7 +25,6 @@ animation = &"Idle"
 animation = &"Walk"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_s1hf5"]
-graph_offset = Vector2(-167.325, -2.97985)
 nodes/Attack/node = SubResource("AnimationNodeAnimation_r4xjw")
 nodes/Attack/position = Vector2(240, 220)
 nodes/AttackOS/node = SubResource("AnimationNodeOneShot_12fwy")
@@ -48,15 +47,13 @@ transform = Transform3D(0.13, 0, 0, 0, 0.13, 0, 0, 0, 0.13, 0, 0, 0)
 
 [node name="Skeleton3D" parent="Armature" index="0"]
 bones/0/position = Vector3(-0.788465, 2.40815, 0)
-bones/0/rotation = Quaternion(0.502809, 0.502809, 0.497175, -0.497175)
-bones/2/rotation = Quaternion(0.00494128, 0, 0, 0.999988)
-bones/3/rotation = Quaternion(-0.00494128, -3.4814e-20, 1.86906e-11, 0.999988)
-bones/4/rotation = Quaternion(0.642849, 0.283843, -0.650141, -0.288954)
-bones/5/rotation = Quaternion(0.00343783, -0.0018024, -0.617576, 0.786502)
-bones/6/rotation = Quaternion(-0.00229022, -0.0034218, -0.468893, 0.883245)
-bones/7/rotation = Quaternion(0.641934, 0.285987, -0.649062, -0.29129)
-bones/8/rotation = Quaternion(0.00324268, -0.00178792, -0.612389, 0.790548)
-bones/9/rotation = Quaternion(-0.0021618, -0.00322996, -0.471636, 0.881785)
+bones/0/rotation = Quaternion(0.478849, 0.478849, 0.520292, -0.520292)
+bones/4/rotation = Quaternion(0.667271, 0.316057, -0.615008, -0.276807)
+bones/5/rotation = Quaternion(-0.0236216, 0.0131492, -0.592274, 0.805283)
+bones/6/rotation = Quaternion(0.0157663, 0.0235559, -0.481751, 0.87585)
+bones/7/rotation = Quaternion(0.675373, 0.298715, -0.621614, -0.261221)
+bones/8/rotation = Quaternion(-0.0254088, 0.0132811, -0.630545, 0.775623)
+bones/9/rotation = Quaternion(0.0169388, 0.0253076, -0.461554, 0.88659)
 bones/10/rotation = Quaternion(0.645891, -0.763198, -0.0180727, 0.00526124)
 
 [node name="AnimationTree" type="AnimationTree" parent="." index="2"]
