@@ -1,5 +1,5 @@
 class_name Item
-extends Object
+extends Resource
 
 var move : Move
 var moveTooltip : String

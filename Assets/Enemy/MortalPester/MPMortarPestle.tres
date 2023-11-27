@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://cwl0p1oeb0ih5"]
+
+[ext_resource type="Shader" path="res://Scripts/Shaders/MortalPester.gdshader" id="1_1ss36"]
+[ext_resource type="Texture2D" uid="uid://cw75lrq2xqf2r" path="res://Assets/Enemy/MortalPester/MortalPester_Mortar Pestle.png" id="2_1mu2d"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1ss36")
+shader_parameter/texture_albedo = ExtResource("2_1mu2d")
+shader_parameter/texture_emission = ExtResource("2_1mu2d")

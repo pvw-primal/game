@@ -97,7 +97,7 @@ func _ready():
 	
 	var n = func(e : Entity, t : Entity):
 		t.AddStatus(Status.Paralysis(), 3)
-		e.text.AddLine(t.Name + " was ensnared!") 
+		e.text.AddLine(t.Name + " was ensnared!\n") 
 	var netMove = Move.new("Fibrous Net", n)
 	netMove.projectileSprite = preload("res://Assets/Items/Net.png")
 	var net = Move.DefaultProjectile(netMove)
@@ -133,12 +133,6 @@ func _ready():
 	Add(Item.new("Salvaging Kit", "Salvage materials from the environment or from a creature.", "", null, salvageMove, "Salvage", true))
 	items["Salvaging Kit"].crafting.requires = Classes.GetClassNum(Classes.BaseClass.Machining)
 	items["Salvaging Kit"].crafting.recipe = ["Adhesive", "Fiber", "Sharp"] as Array[String]
-	
-	
-	Add(Item.new("Big Fuckoff Sword", "Got damn! That's a big ass sword dude lol! XD :P", "", load("res://Assets/Items/Sword.png")))
-	items["Big Fuckoff Sword"].SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { "Cleave":null, "Crush":null })
-	Add(Item.new("Seventeen Piece Woman", "The One Piece! The One Piece is real! (x17)"))
-	items["Seventeen Piece Woman"].SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponMartial, { "Bludgeon":null })
 
 	Add(Item.new("Russ Talon", "A claw shorn from a Russ. The marrow can be used as a base for potions.", ""))
 	items["Russ Talon"].crafting.tags = { "Reagent":null, "Sharp":null }

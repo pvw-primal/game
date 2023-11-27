@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bbe3k4pl1rrna"]
+
+[ext_resource type="Shader" path="res://Scripts/Shaders/MortalPester.gdshader" id="1_52ih7"]
+[ext_resource type="Texture2D" uid="uid://bg7yarr5y74g5" path="res://Assets/Enemy/MortalPester/MortalPester_Hands.png" id="2_myc5h"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_52ih7")
+shader_parameter/texture_albedo = ExtResource("2_myc5h")
+shader_parameter/texture_emission = ExtResource("2_myc5h")

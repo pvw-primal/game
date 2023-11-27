@@ -44,7 +44,7 @@ var inventorySize : int = 12
 var equipped : int = -1
 var equippedTool : int = -1
 
-@onready var meshScene = preload("res://Assets/Enemy/Russ/RussShaded.tscn")
+@onready var meshScene = preload("res://Assets/Enemy/MortalPester/MortalPester.tscn")
 var mesh : Node3D
 var animator : Animator
 
@@ -54,15 +54,14 @@ var animator : Animator
 @onready var text : TextScroll = get_node("/root/Root/Log/ScrollContainer")
 
 func Initialize():
-	mesh = meshScene.instantiate()
-	add_child(mesh)
-	animator = get_node("Mesh/AnimationTree")
+#	mesh = meshScene.instantiate()
+#	add_child(mesh)
+#	animator = get_node("Mesh/AnimationTree")
 	
 	turnhandler.AddEntity(self)
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)
 	Spawn(startingPos)
-	SetColor(Color.GREEN_YELLOW, Color.GREEN, Color.ORANGE_RED)
 
 func Update(delta):
 	if Type != "Player":
@@ -146,7 +145,13 @@ func Swap(pos: Vector2i):
 	gridmap.SetMapPos(e.gridPos, e.entityNum)
 	gridmap.minimap.Reveal(e.gridPos)
 	endTurn.emit()
-	
+
+func SetMesh(meshPath : String):
+	var s = load(meshPath)
+	mesh = s.instantiate()
+	add_child(mesh)
+	animator = get_node("Mesh/AnimationTree")
+
 func StartTurn():
 	Heal(1)
 	for SN in statuses.keys():

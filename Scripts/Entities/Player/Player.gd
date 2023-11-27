@@ -12,6 +12,7 @@ var allies : Array[Entity]
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
 func _ready():
+	SetMesh("res://Assets/Enemy/Russ/RussShaded.tscn")
 	Initialize()
 	originalStats = Stats.new(40, 5, 1, 5, 1)
 	stats = originalStats.Copy()
@@ -20,7 +21,6 @@ func _ready():
 	move.connect(gridmap.ExitCheck)
 	gridmap.minimap.OnMove(gridPos, Vector2i.ZERO)
 	allies = []
-	SetColor(Color.AQUA, Color.BLUE, Color.WHITE)
 	
 func init(pos : Vector2i, num : int):
 	Type = "Player"
