@@ -53,3 +53,22 @@ func EarthEffect(e : Entity):
 
 func AirEffect(e : Entity):
 	e.AddStatus(Status.Air(), 1)
+
+static func GetTileEffect(s : String) -> Effect:
+	if s == "Fire":
+		return Effect.Fire
+	elif s == "Frost":
+		return Effect.Frost
+	elif s == "Earth":
+		return Effect.Earth
+	elif s == "Air":
+		return Effect.Air
+	elif s == "Force":
+		return Effect.Force
+	elif s == "Lightning":
+		return Effect.Lightning
+	elif s == "Radiant":
+		return Effect.Radiant
+	else:
+		return Effect.Shadow
+		

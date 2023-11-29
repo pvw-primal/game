@@ -10,7 +10,7 @@
 		{
 			"name": "Mortal Pester",
 			"path": "res://Assets/Enemy/MortalPester/MortalPester.tscn",
-			"move_name": "",
+			"move_name": "Scratch",
 			"class":[{ "class1": "Alchemy" }]
 		}
 }

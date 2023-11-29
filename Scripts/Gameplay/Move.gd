@@ -82,10 +82,10 @@ static func DefaultMagical():
 	move.magic = true
 	return move
 
-static func DefaultProjectile(applyMove : Move):
+static func DefaultProjectile(applyMove : Move, r : int = 7):
 	var proj = func(e : Entity, t : Entity):
 		var dir = e.facingPos - e.gridPos
-		var def = e.CheckDirection(dir, 7) if t == null else [t.gridPos, t]
+		var def = e.CheckDirection(dir, r) if t == null else [t.gridPos, t]
 		if def[1] == null:
 			e.gridmap.SpawnProjectile(e, def[0], 3, applyMove.projectileSprite)
 		else:

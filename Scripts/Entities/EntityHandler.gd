@@ -85,7 +85,7 @@ func tempClassSet (e : Entity, id : int):
 		player.SetClass(Classes.BaseClass.Alchemy, i)
 	elif id == 6:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
-		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomRandomModifier(Classes.Proficiency.WeaponBasic):null })
+		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
 		player.SetClass(Classes.BaseClass.Machining, i)
 	else:
 		get_tree().quit()

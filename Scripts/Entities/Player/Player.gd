@@ -12,7 +12,7 @@ var allies : Array[Entity]
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
 func _ready():
-	SetMesh("res://Assets/Enemy/Russ/RussShaded.tscn")
+	SetMesh("res://Assets/Enemy/MortalPester/MortalPester.tscn")
 	Initialize()
 	originalStats = Stats.new(40, 5, 1, 5, 1)
 	stats = originalStats.Copy()
@@ -37,7 +37,7 @@ func SetClass(c : Classes.BaseClass, i : Item):
 	moves = classE.moves
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
-	inventory = [i]
+	inventory = [i, Items.items["Flamefroth Tincture"]]
 	equipped = 0
 	equippedMove = inventory[equipped].move
 

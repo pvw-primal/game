@@ -1,0 +1,156 @@
+{
+	"Healing Potion":
+		{
+			"name": "Healing Potion",
+			"description": "Restores 50% HP.",
+			"flavor": "The taste and temperature varies drastically, seemingly adapting to the consumer's current needs and preferences.",
+			"icon": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Drink",
+				"playAnimation": false,
+				"noTargets": true,
+				"reveals": false,
+				"effects":{
+					"heal":{
+						"amount" : 50,
+						"amountType" : "%"
+					}
+				},
+			},
+			"recipe":["Reagent", "Healing"],
+			"requires":["Alchemy"]
+		},
+	"Paralysis Draught":
+		{
+			"name": "Paralysis Draught",
+			"description": "Throw the draught directly in front of you, paralyzing a foe.",
+			"flavor": "Skin exposure causes profound numbness and impaired motor control, quickly rendering the recipient effectively immobile.",
+			"icon": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Throw",
+				"effects":{
+					"debuff":{
+						"type" : "Paralysis",
+						"duration" : 4
+					}
+				}
+			},
+			"recipe":["Reagent", "Paralysis"],
+			"requires": ["Alchemy"]
+		},
+	"Flamefroth Tincture":
+		{
+			"name": "Flamefroth Tincture",
+			"description": "Breathe fire in the area.",
+			"flavor": "Though highly effective, frequent use incinerates phlegm and other particulates in the throat, causing embers and ash to accumulate around the mouth.",
+			"icon": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Drink",
+				"message": "breathed fire!",
+				"noTargets": true,
+				"effects":{
+					"tileEffect":{
+						"type" : "Fire"
+					}
+				}
+			},
+			"recipe":["Reagent", "Fire"],
+			"requires": ["Alchemy"]
+		},
+	"Javelin":
+		{
+			"name": "Javelin",
+			"description": "Throw to deal damage at a distance.",
+			"flavor": "",
+			"icon": "res://Assets/Items/Javelin.png",
+			"consumable": true,
+			"move":{
+				"useTooltip": "Throw",
+				"effects":{
+					"projectile":{
+						"range": 7
+					},
+					"damage":{
+						"magic": false
+					}
+				}
+			},
+			"recipe": ["Adhesive", "Sharp"],
+			"requires": ["Machining"]
+		},
+	"Fibrous Net":
+		{
+			"name": "Fibrous Net",
+			"description": "Throw to ensnare a creature, paralyzing them.",
+			"flavor": "",
+			"icon": "res://Assets/Items/Net.png",
+			"consumable": true,
+			"move":{
+				"useTooltip": "Throw",
+				"message" : "was ensnared!",
+				"effects":{
+					"projectile":{
+						"range": 7
+					},
+					"debuff":{
+						"type" : "Paralysis",
+						"duration" : 3,
+					}
+				}
+			},
+			"recipe": ["Adhesive", "Fiber"],
+			"requires": ["Machining"]
+		},
+
+	"Russ Talon":
+		{
+			"name": "Russ Talon",
+			"description": "A claw shorn from a Russ. The marrow can be used as a base for potions and poisons.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Reagent", "Sharp"]
+		},
+	"Eidolon Mass":
+		{
+			"name": "Eidolon Mass",
+			"description": "The indigestable remains left after an Eidolon's elemental meal. Has a number of unique uses.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Reagent", "Fire", "Adhesive", "Sharp"]
+		},
+	"Charshroom":
+		{
+			"name": "Charshroom",
+			"description": "The fibrous, carbon-rich mycelium of these mushrooms is highly flammable. The cloud of spores they release is indistinguishable from smoke.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Fire", "Fiber"]
+		},
+	"Fulminating Gravel":
+		{
+			"name": "Fulminating Gravel",
+			"description": "Built-up arcane and static energies within this sediment make for a number of potential applications.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Paralysis", "Adhesive", "Stone"]
+		},
+	"Bonder's Bulb":
+		{
+			"name": "Bonder's Bulb",
+			"description": "These small, stringy plants release a curative sap that was once used as a type of glue.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Healing", "Adhesive", "Fiber"]
+		},
+	"Pestail":
+		{
+			"name": "Pestail",
+			"description": "The hard, regenerative tails of a Mortal Pester. Both the stony exterior and fleshy interior could likely be utilized.",
+			"flavor": "",
+			"icon": null,
+			"tags": ["Healing", "Stone"]
+		},
+}
