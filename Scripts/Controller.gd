@@ -6,20 +6,25 @@ extends Node
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var transitionscreen : TransitionScreen = get_node("TransitionScreen")
 
-var level : int = 0
+var level : Level
+
+var floorNum : int = 0
 
 var numEnemies : int = 7
 var statDistribution : int = 2
 var spawnChance : float = 0
 
+func _ready():
+	level = entityhandler.level
+	
 func _process(_delta):
 	if Input.is_action_just_pressed("Test"):
 		await NextLevel()
 		
 func NextLevel():
-	level += 1
+	floorNum += 1
 	IncreaseDifficulty()
-	await Start("GREEN FOREST\nBF" + str(level))
+	await Start(level.name + "\n" + level.floorPrefix + str(floorNum))
 	
 	var player : Player = turnhandler.Entities[turnhandler.player]
 	player.text.label.text = "\n\n\n\n"

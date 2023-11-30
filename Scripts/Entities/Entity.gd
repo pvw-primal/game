@@ -54,10 +54,6 @@ var animator : Animator
 @onready var text : TextScroll = get_node("/root/Root/Log/ScrollContainer")
 
 func Initialize():
-#	mesh = meshScene.instantiate()
-#	add_child(mesh)
-#	animator = get_node("Mesh/AnimationTree")
-	
 	turnhandler.AddEntity(self)
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)

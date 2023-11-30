@@ -1,0 +1,33 @@
+{
+	"Forest":
+		{
+			"type": "Forest",
+			"name": {
+				"prefix": ["Green", "Verdant", "Ruined", "Wild", "Overgrown", "Reclaimed", "Murmuring"],
+				"suffix": ["Woods", "Forest", "Grove", "Thicket", "Backwood", "Weald", "Glade", "Garden", "Grounds"]
+			},
+			"floorPrefix": "F" ,
+			"spawns": {
+				"Russ": {
+					"color": {
+						"RLower": [0, 0, 0],
+						"RUpper": [1, 1, 1],
+						"GLower": [0, 0, 0],
+						"GUpper": [1, 1, 1],
+						"BLower": [0, 0, 0],
+						"BUpper": [1, 1, 1]
+					}
+				},
+				"Mortal Pester": {
+					"color": {
+						"RLower": [0, 0, 0],
+						"RUpper": [1, 1, 1],
+						"GLower": [0, 0, 0],
+						"GUpper": [1, 1, 1],
+						"BLower": [0, 0, 0],
+						"BUpper": [1, 1, 1]
+					}
+				}
+			}
+		}
+}

@@ -10,12 +10,16 @@ extends Node
 @onready var PlayerScene = preload("res://Scripts/Entities/Player/Player.tscn")
 @onready var EnemyScene = preload("res://Scripts/Entities/AI/Enemy.tscn")
 
+var level : Level = null
+
 var player : Player
 var entityNum = 0
 var distributeStats
 var baseStats : Stats = Stats.new(6, 4, 1, 3, 0)
 
 func _ready(pl : Player = null, numEnemies : int = 7, ds : int = 2):
+	if level == null:
+		level = Level.new("Forest")
 	var p : Player = PlayerScene.instantiate() if pl == null else pl
 	var startPos = gridmap.GetRandomRoomPos()
 	if pl == null:
@@ -106,24 +110,29 @@ func SpawnAI():
 		spawnPos = gridmap.GetRandomRoomPos()
 	SpawnAIAt(spawnPos)
 
-func SpawnAIAt(pos : Vector2i):
-	var e : AI = EnemyScene.instantiate()
-	e.init(pos, entityNum)
+func SpawnAIAt(pos : Vector2i, spawnAI : AI = null, distribute : int = -1):
+	var e : AI = EnemyScene.instantiate() if spawnAI == null else spawnAI
 	e.targetEntity = player
-	e.Type = "AI"
-	e.ChangeStats(baseStats.Distribute(distributeStats))
+	if spawnAI == null:
+		var enemyName = level.enemies.keys()[randi_range(0, level.enemies.size() - 1)]
+		e.init(pos, entityNum, enemyName, level.GetRandomEnemyColor(enemyName))
+		e.Type = "AI"
+	if distribute == -1:
+		e.ChangeStats(baseStats.Distribute(distributeStats))
+	else:
+		e.ChangeStats(baseStats.Distribute(distribute))
 	entityNum += 1
 	add_child(e)
 	
-func SpawnAlly(pos : Vector2i):
-	var e : AI = EnemyScene.instantiate()
-	e.init(pos, entityNum)
-	e.targetEntity = player
-	entityNum += 1
-	e.Name = "Ally"
-	e.Type = "Ally"
-	player.allies.append(e)
-	add_child(e)
+#func SpawnAlly(pos : Vector2i):
+#	var e : AI = EnemyScene.instantiate()
+#	e.init(pos, entityNum, "Russ")
+#	e.targetEntity = player
+#	entityNum += 1
+#	e.Name = "Ally"
+#	e.Type = "Ally"
+#	player.allies.append(e)
+#	add_child(e)
 
 func Reset():
 	for e in get_children():

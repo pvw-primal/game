@@ -7,23 +7,20 @@ var shouldMove = false
 func _ready():
 	Initialize()
 	move.connect(UpdateMap)
-	SetColor(Color.DIM_GRAY, Color.FIREBRICK, Color.FIREBRICK)
 	
-func init(pos : Vector2i, num : int):
+func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = []):
 	partialInit(pos, num)
 	startTurn.connect(FindAction)
 	classE = Classes.GetClass(Classes.BaseClass.Beastmastery)
 	
-	var enemyData
-	if randi_range(0, 1) == 0:
-		enemyData = Loader.GetEnemyData("Russ")
-	else:
-		enemyData = Loader.GetEnemyData("Mortal Pester")
+	var enemyData = Loader.GetEnemyData(loadName)
 	moves = [Move.new(enemyData["move_name"])]
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
 	Name = enemyData["name"]
 	SetMesh(enemyData["path"])
+	if color.size() > 2:
+		SetColor(color[0], color[1], color[2])
 	
 func partialInit(pos : Vector2i, num : int):
 	startingPos = pos
