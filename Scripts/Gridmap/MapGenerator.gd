@@ -30,6 +30,7 @@ var map : Array[Array]
 var offsetX : int = 0
 var offsetY : int = 0
 
+var level : Level
 var exits : Dictionary = {}
 var items : Dictionary = {}
 var tileEffects : Dictionary = {}
@@ -81,10 +82,12 @@ func _ready():
 				set_cell_item(Vector3i(x, 0, y), randi_range(1, 3), get_orthogonal_index_from_basis(Basis(Vector3.UP, angles[randi_range(0, 1)])))
 				map[x - offsetX][y - offsetY] = -2
 	
+	if level == null:
+		level = Level.new("Forest")
 	var numItems = randi_range(8, 15)
 	for i in range(numItems):
 		var spot = GetRandomRoomPos()
-		PlaceItem(spot, Items.RandomItem())
+		PlaceItem(spot, level.RandomItem())
 				
 func GenerateMapLayout(pos: Vector2i, numRooms: int):
 	var bound = Rect2i(pos.x, pos.y, randi_range(ROOM_MIN, ROOM_MAX), randi_range(ROOM_MIN, ROOM_MAX))

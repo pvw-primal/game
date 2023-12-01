@@ -2,7 +2,6 @@ class_name MonoClasses
 extends Node
 
 func _ready():
-	Loader.CacheEnemies(["Russ", "Mortal Pester"])
 	Status.InitStatus()
 	
 	var shamanMove = Move.new("Unleash Elements", Shaman1)

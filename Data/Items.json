@@ -60,6 +60,7 @@
 			"recipe":["Reagent", "Fire"],
 			"requires": ["Alchemy"]
 		},
+		
 	"Javelin":
 		{
 			"name": "Javelin",
@@ -104,7 +105,34 @@
 			"recipe": ["Adhesive", "Fiber"],
 			"requires": ["Machining"]
 		},
-
+	"Salvaging Kit":
+		{
+			"name": "Salvaging Kit",
+			"description": "Salvage materials from the environment or from a creature.",
+			"flavor": "",
+			"icon": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Salvage",
+				"custom": "Salvage"
+			},
+			"recipe": ["Adhesive", "Fiber", "Sharp"],
+			"requires": ["Machining"]
+		},
+	
+	"Tunneling Tools":
+		{
+			"name": "Tunneling Tools",
+			"description": "Use to descend to the next level.",
+			"flavor": "Basically cheating.",
+			"icon": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Use",
+				"custom": "Escape"
+			}
+		},
+		
 	"Russ Talon":
 		{
 			"name": "Russ Talon",

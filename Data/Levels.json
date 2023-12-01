@@ -11,23 +11,38 @@
 				"Russ": {
 					"color": {
 						"RLower": [0, 0, 0],
-						"RUpper": [1, 1, 1],
+						"RUpper": [0.5, 0.5, 0.6],
 						"GLower": [0, 0, 0],
-						"GUpper": [1, 1, 1],
+						"GUpper": [0.5, 0.5, 0.6],
 						"BLower": [0, 0, 0],
-						"BUpper": [1, 1, 1]
+						"BUpper": [0.2, 0.12, 0.12],
+						"dependants": {
+							"channels": ["R", "G"],
+							"lighten": [0.1, 0.4],
+							"chance": 0.7
+						}
 					}
 				},
 				"Mortal Pester": {
 					"color": {
 						"RLower": [0, 0, 0],
-						"RUpper": [1, 1, 1],
-						"GLower": [0, 0, 0],
+						"RUpper": [0.35, 0.35, 0.2],
+						"GLower": [0.3, 0.3, 0.3],
 						"GUpper": [1, 1, 1],
 						"BLower": [0, 0, 0],
-						"BUpper": [1, 1, 1]
+						"BUpper": [0.1, 0.1, 0.1],
+						"dependants": {
+							"channels": ["G", "B"],
+							"same": null,
+							"chance": 0.95
+						}
 					}
 				}
+			},
+			"items":{
+				"common": ["Healing Potion", "Paralysis Draught", "Flamefroth Tincture", "Javelin", "Fibrous Net", "Salvaging Kit"],
+				"rare": ["Tunneling Tools", "Salvaging Kit", "Flamefroth Tincture"],
+				"materials": ["Eidolon Mass", "Charshroom", "Fulminating Gravel", "Bonder's Bulb"]
 			}
 		}
 }

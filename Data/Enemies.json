@@ -4,13 +4,15 @@
 			"name": "Russ",
 			"path": "res://Assets/Enemy/Russ/RussShaded.tscn",
 			"move_name": "Peck",
-			"class":[{ "class1": "Beastmastery" }]
+			"drops": ["Russ Talon"],
+			"class":["Beastmastery"]
 		},
 	"Mortal Pester":
 		{
 			"name": "Mortal Pester",
 			"path": "res://Assets/Enemy/MortalPester/MortalPester.tscn",
 			"move_name": "Scratch",
-			"class":[{ "class1": "Alchemy" }]
+			"drops": ["Pestail", "Charshroom", "Bonder's Bulb"],
+			"class":["Alchemy"]
 		}
 }

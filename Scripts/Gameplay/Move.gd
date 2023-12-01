@@ -2,6 +2,7 @@
 class_name Move
 extends Resource
 
+static var moves : Dictionary
 enum ActionType { move, attack, other }
 
 var name : String

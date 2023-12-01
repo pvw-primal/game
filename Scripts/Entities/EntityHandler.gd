@@ -19,7 +19,7 @@ var baseStats : Stats = Stats.new(6, 4, 1, 3, 0)
 
 func _ready(pl : Player = null, numEnemies : int = 7, ds : int = 2):
 	if level == null:
-		level = Level.new("Forest")
+		level = gridmap.level
 	var p : Player = PlayerScene.instantiate() if pl == null else pl
 	var startPos = gridmap.GetRandomRoomPos()
 	if pl == null:

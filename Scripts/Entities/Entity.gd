@@ -44,7 +44,6 @@ var inventorySize : int = 12
 var equipped : int = -1
 var equippedTool : int = -1
 
-@onready var meshScene = preload("res://Assets/Enemy/MortalPester/MortalPester.tscn")
 var mesh : Node3D
 var animator : Animator
 

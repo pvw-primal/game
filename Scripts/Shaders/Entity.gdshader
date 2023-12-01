@@ -22,9 +22,9 @@ const vec3 uv2_offset = vec3(0, 0, 0);
 
 const float TOLERANCE = .01;
 
-instance uniform vec3 replaceR = vec3(.95, .9, .9);
-instance uniform vec3 replaceG = vec3(.45, .4, .4);
-instance uniform vec3 replaceB = vec3(1, 0, 0);
+instance uniform vec3 replaceR = vec3(.033, .025, .1);
+instance uniform vec3 replaceG = vec3(.163, .147, .304);
+instance uniform vec3 replaceB = vec3(0, 0, 0);
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;

@@ -47,50 +47,41 @@ static func RandomEquipment():
 	i.SetEquipment(m, proficiency, { prefix:null })
 	return i
 
-static func RandomItem():
-	var chance = randf_range(0, 1)
-	if chance > .8:
-		return RandomEquipment()
-	elif chance > .5:
-		return items[randomItems[randi_range(0, randomItems.size() - 1)]]
-	else:
-		return items[randomMaterials[randi_range(0, randomMaterials.size() - 1)]]
-
 static var items : Dictionary = {}
-static var randomItems = ["Healing Potion", "Paralysis Draught", "Flamefroth Tincture", "Javelin", "Fibrous Net", "Tunneling Tools", "Salvaging Kit"]
-static var randomMaterials = ["Russ Talon", "Eidolon Mass", "Charshroom", "Fulminating Gravel", "Bonder's Bulb", "Pestail"]
 
 func _ready():
-	LoadItems()
-	
 	var escape = func(e : Entity, _t : Entity):
 		await e.gridmap.controller.NextLevel()
 	var escapeMove = Move.new("Escape", escape)
 	escapeMove.noTargets = true
 	escapeMove.playAnimation = false
-	Add(Item.new("Tunneling Tools", "Use to descend to the next level.", "Basically cheating.", null, escapeMove, "Use", true))
+	Move.moves["Escape"] = escapeMove
 	
 	var x = func(e : Entity, t : Entity):
 		var placePos = e.facingPos if e.gridmap.GetMapPos(e.facingPos) != -2 else e.gridPos
 		var numitems : int
-		if t == null:
+		var possibleItems
+		var salvageTarget = t != null && t.Type != "Ally" && e.Type == "Player"
+		if !salvageTarget:
+			possibleItems = e.gridmap.level.materials
 			numitems = randi_range(2, 3) if randf_range(0, 1) > .2 else 4
-		else: 
+		else:
+			possibleItems = Loader.GetEnemyData(t.Name)["drops"]
 			numitems = randi_range(1, 3)
-		var possibleItems = ["Russ Talon", "Charshroom", "Fulminating Gravel", "Bonder's Bulb"]
+		
 		for i in range(numitems):
 			var foundItem = randi_range(0, possibleItems.size() - 1)
 			e.text.AddLine("Salvaged " + possibleItems[foundItem] + "!\n")
 			e.gridmap.PlaceItem(placePos, items[possibleItems[foundItem]])
-		if t != null:
+		if salvageTarget:
 			t.AddStatus(Status.Bleed(), 2)
 			t.AddStatus(Status.Disarm(), 2)
 			e.text.AddLine(t.Name + " was lacerated while salvaging!\n")
-	var salvageMove = Move.new("Salvaging Kit", x)
+	var salvageMove = Move.new("Salvage", x)
 	salvageMove.noTargets = true
-	Add(Item.new("Salvaging Kit", "Salvage materials from the environment or from a creature.", "", null, salvageMove, "Salvage", true))
-	items["Salvaging Kit"].crafting.requires = Classes.GetClassNum(Classes.BaseClass.Machining)
-	items["Salvaging Kit"].crafting.recipe = ["Adhesive", "Fiber", "Sharp"] as Array[String]
+	Move.moves["Salvage"] = salvageMove
+	
+	LoadItems()
 	
 func Add(i : Item):
 	Items.items[i.name] = i
@@ -121,6 +112,9 @@ func LoadItems():
 		Add(item)
 
 func LoadMove(itemData) -> Move:
+	if "custom" in itemData["move"]:
+		return Move.moves[itemData["move"]["custom"]]
+		
 	var m = Move.new(itemData["name"])
 	
 	if "damage" in itemData["move"]["effects"]:
