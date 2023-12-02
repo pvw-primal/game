@@ -13,7 +13,7 @@ var cutsCorners : bool = false
 var atkRange : int = 1
 var cooldown = 0
 var icon : Texture2D = null
-var projectileSprite : Texture2D = null
+var projectileMesh : PackedScene = null
 
 var playAnimation : bool = true
 var manualEndTurn : bool = false
@@ -88,13 +88,13 @@ static func DefaultProjectile(applyMove : Move, r : int = 7):
 		var dir = e.facingPos - e.gridPos
 		var def = e.CheckDirection(dir, r) if t == null else [t.gridPos, t]
 		if def[1] == null:
-			e.gridmap.SpawnProjectile(e, def[0], 3, applyMove.projectileSprite)
+			e.gridmap.SpawnProjectile(e, def[0], 3, applyMove.projectileMesh)
 		else:
 			applyMove.playAnimation = false
 			applyMove.manualEndTurn = true
 			applyMove.RemoveCheck()
 			applyMove.waittime = .1
-			e.gridmap.SpawnProjectileTarget(e, def[1], applyMove, 3, applyMove.projectileSprite)
+			e.gridmap.SpawnProjectileTarget(e, def[1], applyMove, 3, applyMove.projectileMesh)
 	
 	var move = Move.new("Projectile", proj)
 	move.manualEndTurn = true

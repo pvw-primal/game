@@ -90,8 +90,8 @@ func LoadItems():
 	var data : Dictionary = Loader.GetAllItems()
 	for i in data.keys():
 		var itemData = data[i]
-		var texture = load(itemData["icon"]) if "icon" in itemData && itemData["icon"] != null else null
-		var item = Item.new(itemData["name"], itemData["description"], itemData["flavor"], texture)
+		var mesh = load(itemData["mesh"]) if "mesh" in itemData && itemData["mesh"] != null else null
+		var item = Item.new(itemData["name"], itemData["description"], itemData["flavor"], mesh)
 		if "move" in itemData:
 			item.move = LoadMove(itemData)
 			item.moveTooltip = itemData["move"]["useTooltip"]
@@ -143,7 +143,7 @@ func LoadMove(itemData) -> Move:
 		m.reveals = itemData["move"]["reveals"]
 	
 	if "projectile" in itemData["move"]["effects"]:
-		m.projectileSprite = load(itemData["move"]["effects"]["projectile"]["icon"]) if "icon" in itemData["move"]["effects"]["projectile"] else load(itemData["icon"])
+		m.projectileMesh = load(itemData["move"]["effects"]["projectile"]["mesh"]) if "mesh" in itemData["move"]["effects"]["projectile"] else load("res://Assets/Items/Alchemy/HealingPotion.tscn")
 		var p : Move = Move.DefaultProjectile(m, itemData["move"]["effects"]["projectile"]["range"])
 		return p
 	return m

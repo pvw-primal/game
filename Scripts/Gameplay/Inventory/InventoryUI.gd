@@ -57,9 +57,9 @@ func Open():
 	player.ignoreInput = true
 	for i in range(player.inventory.size()):
 		if i == player.equipped:
-			list.add_item(player.inventory[i].name + " (E)", player.inventory[i].texture)
+			list.add_item(player.inventory[i].name + " (E)")
 		else:
-			list.add_item(player.inventory[i].name, player.inventory[i].texture)
+			list.add_item(player.inventory[i].name)
 	list.select(selected)
 	list.item_selected.emit(selected)
 		

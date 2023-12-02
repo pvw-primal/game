@@ -6,7 +6,7 @@ var moveTooltip : String
 var name : String
 var description : String
 var flavor : String
-var texture : Texture2D
+var mesh : PackedScene
 var consumable : bool
 var equipment : bool
 
@@ -14,14 +14,14 @@ var requiredProf : Classes.Proficiency = Classes.Proficiency.None
 var crafting : Crafting
 var prefixes : Dictionary
 
-func _init(Name : String, Description : String, Flavor : String = "", t : Texture2D = null, Use : Move = null, UseTT : String = "", Consumable : bool = false):
+func _init(Name : String, Description : String, Flavor : String = "", t : PackedScene = null, Use : Move = null, UseTT : String = "", Consumable : bool = false):
 	name = Name
 	description = Description
 	flavor = Flavor
 	move = Use
 	moveTooltip = UseTT
 	consumable = Consumable
-	texture = t
+	mesh = t
 	crafting = Crafting.new()
 	
 func CanUse():

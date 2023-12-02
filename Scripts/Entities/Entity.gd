@@ -77,13 +77,13 @@ func Update(delta):
 		speed -= SPEED_D
 
 func Spawn(pos: Vector2i):
-	RandomRotate(pos)
 	gridPos = pos
 	gridmap.Pathfinding.set_point_weight_scale(gridPos, OCCUPIED_WEIGHT)
 	gridmap.SetMapPos(gridPos, entityNum)
 	targetPos = gridmap.to_global(gridmap.map_to_local(Vector3i(gridPos.x, 0, gridPos.y)))
 	targetPos = Vector3(targetPos.x, position.y, targetPos.z)
 	position = targetPos
+	RandomRotate(pos)
 	
 func SnapPosition(pos: Vector2i):
 	facingPos = (2 * (pos - gridPos)) + gridPos
@@ -126,7 +126,7 @@ func Rotate(pos : Vector2i):
 	facingPos = pos
 	
 func RandomRotate(pos : Vector2i):
-	var rotPos = Vector2i.ZERO
+	var rotPos = pos
 	while rotPos == pos:
 		rotPos = Vector2i(pos.x + randi_range(-1, 1), pos.y + randi_range(-1, 1))
 	Rotate(rotPos)

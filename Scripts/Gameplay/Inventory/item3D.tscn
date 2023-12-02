@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://pvwvmahp2lfu"]
+
+[ext_resource type="Script" path="res://Scripts/Gameplay/Inventory/ItemWorld.gd" id="1_ahb8d"]
+
+[node name="item3D" type="Node3D"]
+script = ExtResource("1_ahb8d")

@@ -4,7 +4,7 @@
 			"name": "Healing Potion",
 			"description": "Restores 50% HP.",
 			"flavor": "The taste and temperature varies drastically, seemingly adapting to the consumer's current needs and preferences.",
-			"icon": null,
+			"mesh": "res://Assets/Items/Alchemy/HealingPotion.tscn",
 			"consumable": true,
 			"move":{
 				"useTooltip": "Drink",
@@ -26,7 +26,7 @@
 			"name": "Paralysis Draught",
 			"description": "Throw the draught directly in front of you, paralyzing a foe.",
 			"flavor": "Skin exposure causes profound numbness and impaired motor control, quickly rendering the recipient effectively immobile.",
-			"icon": null,
+			"mesh": "res://Assets/Items/Alchemy/ParalysisDraught.tscn",
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
@@ -45,7 +45,7 @@
 			"name": "Flamefroth Tincture",
 			"description": "Breathe fire in the area.",
 			"flavor": "Though highly effective, frequent use incinerates phlegm and other particulates in the throat, causing embers and ash to accumulate around the mouth.",
-			"icon": null,
+			"mesh": "res://Assets/Items/Alchemy/FlamefrothTincture.tscn",
 			"consumable": true,
 			"move":{
 				"useTooltip": "Drink",
@@ -66,7 +66,7 @@
 			"name": "Javelin",
 			"description": "Throw to deal damage at a distance.",
 			"flavor": "",
-			"icon": "res://Assets/Items/Javelin.png",
+			"mesh": null,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
@@ -87,7 +87,7 @@
 			"name": "Fibrous Net",
 			"description": "Throw to ensnare a creature, paralyzing them.",
 			"flavor": "",
-			"icon": "res://Assets/Items/Net.png",
+			"mesh": null,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
@@ -110,7 +110,7 @@
 			"name": "Salvaging Kit",
 			"description": "Salvage materials from the environment or from a creature.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Salvage",
@@ -125,7 +125,7 @@
 			"name": "Tunneling Tools",
 			"description": "Use to descend to the next level.",
 			"flavor": "Basically cheating.",
-			"icon": null,
+			"mesh": null,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Use",
@@ -138,7 +138,7 @@
 			"name": "Russ Talon",
 			"description": "A claw shorn from a Russ. The marrow can be used as a base for potions and poisons.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Reagent", "Sharp"]
 		},
 	"Eidolon Mass":
@@ -146,7 +146,7 @@
 			"name": "Eidolon Mass",
 			"description": "The indigestable remains left after an Eidolon's elemental meal. Has a number of unique uses.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Reagent", "Fire", "Adhesive", "Sharp"]
 		},
 	"Charshroom":
@@ -154,7 +154,7 @@
 			"name": "Charshroom",
 			"description": "The fibrous, carbon-rich mycelium of these mushrooms is highly flammable. The cloud of spores they release is indistinguishable from smoke.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Fire", "Fiber"]
 		},
 	"Fulminating Gravel":
@@ -162,7 +162,7 @@
 			"name": "Fulminating Gravel",
 			"description": "Built-up arcane and static energies within this sediment make for a number of potential applications.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Paralysis", "Adhesive", "Stone"]
 		},
 	"Bonder's Bulb":
@@ -170,7 +170,7 @@
 			"name": "Bonder's Bulb",
 			"description": "These small, stringy plants release a curative sap that was once used as a type of glue.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Healing", "Adhesive", "Fiber"]
 		},
 	"Pestail":
@@ -178,7 +178,7 @@
 			"name": "Pestail",
 			"description": "The hard, regenerative tails of a Mortal Pester. Both the stony exterior and fleshy interior could likely be utilized.",
 			"flavor": "",
-			"icon": null,
+			"mesh": null,
 			"tags": ["Healing", "Stone"]
 		},
 }

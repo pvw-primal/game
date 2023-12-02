@@ -38,7 +38,7 @@ var tileEffects : Dictionary = {}
 @onready var minimap : Minimap = get_node("/root/Root/MinimapContainer/Minimap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var controller : Controller = get_node("/root/Root/Controller")
-@onready var item = preload("res://Scripts/Gameplay/Inventory/item.tscn")
+@onready var item = preload("res://Scripts/Gameplay/Inventory/item3D.tscn")
 @onready var tileEffect = preload("res://Scripts/Gridmap/Tiles/TileEffect.tscn")
 @onready var projectile = preload("res://Scripts/Gameplay/Projectile.tscn")
 
@@ -337,12 +337,12 @@ func RemoveTileEffect(pos : Vector2i):
 		tileEffects[pos].queue_free()
 		tileEffects.erase(pos)
 
-func SpawnProjectileTarget(attacker : Entity, defender : Entity, move : Move, speed : float, t : Texture2D):
+func SpawnProjectileTarget(attacker : Entity, defender : Entity, move : Move, speed : float, t : PackedScene):
 	var proj : Projectile = projectile.instantiate()
 	proj.init(attacker, Vector3(defender.position.x, proj.position.y, defender.position.z), speed, t, move, defender)
 	add_child(proj)
 	
-func SpawnProjectile(attacker : Entity, pos : Vector2i, speed : float, t : Texture2D):
+func SpawnProjectile(attacker : Entity, pos : Vector2i, speed : float, t : PackedScene):
 	var proj : Projectile = projectile.instantiate()
 	var placePos = map_to_local(Vector3i(pos.x, 0, pos.y))
 	proj.init(attacker, Vector3(placePos.x, proj.position.y, placePos.z), speed, t)

@@ -28,9 +28,9 @@ func _ready():
 		var def = e.CheckDirection(e.facingPos - e.gridPos, r) if t == null else [t.gridPos, t]
 		
 		if def[1] == null:
-			e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Sword.png"))
+			e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
 		else:
-			e.gridmap.SpawnProjectileTarget(e, def[1], arcanaApply, 3, preload("res://Assets/Items/Sword.png"))
+			e.gridmap.SpawnProjectileTarget(e, def[1], arcanaApply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
 	var arcanistMove = Move.new("Aspected Blast", Arcana1)
 	arcanistMove.manualEndTurn = true
 	arcanistMove.noTargets = true

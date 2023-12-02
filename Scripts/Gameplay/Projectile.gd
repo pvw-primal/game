@@ -9,10 +9,11 @@ var move : Move
 var atk : Entity
 var def : Entity
 
-func init(attacker : Entity, destination : Vector3, Speed : float, sprite : Texture2D, m : Move = null, defender : Entity = null):
+func init(attacker : Entity, destination : Vector3, Speed : float, mesh : PackedScene, m : Move = null, defender : Entity = null):
+	var model = mesh.instantiate()
+	add_child(model)
 	position = Vector3(attacker.position.x, position.y, attacker.position.z)
 	rotation.y = attacker.mesh.rotation.y - (3 * PI / 4)
-	texture = sprite
 	targetPos = destination
 	speed = Speed
 	moving = true
