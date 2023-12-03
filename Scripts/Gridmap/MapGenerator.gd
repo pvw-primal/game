@@ -290,7 +290,7 @@ func TakeItems(pos : Vector2i, e : Entity):
 				if e.inventory.size() >= e.inventorySize:
 					e.text.AddLine("Inventory is full!\n")
 					break
-				var i = items[pos].items.pop_back()
+				var i = items[pos].PopItem()
 				e.inventory.append(i)
 				e.text.AddLine("Picked up " + i.name + ".\n")
 		elif e.Type == "Ally":
@@ -299,14 +299,14 @@ func TakeItems(pos : Vector2i, e : Entity):
 				if player.inventory.size() >= player.inventorySize:
 					e.text.AddLine("Inventory is full!\n")
 					break
-				var i = items[pos].items.pop_back()
+				var i = items[pos].PopItem()
 				player.inventory.append(i)
 				player.text.AddLine(e.Name + " picked up " + i.name + ".\n")
 		else:
 			for x in range(items[pos].items.size()):
 				if e.inventory.size() >= e.inventorySize:
 					break
-				var i = items[pos].items.pop_back()
+				var i = items[pos].PopItem()
 				e.inventory.append(i)
 				e.text.AddLine(e.Name + " picked up " + i.name + ".\n")
 		if items[pos].items.size() <= 0:

@@ -51,6 +51,7 @@ var animator : Animator
 @onready var gridmap : MapGenerator = get_node("/root/Root/GridMap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var text : TextScroll = get_node("/root/Root/Log/ScrollContainer")
+@onready var statusUI : StatusUI = get_node("StatusUI")
 
 func Initialize():
 	turnhandler.AddEntity(self)
@@ -234,11 +235,18 @@ func SetColor(cR : Color, cG : Color, cB: Color):
 func UpdateStats():
 	var statcopy = originalStats.Copy()
 	var additiveMod : Array[float] = [1, 1, 1, 1] #POW, DEF, MAG, RES
+	statusUI.icons.clear()
 	for SN in statuses.keys():
 		if !statuses[SN].OnStatCheck.is_null():
 			statuses[SN].OnStatCheck.call(statcopy)
 		if !statuses[SN].OnPercentStatCheck.is_null():
 			statuses[SN].OnPercentStatCheck.call(additiveMod)
+		if statuses[SN].icon != null:
+			statusUI.icons.append(statuses[SN].icon)
+	if statusUI.icons.size() <= 0:
+		statusUI.Disable()
+	else:
+		statusUI.Enable()
 	stats.CopyAll(statcopy.Modified(additiveMod))
 
 func ChangeStats(s : Stats):

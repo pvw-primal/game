@@ -117,12 +117,12 @@ func SpawnAIAt(pos : Vector2i, spawnAI : AI = null, distribute : int = -1):
 		var enemyName = level.enemies.keys()[randi_range(0, level.enemies.size() - 1)]
 		e.init(pos, entityNum, enemyName, level.GetRandomEnemyColor(enemyName))
 		e.Type = "AI"
+	entityNum += 1
+	add_child(e)
 	if distribute == -1:
 		e.ChangeStats(baseStats.Distribute(distributeStats))
 	else:
 		e.ChangeStats(baseStats.Distribute(distribute))
-	entityNum += 1
-	add_child(e)
 	
 #func SpawnAlly(pos : Vector2i):
 #	var e : AI = EnemyScene.instantiate()

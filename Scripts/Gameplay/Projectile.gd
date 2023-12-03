@@ -1,5 +1,5 @@
 class_name Projectile
-extends Sprite3D
+extends Node3D
 
 var targetPos : Vector3
 var speed : float

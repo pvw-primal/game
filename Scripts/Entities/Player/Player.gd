@@ -37,7 +37,7 @@ func SetClass(c : Classes.BaseClass, i : Item):
 	moves = classE.moves
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
-	inventory = [i, Items.items["Tunneling Tools"], Items.items["Paralysis Draught"], Items.items["Javelin"]]
+	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"]]
 	equipped = 0
 	equippedMove = inventory[equipped].move
 

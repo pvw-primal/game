@@ -1,10 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://brlbpr22i3636"]
+[gd_scene load_steps=2 format=3 uid="uid://brlbpr22i3636"]
 
-[ext_resource type="Texture2D" uid="uid://bmm73g17ekgwn" path="res://Assets/Items/Sword.png" id="1_e6b4f"]
 [ext_resource type="Script" path="res://Scripts/Gameplay/Projectile.gd" id="1_qw3bb"]
 
-[node name="Sprite3D" type="Sprite3D"]
-transform = Transform3D(-0.707107, -0.707107, 3.09086e-08, 0, -4.37114e-08, -1, 0.707107, -0.707107, 3.09086e-08, 0, 0.3, 0)
-texture_filter = 0
-texture = ExtResource("1_e6b4f")
+[node name="Projectile" type="Node3D"]
 script = ExtResource("1_qw3bb")

@@ -143,7 +143,7 @@ func LoadMove(itemData) -> Move:
 		m.reveals = itemData["move"]["reveals"]
 	
 	if "projectile" in itemData["move"]["effects"]:
-		m.projectileMesh = load(itemData["move"]["effects"]["projectile"]["mesh"]) if "mesh" in itemData["move"]["effects"]["projectile"] else load("res://Assets/Items/Alchemy/HealingPotion.tscn")
+		m.projectileMesh = load(itemData["move"]["effects"]["projectile"]["mesh"]) if "mesh" in itemData["move"]["effects"]["projectile"] else load("res://Assets/Items/Machining/Javelin.tscn")
 		var p : Move = Move.DefaultProjectile(m, itemData["move"]["effects"]["projectile"]["range"])
 		return p
 	return m

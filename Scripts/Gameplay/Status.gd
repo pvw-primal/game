@@ -7,9 +7,11 @@ var OnTurnStart : Callable
 var OnStatCheck : Callable
 var OnPercentStatCheck : Callable
 
+var icon : Texture2D
+
 static var status : Dictionary
 
-func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck = null):
+func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck = null, i : Texture2D = null):
 	name = Name
 	if turnstart != null:
 		OnTurnStart = turnstart
@@ -17,6 +19,9 @@ func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck =
 		OnStatCheck = statcheck
 	if percentstatcheck != null:
 		OnPercentStatCheck = percentstatcheck
+	icon = i
+
+
 
 #temporary
 static func InitStatus():
@@ -44,7 +49,7 @@ static func Disarm():
 		var da = func(stat : Stats):
 			stat.CanAttack = false
 			return stat
-		status["Disarm"] = Status.new("Disarm", null, da, null)
+		status["Disarm"] = Status.new("Disarm", null, da, null, preload("res://Assets/Icons/Status/Disarm.png"))
 	return status["Disarm"]
 
 static func Paralysis():
@@ -52,7 +57,7 @@ static func Paralysis():
 		var para = func(stat : Stats):
 			stat.CanMove = false
 			return stat
-		status["Paralysis"] = Status.new("Paralysis", null, para, null)
+		status["Paralysis"] = Status.new("Paralysis", null, para, null, preload("res://Assets/Icons/Status/Paralysis.png"))
 	return status["Paralysis"]
 
 static func Burning():
@@ -62,7 +67,7 @@ static func Burning():
 			e.animator.Damage()
 			e.text.AddLine(e.Name + " was burned for " + str(damage) + " damage!\n")
 			e.TakeDamage(damage)
-		status["Burning"] = Status.new("Burning", burn, null, null)
+		status["Burning"] = Status.new("Burning", burn, null, null, preload("res://Assets/Icons/Status/Burning.png"))
 	return status["Burning"]
 	
 static func Air():
@@ -71,7 +76,7 @@ static func Air():
 			var healing = e.Heal(1)
 			if healing > 0:
 				e.text.AddLine("The cool breeze healed " + e.Name + " for " + str(healing) + " HP!\n")
-		status["Refreshing Breeze"] = Status.new("Refreshing Breeze", air, null, null)
+		status["Refreshing Breeze"] = Status.new("Refreshing Breeze", air, null, null, preload("res://Assets/Icons/Status/Breeze.png"))
 	return status["Refreshing Breeze"]
 	
 #POW DEF MAG RES
@@ -81,7 +86,7 @@ static func Frost():
 			sum[0] -= .2
 			sum[2] -= .2
 			return sum
-		status["Frostbite"] = Status.new("Frostbite", null, null, frost)
+		status["Frostbite"] = Status.new("Frostbite", null, null, frost, preload("res://Assets/Icons/Status/Frostbite.png"))
 	return status["Frostbite"]
 	
 #POW DEF MAG RES
@@ -91,7 +96,7 @@ static func Earth():
 			sum[1] += .2
 			sum[3] += .2
 			return sum
-		status["Earthen Resistence"] = Status.new("Earthen Resistence", null, null, earth)
+		status["Earthen Resistence"] = Status.new("Earthen Resistence", null, null, earth, preload("res://Assets/Icons/Status/Resistence.png"))
 	return status["Earthen Resistence"]
 	
 static func Stealth():
@@ -99,7 +104,7 @@ static func Stealth():
 		var stealth = func(stat : Stats):
 			stat.CanBeTargeted = false
 			return stat
-		status["Stealth"] = Status.new("Stealth", null, stealth, null)
+		status["Stealth"] = Status.new("Stealth", null, stealth, null, preload("res://Assets/Icons/Status/Stealth.png"))
 	return status["Stealth"]
 	
 static func Bleed():
@@ -108,5 +113,5 @@ static func Bleed():
 			e.animator.Damage()
 			e.text.AddLine(e.Name + " bled for " + str(1) + " damage!\n")
 			e.TakeDamage(1)
-		status["Bleed"] = Status.new("Bleed", bleed, null, null)
+		status["Bleed"] = Status.new("Bleed", bleed, null, null, preload("res://Assets/Icons/Status/Bleed.png"))
 	return status["Bleed"]

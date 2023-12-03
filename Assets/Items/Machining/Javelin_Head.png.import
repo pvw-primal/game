@@ -2,16 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmm73g17ekgwn"
-path="res://.godot/imported/Sword.png-a34a1c59a30fb4eadcbd5953ed94a759.ctex"
+uid="uid://o266ehuhe557"
+path="res://.godot/imported/Javelin_Head.png-a21ec4c7f5135aa5bd7471f05e488469.ctex"
 metadata={
 "vram_texture": false
 }
+generator_parameters={}
 
 [deps]
 
-source_file="res://Assets/Items/Sword.png"
-dest_files=["res://.godot/imported/Sword.png-a34a1c59a30fb4eadcbd5953ed94a759.ctex"]
+source_file="res://Assets/Items/Machining/Javelin_Head.png"
+dest_files=["res://.godot/imported/Javelin_Head.png-a21ec4c7f5135aa5bd7471f05e488469.ctex"]
 
 [params]
 

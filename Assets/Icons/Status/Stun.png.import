@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmljn7n7bug4q"
-path="res://.godot/imported/Javelin.png-f49c22d186b85b3599aabcd59f09279b.ctex"
+uid="uid://cmrxkpbj3y5wn"
+path="res://.godot/imported/Stun.png-309c5f0dd27425e28eefb8dd3ccbad8f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Items/Javelin.png"
-dest_files=["res://.godot/imported/Javelin.png-f49c22d186b85b3599aabcd59f09279b.ctex"]
+source_file="res://Assets/Icons/Status/Stun.png"
+dest_files=["res://.godot/imported/Stun.png-309c5f0dd27425e28eefb8dd3ccbad8f.ctex"]
 
 [params]
 

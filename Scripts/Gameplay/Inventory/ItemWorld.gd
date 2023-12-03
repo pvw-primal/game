@@ -29,7 +29,10 @@ func init(i : Array[Item], pos : Vector3):
 		var item : Node3D = im.instantiate()
 		var multiplier = items.size() if items.size() < 2 else 5
 		item.position = Vector3(randf_range(-.1 * multiplier, .1 * multiplier), 0, randf_range(-.1 * multiplier, .1 * multiplier))
+		item.rotation.y = randi_range(0, 360)
 		add_child(item)
+		var anim : ItemAnimator = item.get_node("AnimationTree")
+		anim.Drop()
 	
 func AddItem(i : Item):
 	items.append(i)
@@ -37,4 +40,11 @@ func AddItem(i : Item):
 	var item : Node3D = im.instantiate()
 	var multiplier = items.size() if items.size() < 2 else 5
 	item.position = Vector3(randf_range(-.1 * multiplier, .1 * multiplier), 0, randf_range(-.1 * multiplier, .1 * multiplier))
+	item.rotation.y = randi_range(0, 360)
 	add_child(item)
+	var anim : ItemAnimator = item.get_node("AnimationTree")
+	anim.Drop()
+	
+func PopItem() -> Item:
+	get_child(items.size() - 1).queue_free()
+	return items.pop_back()

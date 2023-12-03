@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdn8stdx7ribr"
-path="res://.godot/imported/Net.png-436ed9aec3dcfc34a3ee4ccdd6fcb8d6.ctex"
+uid="uid://c2hukpughi67d"
+path="res://.godot/imported/Resistence.png-c03142ae43294d72cd0b562de57e1886.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Items/Net.png"
-dest_files=["res://.godot/imported/Net.png-436ed9aec3dcfc34a3ee4ccdd6fcb8d6.ctex"]
+source_file="res://Assets/Icons/Status/Resistence.png"
+dest_files=["res://.godot/imported/Resistence.png-c03142ae43294d72cd0b562de57e1886.ctex"]
 
 [params]
 

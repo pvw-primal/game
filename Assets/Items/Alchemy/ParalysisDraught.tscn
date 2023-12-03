@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://gdsy8r17eyj5"]
+[gd_scene load_steps=22 format=3 uid="uid://gdsy8r17eyj5"]
 
 [ext_resource type="Texture2D" uid="uid://cwvuusjus06el" path="res://Assets/Items/Alchemy/ParalysisDraught_Bottom.png" id="1_btrk6"]
 [ext_resource type="Texture2D" uid="uid://bb0xar220xwmd" path="res://Assets/Items/Alchemy/ParalysisDraught_Cork.png" id="2_n4vv2"]
@@ -215,22 +215,12 @@ _data = {
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h50cl"]
 animation = &"Drop"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qdgg4"]
-animation = &"Drop"
-
-[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_ia8wg"]
-fadeout_time = 0.2
-
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_h0ht3"]
 graph_offset = Vector2(150, 238)
 nodes/Drop/node = SubResource("AnimationNodeAnimation_h50cl")
 nodes/Drop/position = Vector2(400, 320)
-nodes/Drop2/node = SubResource("AnimationNodeAnimation_qdgg4")
-nodes/Drop2/position = Vector2(400, 460)
-nodes/DropOS/node = SubResource("AnimationNodeOneShot_ia8wg")
-nodes/DropOS/position = Vector2(540, 340)
-nodes/output/position = Vector2(780, 260)
-node_connections = [&"output", 0, &"DropOS", &"DropOS", 0, &"Drop", &"DropOS", 1, &"Drop2"]
+nodes/output/position = Vector2(580, 320)
+node_connections = [&"output", 0, &"Drop"]
 
 [node name="Item" type="Node3D"]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
@@ -263,8 +253,4 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource("AnimationNodeBlendTree_h0ht3")
 anim_player = NodePath("../AnimationPlayer")
-active = true
-parameters/DropOS/active = false
-parameters/DropOS/internal_active = false
-parameters/DropOS/request = 0
 script = ExtResource("5_u5fw3")

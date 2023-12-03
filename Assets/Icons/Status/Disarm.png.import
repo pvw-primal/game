@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ce0o0kpldk2t4"
-path="res://.godot/imported/Bundle.png-257f6aaa9a3962339434697ab71f18e1.ctex"
+uid="uid://by3p0vfp4kbll"
+path="res://.godot/imported/Disarm.png-1e3e55d4d1e92ff5217e3e4d1fd7db39.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Items/Bundle.png"
-dest_files=["res://.godot/imported/Bundle.png-257f6aaa9a3962339434697ab71f18e1.ctex"]
+source_file="res://Assets/Icons/Status/Disarm.png"
+dest_files=["res://.godot/imported/Disarm.png-1e3e55d4d1e92ff5217e3e4d1fd7db39.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

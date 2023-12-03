@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bttrlaqtmbj1i"]
+[gd_scene load_steps=22 format=3 uid="uid://bttrlaqtmbj1i"]
 
 [ext_resource type="Texture2D" uid="uid://dry67xrnd1lyu" path="res://Assets/Items/Alchemy/FlamefrothTincture_Bottom.png" id="1_u5s2u"]
 [ext_resource type="Texture2D" uid="uid://d4in64m66emsq" path="res://Assets/Items/Alchemy/FlamefrothTincture_Cork.png" id="2_i0kkv"]
@@ -215,22 +215,12 @@ _data = {
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h50cl"]
 animation = &"Drop"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qdgg4"]
-animation = &"Drop"
-
-[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_ia8wg"]
-fadeout_time = 0.2
-
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_bijut"]
-graph_offset = Vector2(150, 238)
+graph_offset = Vector2(90, 192)
 nodes/Drop/node = SubResource("AnimationNodeAnimation_h50cl")
 nodes/Drop/position = Vector2(400, 320)
-nodes/Drop2/node = SubResource("AnimationNodeAnimation_qdgg4")
-nodes/Drop2/position = Vector2(400, 460)
-nodes/DropOS/node = SubResource("AnimationNodeOneShot_ia8wg")
-nodes/DropOS/position = Vector2(540, 340)
-nodes/output/position = Vector2(780, 260)
-node_connections = [&"output", 0, &"DropOS", &"DropOS", 0, &"Drop", &"DropOS", 1, &"Drop2"]
+nodes/output/position = Vector2(560, 320)
+node_connections = [&"output", 0, &"Drop"]
 
 [node name="Item" type="Node3D"]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
@@ -263,8 +253,4 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource("AnimationNodeBlendTree_bijut")
 anim_player = NodePath("../AnimationPlayer")
-active = true
-parameters/DropOS/active = false
-parameters/DropOS/internal_active = false
-parameters/DropOS/request = 0
 script = ExtResource("5_juyoq")
