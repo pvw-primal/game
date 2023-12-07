@@ -37,7 +37,7 @@ func _ready(pl : Player = null, numEnemies : int = 7, ds : int = 2):
 		add_child(player)
 		player.option.OptionSelected.connect(tempClassSet)
 		player.option.list.auto_height = false
-		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist"], [], 150)
+		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Herbalist"], [], 150)
 		
 	skillUI.player = player
 	
@@ -66,31 +66,36 @@ func tempClassSet (e : Entity, id : int):
 	if id == 0:
 		var i = Item.new("Starting Focus", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultMagical(), Classes.Proficiency.FocusBasic, { Items.RandomAspect(Classes.Proficiency.FocusBasic):null })
-		player.SetClass(Classes.BaseClass.Shamanism, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism), i)
 	elif id == 1:
 		var i = Item.new("Starting Focus", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultMagical(), Classes.Proficiency.FocusBasic, { Items.RandomAspect(Classes.Proficiency.FocusBasic):null })
-		player.SetClass(Classes.BaseClass.Arcana, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Arcana), i)
 	elif id == 2:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.BaseClass.Arms, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Arms), i)
 	elif id == 3:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.BaseClass.Technique, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Technique), i)
 	elif id == 4:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.BaseClass.Beastmastery, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Beastmastery), i)
 	elif id == 5:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.BaseClass.Alchemy, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Alchemy), i)
 	elif id == 6:
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.BaseClass.Machining, i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Machining), i)
+	elif id == 7:
+		#for testing
+		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
+		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Alchemy), i)
 	else:
 		get_tree().quit()
 	e.option.OptionSelected.disconnect(tempClassSet)

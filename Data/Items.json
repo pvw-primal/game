@@ -3,7 +3,7 @@
 		{
 			"name": "Healing Potion",
 			"description": "Restores 50% HP.",
-			"flavor": "The taste and temperature varies drastically, seemingly adapting to the consumer's current needs and preferences.",
+			"flavor": "The taste and temperature vary drastically, seemingly adapting to the consumer's current needs and preferences.",
 			"mesh": "res://Assets/Items/Alchemy/HealingPotion.tscn",
 			"consumable": true,
 			"move":{
@@ -154,8 +154,32 @@
 			"name": "Charshroom",
 			"description": "The fibrous, carbon-rich mycelium of these mushrooms is highly flammable. The cloud of spores they release is indistinguishable from smoke.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/Charshroom.tscn",
 			"tags": ["Fire", "Fiber"]
+		},
+	"Pebblepod":
+		{
+			"name": "Pebblepod",
+			"description": "These plants incorporate loose sediment into a rocky shell for their seed pods. The pods also contain pockets of mineral-rich soil that can be used as fertilizer.",
+			"flavor": "",
+			"mesh": null,
+			"tags": ["Fertilizer", "Stone"]
+		},
+	"Tarrime Bloom":
+		{
+			"name": "Tarrime Bloom",
+			"description": "This flowering plant retains water using an adhesive liquid. Highly resistant to cold temperatures, it flourishes during winter months.",
+			"flavor": "",
+			"mesh": null,
+			"tags": ["Frost", "Adhesive", "Sharp"]
+		},
+	"Windeelion":
+		{
+			"name": "Windeelion",
+			"description": "This large, mutated offshoot of a dandelion seems to generate small gusts of wind to carry its seeds.",
+			"flavor": "",
+			"mesh": null,
+			"tags": ["Air", "Reagent"]
 		},
 	"Fulminating Gravel":
 		{

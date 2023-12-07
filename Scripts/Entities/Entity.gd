@@ -299,8 +299,9 @@ func StartCooldown(id : int):
 	
 func StartCooldownName(n : String):
 	for i in range(moves.size()):
-		if moves[i].name == n:
+		if moves[i] != null && moves[i].name == n:
 			StartCooldown(i)
+			return
 	
 func OnCooldown(id : int):
 	return cooldown[id] > 0

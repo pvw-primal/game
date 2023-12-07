@@ -11,7 +11,7 @@ func _init():
 	recipe = []
 
 func CanCraft(e : Entity):
-	if recipe.size() <= 0 || e.classE.classBit != requires:
+	if recipe.size() <= 0:
 		return []
 	var locations : Array[int] = []
 	locations.resize(recipe.size())

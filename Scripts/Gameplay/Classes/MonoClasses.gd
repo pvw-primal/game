@@ -11,7 +11,7 @@ func _ready():
 	shamanMove.cooldown = 3
 	shamanMove.manualCooldown = true
 	shamanMove.icon = preload("res://Assets/Icons/Move/Shaman.png")
-	Class.new("Shaman", [shamanMove], Classes.GetClassNum(Classes.BaseClass.Shamanism), Classes.GetProfNum(Classes.Proficiency.FocusBasic))
+	Move.moves["Unleash Elements"] = shamanMove
 	
 	var arcanaApply = Move.new("Aspected Blast", Arcana1Apply)
 	arcanaApply.playAnimation = false
@@ -35,13 +35,14 @@ func _ready():
 	arcanistMove.manualEndTurn = true
 	arcanistMove.noTargets = true
 	arcanistMove.cooldown = 3
-	Class.new("Arcanist", [arcanistMove], Classes.GetClassNum(Classes.BaseClass.Arcana), Classes.GetProfNum(Classes.Proficiency.FocusBasic, Classes.Proficiency.FocusAdvanced), [], false, true)
+	arcanistMove.icon = preload("res://Assets/Icons/Move/Arcanist.png")
+	Move.moves["Aspected Blast"] = arcanistMove
 	
 	var fighterMove = Move.new("Skilled Strike", Arms1)
 	fighterMove.noTargets = true
 	fighterMove.cooldown = 2
 	fighterMove.icon = preload("res://Assets/Icons/Move/Fighter.png")
-	Class.new("Fighter", [fighterMove], Classes.GetClassNum(Classes.BaseClass.Arms), Classes.GetProfNum(Classes.Proficiency.WeaponBasic, Classes.Proficiency.WeaponMartial), [], false, true)
+	Move.moves["Skilled Strike"] = fighterMove
 	
 	var rogueMove = Move.new("Stealth", Technique1)
 	rogueMove.playAnimation = false
@@ -49,32 +50,37 @@ func _ready():
 	rogueMove.reveals = false
 	rogueMove.cooldown = 3
 	rogueMove.icon = preload("res://Assets/Icons/Move/Rogue.png")
-	Class.new("Rogue", [rogueMove], Classes.GetClassNum(Classes.BaseClass.Technique), Classes.GetProfNum(Classes.Proficiency.WeaponBasic))
+	Move.moves["Stealth"] = rogueMove
 	
 	var tamerMove = Move.new("Tame", Beastmastery1)
 	tamerMove.playAnimation = false
 	tamerMove.noTargets = true
 	tamerMove.cooldown = 1
 	tamerMove.icon = preload("res://Assets/Icons/Move/Tamer.png")
-	Class.new("Tamer", [tamerMove], Classes.GetClassNum(Classes.BaseClass.Beastmastery), Classes.GetProfNum(Classes.Proficiency.WeaponBasic, Classes.Proficiency.FocusBasic))
+	Move.moves["Tame"] = tamerMove
 	
-	var craft : Array[String] = ["Healing Potion", "Paralysis Draught", "Flamefroth Tincture"]
 	var alchemyMove = Move.new("Brew", Alchemy1)
 	alchemyMove.playAnimation = false
 	alchemyMove.manualEndTurn = true
 	alchemyMove.noTargets = true
 	alchemyMove.reveals = false
-	Class.new("Alchemist", [alchemyMove], Classes.GetClassNum(Classes.BaseClass.Alchemy), Classes.GetProfNum(Classes.Proficiency.WeaponBasic, Classes.Proficiency.Tool), craft, true)
+	alchemyMove.cooldown = 1
+	alchemyMove.manualCooldown = true
+	alchemyMove.icon = preload("res://Assets/Icons/Move/Alchemy.png")
+	Move.moves["Brew"] = alchemyMove
 	
-	var craft2 : Array[String] = ["Salvaging Kit", "Fibrous Net", "Javelin"]
 	var machiningMove = Move.new("Tinker", Machining1)
 	machiningMove.playAnimation = false
 	machiningMove.manualEndTurn = true
 	machiningMove.noTargets = true
 	machiningMove.reveals = false
-	Class.new("Mechanist", [machiningMove], Classes.GetClassNum(Classes.BaseClass.Machining), Classes.GetProfNum(Classes.Proficiency.WeaponBasic, Classes.Proficiency.Tool), craft2, true)
-	
+	machiningMove.cooldown = 1
+	machiningMove.manualCooldown = true
+	machiningMove.icon = preload("res://Assets/Icons/Move/Machining.png")
+	Move.moves["Tinker"] = machiningMove
 
+	Classes.LoadAllClasses()
+	
 #SHAMANISM
 var ShamanOptions : Array[String] = ["Fire", "Frost", "Earth", "Air"]
 func Shaman1(e : Entity, _t = null):
@@ -103,7 +109,7 @@ func ShamanAttack(e : Entity, id : int):
 		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Air, e)
 		e.text.AddLine(e.Name + " called the wind!\n")
 	e.animator.Attack()
-	e.StartCooldownName(Classes.GetClass(Classes.BaseClass.Shamanism).moves[0].name)
+	e.StartCooldownName("Unleash Elements")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
 	e.endTurn.emit()
@@ -171,12 +177,14 @@ func Arms1(e : Entity, t : Entity):
 		var damage = Stats.GetDamage(e.stats, targets[i].stats, false, 2) if "Bludgeon" in mods else Stats.GetDamage(e.stats, targets[i].stats)
 		damage *= additiveMod
 		if i > 0:
-			damage /= 2
-			e.text.AddLine(e.Name + " cleaved " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage)) + " damage!" + "\n")
+			e.text.AddLine(e.Name + " cleaved " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage / 2)) + " damage!" + "\n")
+			targets[i].animator.Damage()
+			targets[i].TakeDamage(int(damage / 2), e)
 		else:
 			e.text.AddLine(e.Name + " attacked " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage)) + " damage!" + "\n")
-		targets[i].animator.Damage()
-		targets[i].TakeDamage(damage, e)
+			targets[i].animator.Damage()
+			targets[i].TakeDamage(damage, e)
+		
 	await e.Wait(.65)
 	
 #TECHNIQUE
@@ -245,6 +253,7 @@ func CraftAlchemy(e : Entity, id : int):
 		removed += 1
 	e.text.AddLine(e.name + " brewed 1 " + item.name + ".\n")
 	e.inventory.append(item)
+	e.StartCooldownName("Brew")
 	e.endTurn.emit()
 	
 #MACHINING
@@ -279,4 +288,5 @@ func CraftMachining(e : Entity, id : int):
 		removed += 1
 	e.text.AddLine(e.name + " crafted 1 " + item.name + ".\n")
 	e.inventory.append(item)
+	e.StartCooldownName("Tinker")
 	e.endTurn.emit()

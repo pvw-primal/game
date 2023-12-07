@@ -126,11 +126,13 @@ func LoadMove(itemData) -> Move:
 	if "debuff" in itemData["move"]["effects"]:
 		m.attackEffects = func(e : Entity, t : Entity):
 			t.AddStatus(Status.status[itemData["move"]["effects"]["debuff"]["type"]], itemData["move"]["effects"]["debuff"]["duration"])
-			e.text.AddLine(t.Name + " " + itemData["move"]["message"] + "\n")
+			if "message" in itemData["move"]:
+				e.text.AddLine(t.Name + " " + itemData["move"]["message"] + "\n")
 	if "tileEffect" in itemData["move"]["effects"]:
 		m.attackEffects = func(e : Entity, _t : Entity):
 			e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.GetTileEffect(itemData["move"]["effects"]["tileEffect"]["type"]), e)
-			e.text.AddLine(e.Name + " " + itemData["move"]["message"] + "\n")
+			if "message" in itemData["move"]:
+				e.text.AddLine(e.Name + " " + itemData["move"]["message"] + "\n")
 		
 	
 	if "playAnimation" in itemData["move"]:

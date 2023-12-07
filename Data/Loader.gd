@@ -3,6 +3,8 @@ class_name Loader
 const EnemyData = "res://Data/Enemies.json"
 const ItemData = "res://Data/Items.json"
 const LevelData = "res://Data/Levels.json"
+const ClassData = "res://Data/Classes.json"
+
 static var EnemyDataCache : Dictionary
 
 static var accesses : int = 0
@@ -80,4 +82,11 @@ static func GetLevelData(type : String):
 		return
 	var LevelList = json.data
 	return LevelList[type]
+	
+static func GetClassData():
+	var json = JSON.new()
+	if json.parse(LoadFile(ClassData)) != OK:
+		print(json.get_error_message())
+		return
+	return json.data
 

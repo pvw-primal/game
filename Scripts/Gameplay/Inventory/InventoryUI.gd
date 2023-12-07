@@ -49,7 +49,7 @@ func _process(_delta):
 func Display(id : int):
 	popup.visible = false
 	selected = id
-	description.text = player.inventory[id].GetDescription(player.classE.showCrafting, player.classE.showModifiers)
+	description.text = player.inventory[id].GetDescription(player.classE.canCraft.size() > 0, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
 		
 func Open():
 	visible = true

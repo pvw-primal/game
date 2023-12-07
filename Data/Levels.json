@@ -42,7 +42,7 @@
 			"items":{
 				"common": ["Healing Potion", "Paralysis Draught", "Flamefroth Tincture", "Javelin", "Fibrous Net", "Salvaging Kit"],
 				"rare": ["Tunneling Tools", "Salvaging Kit", "Flamefroth Tincture"],
-				"materials": ["Eidolon Mass", "Charshroom", "Fulminating Gravel", "Bonder's Bulb"]
+				"materials": ["Eidolon Mass", "Charshroom", "Tarrime Bloom", "Pebblepod", "Windeelion", "Fulminating Gravel", "Bonder's Bulb"]
 			}
 		}
 }

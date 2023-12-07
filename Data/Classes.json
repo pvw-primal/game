@@ -1,1 +1,70 @@
-{}
+{
+	"Shaman":
+	{
+		"name": "Shaman",
+		"description": "",
+		"moves": ["Unleash Elements"],
+		"class": ["Shamanism"],
+		"prof": ["FocusBasic"]
+	},
+	"Arcanist":
+	{
+		"name": "Arcanist",
+		"description": "",
+		"moves": ["Aspected Blast"],
+		"class": ["Arcana"],
+		"prof": ["FocusBasic", "FocusAdvanced"]
+	},
+	"Fighter":
+	{
+		"name": "Fighter",
+		"description": "",
+		"moves": ["Skilled Strike"],
+		"class": ["Arms"],
+		"prof": ["WeaponBasic", "WeaponMartial"]
+	},
+	"Rogue":
+	{
+		"name": "Rogue",
+		"description": "",
+		"moves": ["Stealth"],
+		"class": ["Technique"],
+		"prof": ["WeaponBasic"]
+	},
+	"Tamer":
+	{
+		"name": "Tamer",
+		"description": "",
+		"moves": ["Tame"],
+		"class": ["Beastmastery"],
+		"prof": ["WeaponBasic", "FocusBasic"]
+	},
+	"Alchemist":
+	{
+		"name": "Alchemist",
+		"description": "",
+		"moves": ["Brew"],
+		"class": ["Alchemy"],
+		"prof": ["WeaponBasic", "Tool"],
+		"craft": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"]
+	},
+	"Mechanist":
+	{
+		"name": "Mechanist",
+		"description": "",
+		"moves": ["Tinker"],
+		"class": ["Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craft": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+	},
+	
+	"Herbalist":
+	{
+		"name": "Herbalist",
+		"description": "",
+		"moves": ["Unleash Elements", "Brew"],
+		"class": ["Shamanism", "Alchemy"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craft": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"]
+	}
+}

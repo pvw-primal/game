@@ -32,12 +32,12 @@ func partialInit(pos : Vector2i, num : int):
 	entityNum = num
 	startingPos = pos
 
-func SetClass(c : Classes.BaseClass, i : Item):
-	classE = Classes.GetClass(c)
+func SetClass(c : Class, i : Item):
+	classE = c
 	moves = classE.moves
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
-	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"]]
+	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Charshroom"]]
 	equipped = 0
 	equippedMove = inventory[equipped].move
 
@@ -53,7 +53,7 @@ func _process(delta):
 			if e != null && e.Type != "Ally":
 				for ally in allies:
 					ally.targetEntity = e
-		elif Input.is_action_just_pressed("Attack1") && moves[0] != null && !OnCooldown(0):
+		elif moves.size() > 0 && Input.is_action_just_pressed("Attack1") && moves[0] != null && !OnCooldown(0):
 			action = true
 			var e = GetEntity(facingPos)
 			moves[0].Use(self, e)
@@ -61,15 +61,15 @@ func _process(delta):
 			if e != null && e.Type != "Ally":
 				for ally in allies:
 					ally.targetEntity = e
-		elif Input.is_action_just_pressed("Attack2") && moves[1] != null && !OnCooldown(1):
+		elif moves.size() > 1 && Input.is_action_just_pressed("Attack2") && moves[1] != null && !OnCooldown(1):
 			action = true
 			var e = GetEntity(facingPos)
 			moves[1].Use(self, e)
-			skillUI.UpdateSkill(2, cooldown[2])
+			skillUI.UpdateSkill(1, cooldown[1])
 			if e != null && e.Type != "Ally":
 				for ally in allies:
 					ally.targetEntity = e
-		elif Input.is_action_just_pressed("Attack3") && moves[2] != null && !OnCooldown(2):
+		elif moves.size() > 2 && Input.is_action_just_pressed("Attack3") && moves[2] != null && !OnCooldown(2):
 			action = true
 			var e = GetEntity(facingPos)
 			moves[2].Use(self, e)
