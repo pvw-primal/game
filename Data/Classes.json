@@ -36,6 +36,7 @@
 		"name": "Tamer",
 		"description": "",
 		"moves": ["Tame"],
+		"passives": ["Forgotten Bond"],
 		"class": ["Beastmastery"],
 		"prof": ["WeaponBasic", "FocusBasic"]
 	},
@@ -46,7 +47,7 @@
 		"moves": ["Brew"],
 		"class": ["Alchemy"],
 		"prof": ["WeaponBasic", "Tool"],
-		"craft": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"]
+		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"]
 	},
 	"Mechanist":
 	{
@@ -55,16 +56,35 @@
 		"moves": ["Tinker"],
 		"class": ["Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craft": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
 	},
-	
+	"Druid":
+	{
+		"name": "Druid",
+		"description": "",
+		"moves": ["Unleash Elements", "Tame", "Shapeshare"],
+		"passives": ["Forgotten Bond", "True to Form"],
+		"class": ["Shamanism", "Beastmastery"],
+		"prof": ["WeaponBasic", "FocusBasic"]
+	},
 	"Herbalist":
 	{
 		"name": "Herbalist",
 		"description": "",
-		"moves": ["Unleash Elements", "Brew"],
+		"moves": ["Unleash Elements", "Brew", "Forager's Bounty"],
 		"class": ["Shamanism", "Alchemy"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craft": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"]
+		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Blooming Brew"]
+	},
+	"Artificer":
+	{
+		"name": "Artificer",
+		"description": "",
+		"moves": ["Brew", "Tinker", "Aspected Blast"],
+		"passives": ["Combat Ingenuity"],
+		"class": ["Alchemy", "Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"],
+		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
 	}
 }

@@ -273,14 +273,14 @@ func ExitCheck(pos : Vector2i, _dir : Vector2i):
 	if pos in exits:
 		await controller.NextLevel()
 
-func PlaceItem(pos : Vector2i, i : Item):
+func PlaceItem(pos : Vector2i, i : Item, animate : bool = true):
 	if pos in items.keys():
 		items[pos].AddItem(i)
 	else:
 		var ni : ItemWorld = item.instantiate()
 		add_child(ni)
 		var placePos = map_to_local(Vector3i(pos.x, 0, pos.y))
-		ni.init([i], Vector3(placePos.x, ni.position.y, placePos.z))
+		ni.init([i], Vector3(placePos.x, ni.position.y, placePos.z), animate)
 		items[pos] = ni
 		
 func TakeItems(pos : Vector2i, e : Entity):

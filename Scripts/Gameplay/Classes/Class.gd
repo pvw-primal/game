@@ -4,15 +4,21 @@ extends Resource
 var name : String
 var classBit : int
 var moves : Array[Move]
+var passives : Array[Passive]
 var profBit : int
-var canCraft : Array[String]
+var craftBrew : Array[String]
+var craftTinker : Array[String]
 
-func _init(Name : String, Attacks : Array[Move], classNum : int, profNum : int, CC : Array[String] = []):
+var classVariables : Dictionary = {}
+
+func _init(Name : String, Attacks : Array[Move], classNum : int, profNum : int, Passives : Array[Passive] = [], CB : Array[String] = [], CT : Array[String] = []):
 	name = Name
 	classBit = classNum
 	moves = Attacks
 	profBit = profNum
-	canCraft = CC
+	passives = Passives
+	craftBrew = CB
+	craftTinker = CT
 	Classes.ClassDict[classBit] = self
 	
 func _to_string():

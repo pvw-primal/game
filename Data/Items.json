@@ -162,7 +162,7 @@
 			"name": "Pebblepod",
 			"description": "These plants incorporate loose sediment into a rocky shell for their seed pods. The pods also contain pockets of mineral-rich soil that can be used as fertilizer.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/Pebblepod.tscn",
 			"tags": ["Fertilizer", "Stone"]
 		},
 	"Tarrime Bloom":
@@ -170,7 +170,7 @@
 			"name": "Tarrime Bloom",
 			"description": "This flowering plant retains water using an adhesive liquid. Highly resistant to cold temperatures, it flourishes during winter months.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/TarrimeBloom.tscn",
 			"tags": ["Frost", "Adhesive", "Sharp"]
 		},
 	"Windeelion":
@@ -178,8 +178,8 @@
 			"name": "Windeelion",
 			"description": "This large, mutated offshoot of a dandelion seems to generate small gusts of wind to carry its seeds.",
 			"flavor": "",
-			"mesh": null,
-			"tags": ["Air", "Reagent"]
+			"mesh": "res://Assets/Items/Material/Windeelion.tscn",
+			"tags": ["Reagent", "Air"]
 		},
 	"Fulminating Gravel":
 		{
@@ -205,4 +205,19 @@
 			"mesh": "res://Assets/Items/Drops/Pestail.tscn",
 			"tags": ["Healing", "Stone"]
 		},
+	
+	"Blooming Brew":
+		{
+			"name": "Blooming Brew",
+			"description": "Grows plants in areas with field effects.",
+			"flavor": "This complex mixture harnesses and absorbs latent magic, converting them into a quick burst of cultivating energies.",
+			"mesh": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Throw",
+				"custom": "Blooming Brew"
+			},
+			"recipe":["Reagent", "Fertilizer", "Frost"],
+			"requires":["Alchemy", "Shamanism"]
+		}
 }

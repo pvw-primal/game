@@ -39,6 +39,8 @@ var cooldown : Array[int]
 var classE : Class
 signal HPChange(currentHP : int, maxHP : int)
 
+signal OnMoveUse(e : Entity, name : String)
+
 var inventory : Array[Item] = []
 var inventorySize : int = 12
 var equipped : int = -1
@@ -58,6 +60,7 @@ func Initialize():
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)
 	Spawn(startingPos)
+	UpdateStatusUI()
 
 func Update(delta):
 	if Type != "Player":
@@ -144,7 +147,12 @@ func Swap(pos: Vector2i):
 
 func SetMesh(meshPath : String):
 	var s = load(meshPath)
+	var oldRotate = Vector3.ZERO
+	if mesh != null:
+		oldRotate = mesh.rotation
+		mesh.queue_free()
 	mesh = s.instantiate()
+	mesh.rotation = oldRotate
 	add_child(mesh)
 	animator = get_node("Mesh/AnimationTree")
 
@@ -162,13 +170,18 @@ func StartTurn():
 	
 func EndTurn():
 	turn = false
+	var statusChanged = false
 	for SN in statuses.keys():
 		statuses[SN].turnsRemaining -= 1
 		if statuses[SN].turnsRemaining <= 0:
+			statusChanged = true
 			if !statuses[SN].OnStatCheck.is_null() || !statuses[SN].OnPercentStatCheck.is_null():
 				statsChanged = true
 			statuses.erase(statuses[SN].name)
-			
+	
+	if statusChanged:
+		UpdateStatusUI()
+		
 	if gridPos in gridmap.tileEffects.keys():
 		gridmap.tileEffects[gridPos].applyEffect.call(self)
 	
@@ -191,6 +204,7 @@ func Die():
 	endTurn.emit()
 	usedTurn = true
 	if Type == "Ally":
+		turnhandler.Entities[turnhandler.player].OnAllyDeath.emit(turnhandler.Entities[turnhandler.player], self)
 		turnhandler.Entities[turnhandler.player].UpdateAllies()
 	queue_free.call_deferred()
 		
@@ -235,18 +249,11 @@ func SetColor(cR : Color, cG : Color, cB: Color):
 func UpdateStats():
 	var statcopy = originalStats.Copy()
 	var additiveMod : Array[float] = [1, 1, 1, 1] #POW, DEF, MAG, RES
-	statusUI.icons.clear()
 	for SN in statuses.keys():
 		if !statuses[SN].OnStatCheck.is_null():
 			statuses[SN].OnStatCheck.call(statcopy)
 		if !statuses[SN].OnPercentStatCheck.is_null():
 			statuses[SN].OnPercentStatCheck.call(additiveMod)
-		if statuses[SN].icon != null:
-			statusUI.icons.append(statuses[SN].icon)
-	if statusUI.icons.size() <= 0:
-		statusUI.Disable()
-	else:
-		statusUI.Enable()
 	stats.CopyAll(statcopy.Modified(additiveMod))
 
 func ChangeStats(s : Stats):
@@ -255,19 +262,31 @@ func ChangeStats(s : Stats):
 	UpdateStats()
 
 func AddStatus(status : Status, turns : int):
-	var changed = false
 	if status.name not in statuses:
 		statuses[status.name] = status
-	else:
-		changed = true
+		if status.icon != null:
+			statusUI.icons.append(status.icon)
+			statusUI.Enable()
+		if !status.OnStatCheck.is_null() || !status.OnPercentStatCheck.is_null():
+			UpdateStats()
 	statuses[status.name].turnsRemaining = turns
-	if changed || !status.OnStatCheck.is_null() || !status.OnPercentStatCheck.is_null():
-		UpdateStats()
+		
 		
 func RemoveStatus(status : String):
 	if status in statuses:
 		statuses.erase(status)
 		UpdateStats()
+		UpdateStatusUI()
+
+func UpdateStatusUI():
+	statusUI.icons.clear()
+	for SN in statuses.keys():
+		if statuses[SN].icon != null:
+			statusUI.icons.append(statuses[SN].icon)
+	if statusUI.icons.size() <= 0:
+		statusUI.Disable()
+	else:
+		statusUI.Enable()
 
 func TakeDamage(damage : int, source : Entity = null):
 	stats.HP -= damage
@@ -286,6 +305,19 @@ func Heal(healing : int):
 	HPChange.emit(stats.HP, stats.maxHP)
 	return stats.HP - originalHP
 
+func HasItem(n : String) -> int:
+	for i in range(inventory.size()):
+		if inventory[i].name == n:
+			return i
+	return -1
+	
+func RemoveItemAt(itemPos : int):
+	inventory.remove_at(itemPos)
+	if itemPos < equipped:
+		equipped -= 1
+	if itemPos < equippedTool:
+		equippedTool -= 1
+	
 func Equip(id : int):
 	equipped = id
 	equippedMove = inventory[id].move
@@ -294,13 +326,13 @@ func Unequip():
 	equipped = -1
 	equippedMove = null
 
-func StartCooldown(id : int):
-	cooldown[id] = moves[id].cooldown
+func StartCooldown(id : int, cd : int = -1):
+	cooldown[id] = moves[id].cooldown if cd == -1 else cd
 	
-func StartCooldownName(n : String):
+func StartCooldownName(n : String, cd : int = -1):
 	for i in range(moves.size()):
 		if moves[i] != null && moves[i].name == n:
-			StartCooldown(i)
+			StartCooldown(i, cd)
 			return
 	
 func OnCooldown(id : int):

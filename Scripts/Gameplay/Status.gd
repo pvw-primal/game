@@ -11,6 +11,9 @@ var icon : Texture2D
 
 static var status : Dictionary
 
+static var genericBuff : Texture2D = preload("res://Assets/Icons/Status/GenericBuff.png")
+static var genericDebuff : Texture2D = preload("res://Assets/Icons/Status/GenericDebuff.png")
+
 func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck = null, i : Texture2D = null):
 	name = Name
 	if turnstart != null:
@@ -34,6 +37,38 @@ static func InitStatus():
 	Earth()
 	Stealth()
 	Bleed()
+
+static func AttackBuff():
+	if "AttackBuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[0] += .3
+			return sum
+		status["AttackBuff"] = Status.new("AttackBuff", null, null, atk, genericBuff)
+	return status["AttackBuff"]
+	
+static func MagicBuff():
+	if "MagicBuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[1] += .3
+			return sum
+		status["MagicBuff"] = Status.new("MagicBuff", null, null, atk, genericBuff)
+	return status["MagicBuff"]
+	
+static func DefenseBuff():
+	if "DefenseBuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[2] += .3
+			return sum
+		status["DefenseBuff"] = Status.new("DefenseBuff", null, null, atk, genericBuff)
+	return status["DefenseBuff"]
+
+static func ResistenceBuff():
+	if "ResistenceBuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[3] += .3
+			return sum
+		status["ResistenceBuff"] = Status.new("ResistenceBuff", null, null, atk, genericBuff)
+	return status["ResistenceBuff"]
 
 static func Stun():
 	if "Stun" not in status:

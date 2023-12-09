@@ -37,7 +37,7 @@ func _ready(pl : Player = null, numEnemies : int = 7, ds : int = 2):
 		add_child(player)
 		player.option.OptionSelected.connect(tempClassSet)
 		player.option.list.auto_height = false
-		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Herbalist"], [], 150)
+		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Herbalist", "Artificer", "Druid"], {}, 150)
 		
 	skillUI.player = player
 	
@@ -96,6 +96,17 @@ func tempClassSet (e : Entity, id : int):
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
 		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Alchemy), i)
+	elif id == 8:
+		#also for testing
+		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
+		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Alchemy, Classes.BaseClass.Machining), i)
+		
+	elif id == 9:
+		#also for testing
+		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
+		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Beastmastery), i)
 	else:
 		get_tree().quit()
 	e.option.OptionSelected.disconnect(tempClassSet)

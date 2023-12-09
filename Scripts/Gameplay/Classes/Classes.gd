@@ -87,13 +87,23 @@ static func AddClassFromData(classData):
 		profs.append(GetProficiency(prof))
 	for i in range(5 - profs.size()):
 		profs.append(Proficiency.None)
+	
+	var passives : Array[Passive] = []
+	if "passives" in classData:
+		for passive in classData["passives"]:
+			passives.append(Passive.passives[passive])
+	
+	var craftBrew : Array[String] = []
+	if "craftBrew" in classData:
+		for item in classData["craftBrew"]:
+			craftBrew.append(item)
+	
+	var craftTinker : Array[String] = []
+	if "craftTinker" in classData:
+		for item in classData["craftTinker"]:
+			craftTinker.append(item)
 		
-	var crafting : Array[String] = []
-	if "craft" in classData:
-		for item in classData["craft"]:
-			crafting.append(item)
-		
-	AddClass(Class.new(classData["name"], moves, GetClassNum(classes[0], classes[1], classes[2]), GetProfNum(profs[0], profs[1], profs[2], profs[3], profs[4]), crafting))
+	AddClass(Class.new(classData["name"], moves, GetClassNum(classes[0], classes[1], classes[2]), GetProfNum(profs[0], profs[1], profs[2], profs[3], profs[4]), passives, craftBrew, craftTinker))
 	
 static func LoadAllClasses():
 	var data = Loader.GetClassData()

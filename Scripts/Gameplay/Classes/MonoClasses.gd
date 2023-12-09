@@ -10,12 +10,14 @@ func _ready():
 	shamanMove.noTargets = true
 	shamanMove.cooldown = 3
 	shamanMove.manualCooldown = true
+	shamanMove.manualOnMoveUse = true
 	shamanMove.icon = preload("res://Assets/Icons/Move/Shaman.png")
 	Move.moves["Unleash Elements"] = shamanMove
 	
 	var arcanaApply = Move.new("Aspected Blast", Arcana1Apply)
 	arcanaApply.playAnimation = false
 	arcanaApply.manualEndTurn = true
+	arcanaApply.manualOnMoveUse = true
 	arcanaApply.RemoveCheck()
 	arcanaApply.magic = true
 	arcanaApply.waittime = .1
@@ -58,6 +60,8 @@ func _ready():
 	tamerMove.cooldown = 1
 	tamerMove.icon = preload("res://Assets/Icons/Move/Tamer.png")
 	Move.moves["Tame"] = tamerMove
+	var tamerPassive = Passive.new("Forgotten Bond", TamerOnPassiveApply, TamerOnPassiveRemove, true)
+	Passive.passives["Forgotten Bond"] = tamerPassive
 	
 	var alchemyMove = Move.new("Brew", Alchemy1)
 	alchemyMove.playAnimation = false
@@ -66,6 +70,7 @@ func _ready():
 	alchemyMove.reveals = false
 	alchemyMove.cooldown = 1
 	alchemyMove.manualCooldown = true
+	alchemyMove.manualOnMoveUse = true
 	alchemyMove.icon = preload("res://Assets/Icons/Move/Alchemy.png")
 	Move.moves["Brew"] = alchemyMove
 	
@@ -76,10 +81,10 @@ func _ready():
 	machiningMove.reveals = false
 	machiningMove.cooldown = 1
 	machiningMove.manualCooldown = true
+	machiningMove.manualOnMoveUse = true
 	machiningMove.icon = preload("res://Assets/Icons/Move/Machining.png")
 	Move.moves["Tinker"] = machiningMove
-
-	Classes.LoadAllClasses()
+	
 	
 #SHAMANISM
 var ShamanOptions : Array[String] = ["Fire", "Frost", "Earth", "Air"]
@@ -112,6 +117,7 @@ func ShamanAttack(e : Entity, id : int):
 	e.StartCooldownName("Unleash Elements")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
+	e.OnMoveUse.emit(e, "Unleash Elements")
 	e.endTurn.emit()
 
 #ARCANA
@@ -220,22 +226,34 @@ func TameChance(t : Entity):
 	var percentHealth = float(t.stats.HP) / float(t.stats.maxHP)
 	var chanceIncrease = (1 - percentHealth)
 	return (chance + chanceIncrease) > .5
-	
+
+func TamerOnPassiveApply(e : Entity):
+	if e.Type == "Player":
+		e.OnAllyDeath.connect(TamerOnAllyDeath)
+
+func TamerOnPassiveRemove(e : Entity):
+	if e.Type == "Player":
+		e.OnAllyDeath.disconnect(TamerOnAllyDeath)
+
+func TamerOnAllyDeath(p : Player, _e : Entity):
+	p.StartCooldownName("Tame", 9)
+	p.skillUI.UpdateAll()
+
 #ALCHEMY
 func Alchemy1(e : Entity, _t = null):
 	if e.Type == "Player":
-		var disabled : Array[int] = []
+		var disabled : Dictionary = {}
 		var desc : Array[String] = []
-		var items = Classes.GetClass(Classes.BaseClass.Alchemy).canCraft
+		var items = e.classE.craftBrew
 		for i in range(items.size()):
 			var cc = Items.items[items[i]].crafting.CanCraft(e)
 			desc.append(Items.items[items[i]].description + "\n")
 			if cc.size() <= 0:
-				disabled.append(i)
+				disabled[i] = null
 				desc[i] += "Missing ingredients."
 		desc.append("Close the menu.")
 		e.option.OptionSelected.connect(CraftAlchemy)
-		e.option.Open(Classes.GetClass(Classes.BaseClass.Alchemy).canCraft, disabled, 250, desc, 200)
+		e.option.Open(items, disabled, 250, desc, 200)
 
 
 func CraftAlchemy(e : Entity, id : int):
@@ -244,33 +262,34 @@ func CraftAlchemy(e : Entity, id : int):
 		if id == -1:
 			e.Start.call_deferred()
 			return
-	var item = Items.items[Classes.GetClass(Classes.BaseClass.Alchemy).canCraft[id]]
+	var item = Items.items[e.classE.craftBrew[id]]
 	var remove = item.crafting.CanCraft(e)
 	remove.sort()
 	var removed = 0
 	for i in remove:
-		e.inventory.remove_at(i - removed)
+		e.RemoveItemAt(i - removed)
 		removed += 1
 	e.text.AddLine(e.name + " brewed 1 " + item.name + ".\n")
 	e.inventory.append(item)
 	e.StartCooldownName("Brew")
+	e.OnMoveUse.emit(e, "Brew")
 	e.endTurn.emit()
 	
 #MACHINING
 func Machining1(e : Entity, _t = null):
 	if e.Type == "Player":
-		var disabled : Array[int] = []
+		var disabled : Dictionary = {}
 		var desc : Array[String] = []
-		var items = Classes.GetClass(Classes.BaseClass.Machining).canCraft
+		var items = e.classE.craftTinker
 		for i in range(items.size()):
 			var cc = Items.items[items[i]].crafting.CanCraft(e)
 			desc.append(Items.items[items[i]].description + "\n")
 			if cc.size() <= 0:
-				disabled.append(i)
+				disabled[i] = null
 				desc[i] += "Missing materials."
 		desc.append("Close the menu.")
 		e.option.OptionSelected.connect(CraftMachining)
-		e.option.Open(Classes.GetClass(Classes.BaseClass.Machining).canCraft, disabled, 250, desc, 350)
+		e.option.Open(items, disabled, 250, desc, 350)
 
 
 func CraftMachining(e : Entity, id : int):
@@ -279,14 +298,15 @@ func CraftMachining(e : Entity, id : int):
 		if id == -1:
 			e.Start.call_deferred()
 			return
-	var item = Items.items[Classes.GetClass(Classes.BaseClass.Machining).canCraft[id]]
+	var item = Items.items[e.classE.craftTinker[id]]
 	var remove = item.crafting.CanCraft(e)
 	remove.sort()
 	var removed = 0
 	for i in remove:
-		e.inventory.remove_at(i - removed)
+		e.RemoveItemAt(i - removed)
 		removed += 1
 	e.text.AddLine(e.name + " crafted 1 " + item.name + ".\n")
 	e.inventory.append(item)
 	e.StartCooldownName("Tinker")
+	e.OnMoveUse.emit(e, "Tinker")
 	e.endTurn.emit()

@@ -40,7 +40,12 @@ func FindAction():
 		MovePath(targetGridPos)
 		path.pop_front()
 		targetGridPosChanged = false
-	if path.size() > 0 && stats.CanMove && targetEntity.stats.CanBeTargeted:
+	if path.size() > 0 && targetEntity.stats.CanBeTargeted:
+		if !stats.CanMove:
+			text.AddLine(Name + " can't move!\n")
+			lastAction = Move.ActionType.other
+			endTurn.emit()
+			return
 		var nextMove = path.pop_back()
 		var mappos = gridmap.GetMapPos(nextMove)
 		if mappos == -1:
@@ -54,8 +59,10 @@ func FindAction():
 		elif mappos > -1 && GetEntity(nextMove).Type != "AI":
 			targetEntity = GetEntity(nextMove)
 			targetGridPos = GetEntity(nextMove).gridPos
-	if shouldMove && !(Type == "Ally" && targetEntity.Type == "Player") && stats.CanAttack && targetEntity.stats.CanBeTargeted: # attacking check
-		if moves[0].InRange(self, targetEntity):
+	if shouldMove && !(Type == "Ally" && targetEntity.Type == "Player") && targetEntity.stats.CanBeTargeted: # attacking check
+		if !stats.CanAttack:
+			text.AddLine(Name + " can't attack!\n")
+		elif moves[0].InRange(self, targetEntity):
 			Rotate(targetGridPos)
 			await Wait(.5)
 			if is_instance_valid(targetEntity):

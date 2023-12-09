@@ -8,6 +8,8 @@ var action = false
 
 var allies : Array[Entity]
 
+signal OnAllyDeath(player : Player, ally : Entity)
+
 @onready var option : OptionMenu = get_node("/root/Root/OptionUI")
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
@@ -37,7 +39,9 @@ func SetClass(c : Class, i : Item):
 	moves = classE.moves
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
-	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Charshroom"]]
+	for passive in classE.passives:
+		passive.PassiveApply.call(self)
+	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Windeelion"], Items.items["Tarrime Bloom"], Items.items["Pebblepod"]]
 	equipped = 0
 	equippedMove = inventory[equipped].move
 

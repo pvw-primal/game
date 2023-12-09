@@ -1,27 +1,11 @@
-#class_name ItemWorld
-#extends Sprite3D
-#
-#@onready var bundlesprite = load("res://Assets/Items/Bundle.png")
-#
-#var items : Array[Item]
-#
-#func init(i : Array[Item], pos : Vector3):
-#	items = i
-#	position = pos
-#	texture = items[0].texture if items.size() < 2 && items[0].texture != null else bundlesprite
-#
-#func AddItem(i : Item):
-#	items.append(i)
-#	texture = bundlesprite
-
 class_name ItemWorld
 extends Node3D
 
-@onready var itemMesh = preload("res://Assets/Items/Alchemy/HealingPotion.tscn")
+@onready var itemMesh = preload("res://Assets/Items/Drops/Chest.tscn")
 
 var items : Array[Item]
 
-func init(i : Array[Item], pos : Vector3):
+func init(i : Array[Item], pos : Vector3, animate : bool = true):
 	items = i
 	position = pos
 	for j in items:
@@ -31,8 +15,10 @@ func init(i : Array[Item], pos : Vector3):
 		item.position = Vector3(randf_range(-.1 * multiplier, .1 * multiplier), 0, randf_range(-.1 * multiplier, .1 * multiplier))
 		item.rotation.y = randi_range(0, 360)
 		add_child(item)
-		var anim : ItemAnimator = item.get_node("AnimationTree")
-		anim.Drop()
+		if animate:
+			var anim : ItemAnimator = item.get_node("AnimationTree")
+			anim.Drop()
+			
 	
 func AddItem(i : Item):
 	items.append(i)

@@ -49,7 +49,8 @@ func _process(_delta):
 func Display(id : int):
 	popup.visible = false
 	selected = id
-	description.text = player.inventory[id].GetDescription(player.classE.canCraft.size() > 0, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
+	var showCrafting : bool = player.classE.craftTinker.size() > 0 || player.classE.craftBrew.size() > 0
+	description.text = player.inventory[id].GetDescription(showCrafting, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
 		
 func Open():
 	visible = true
@@ -96,9 +97,7 @@ func DismissMenu(id : int):
 		player.gridmap.PlaceItem(player.gridPos, player.inventory[selected])
 		if selected == player.equipped:
 			player.Unequip()
-		if selected < player.equipped:
-			player.equipped -= 1
-		player.inventory.remove_at(selected)
+		player.RemoveItemAt(selected)
 		Close.call_deferred()
 		return
 	if id == popup.item_count - 1:
@@ -118,7 +117,5 @@ func DismissMenu(id : int):
 		return
 	player.inventory[selected].move.Use(player, player.GetEntity(player.facingPos))
 	if player.inventory[selected].consumable:
-		if selected < player.equipped:
-			player.equipped -= 1
-		player.inventory.remove_at(selected)
+		player.RemoveItemAt(selected)
 	

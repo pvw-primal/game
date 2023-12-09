@@ -2,7 +2,7 @@ class_name TileEffect
 extends Node3D
 
 enum Effect { Fire, Frost, Earth, Air, Force, Lightning, Radiant, Shadow }
-const TILE_EFFECT_TURNS = 15
+const TILE_EFFECT_TURNS = 10
 
 @onready var fire = preload("res://Scripts/Gridmap/Tiles/Effects/FireTile.tscn")
 @onready var frost = preload("res://Scripts/Gridmap/Tiles/Effects/FrostTile.tscn")

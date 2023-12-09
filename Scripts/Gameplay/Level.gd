@@ -46,14 +46,14 @@ func GetRandomEnemyColor(enemyName : String):
 	return enemies[enemyName][randi_range(0, NUM_COLOR_VARIATIONS - 1)]
 
 func RandomItem():
-	#equipment : 20%
-	#common : 40%
-	#material : 30%
+	#equipment : 10%
+	#common : 30%
+	#material : 50%
 	#rare : 10%
 	var chance = randf_range(0, 1)
-	if chance > .8:
+	if chance > .9:
 		return Items.RandomEquipment()
-	elif chance > .4:
+	elif chance > .6:
 		return Items.items[commonItems[randi_range(0, commonItems.size() - 1)]]
 	elif chance > .1:
 		return Items.items[materials[randi_range(0, materials.size() - 1)]]

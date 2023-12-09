@@ -18,6 +18,7 @@ var projectileMesh : PackedScene = null
 var playAnimation : bool = true
 var manualEndTurn : bool = false
 var manualCooldown : bool = false
+var manualOnMoveUse : bool = false
 var noTargets : bool = false
 var reveals = true
 var waittime : float = .65
@@ -49,12 +50,16 @@ func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] 
 		attackEffects.call(attacker, defender)
 	else:
 		await attacker.Wait(waittime)
-		
+	
 	if reveals:
 		attacker.RemoveStatus("Stealth")
 	attacker.lastAction = Move.ActionType.attack
 	
+	if !manualOnMoveUse:
+		attacker.OnMoveUse.emit(attacker, name)
+		
 	if !manualEndTurn:
+		
 		attacker.endTurn.emit()
 		
 func Effects(attacker : Entity, defender : Entity = null):
