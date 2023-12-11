@@ -41,7 +41,7 @@ func SetClass(c : Class, i : Item):
 	cooldown.fill(0)
 	for passive in classE.passives:
 		passive.PassiveApply.call(self)
-	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Windeelion"], Items.items["Tarrime Bloom"], Items.items["Pebblepod"]]
+	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Javelin"], Items.items["Fibrous Net"]]
 	equipped = 0
 	equippedMove = inventory[equipped].move
 
@@ -53,14 +53,14 @@ func _process(delta):
 		if Input.is_action_just_pressed("EquipAttack") && equippedMove != null:
 			action = true
 			var e = GetEntity(facingPos)
-			equippedMove.Use(self, e)
+			await equippedMove.Use(self, e)
 			if e != null && e.Type != "Ally":
 				for ally in allies:
 					ally.targetEntity = e
 		elif moves.size() > 0 && Input.is_action_just_pressed("Attack1") && moves[0] != null && !OnCooldown(0):
 			action = true
 			var e = GetEntity(facingPos)
-			moves[0].Use(self, e)
+			await moves[0].Use(self, e)
 			skillUI.UpdateSkill(0, cooldown[0])
 			if e != null && e.Type != "Ally":
 				for ally in allies:
@@ -68,7 +68,7 @@ func _process(delta):
 		elif moves.size() > 1 && Input.is_action_just_pressed("Attack2") && moves[1] != null && !OnCooldown(1):
 			action = true
 			var e = GetEntity(facingPos)
-			moves[1].Use(self, e)
+			await moves[1].Use(self, e)
 			skillUI.UpdateSkill(1, cooldown[1])
 			if e != null && e.Type != "Ally":
 				for ally in allies:
@@ -76,7 +76,7 @@ func _process(delta):
 		elif moves.size() > 2 && Input.is_action_just_pressed("Attack3") && moves[2] != null && !OnCooldown(2):
 			action = true
 			var e = GetEntity(facingPos)
-			moves[2].Use(self, e)
+			await moves[2].Use(self, e)
 			skillUI.UpdateSkill(2, cooldown[2])
 			if e != null && e.Type != "Ally":
 				for ally in allies:

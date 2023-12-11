@@ -5,11 +5,11 @@ var targetPos : Vector3
 var speed : float
 var moving : bool
 
-var move : Move
+var move : Callable
 var atk : Entity
 var def : Entity
 
-func init(attacker : Entity, destination : Vector3, Speed : float, mesh : PackedScene, m : Move = null, defender : Entity = null):
+func init(attacker : Entity, destination : Vector3, Speed : float, mesh : PackedScene, m = null, defender : Entity = null):
 	var model = mesh.instantiate()
 	add_child(model)
 	position = Vector3(attacker.position.x, position.y, attacker.position.z)
@@ -17,7 +17,8 @@ func init(attacker : Entity, destination : Vector3, Speed : float, mesh : Packed
 	targetPos = destination
 	speed = Speed
 	moving = true
-	move = m
+	if m != null:
+		move = m
 	atk = attacker
 	def = defender
 	
@@ -32,7 +33,8 @@ func _process(delta):
 func Complete():
 	visible = false
 	if move != null:
-		await move.Use(atk, def)
+		if def != null:
+			await move.call(atk, def)
 		await atk.Wait(.65)
 	atk.endTurn.emit()
 	queue_free()

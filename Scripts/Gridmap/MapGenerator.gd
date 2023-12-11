@@ -328,16 +328,13 @@ func PlaceTileEffect(pos : Vector2i, effect : TileEffect.Effect, placer : Entity
 	else:
 		placer.endTurn.connect(TE.OnTurn)
 	tileEffects[pos] = TE
-	var e = placer.GetEntity(pos)
-	if e != null:
-		tileEffects[pos].applyEffect.call(e)
 	
 func RemoveTileEffect(pos : Vector2i):
 	if pos in tileEffects.keys():
 		tileEffects[pos].queue_free()
 		tileEffects.erase(pos)
 
-func SpawnProjectileTarget(attacker : Entity, defender : Entity, move : Move, speed : float, t : PackedScene):
+func SpawnProjectileTarget(attacker : Entity, defender : Entity, move : Callable, speed : float, t : PackedScene):
 	var proj : Projectile = projectile.instantiate()
 	proj.init(attacker, Vector3(defender.position.x, proj.position.y, defender.position.z), speed, t, move, defender)
 	add_child(proj)

@@ -76,6 +76,44 @@
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Blooming Brew"]
 	},
+	"Cutthroat":
+	{
+		"name": "Cutthroat",
+		"description": "",
+		"moves": ["Skilled Strike", "Stealth", "Ambush"],
+		"passives": ["Sneak Attack"],
+		"class": ["Arms", "Technique"],
+		"prof": ["WeaponBasic", "WeaponMartial"]
+	},
+	"Ranger":
+	{
+		"name": "Ranger",
+		"description": "",
+		"moves": ["Stealth", "Tame", "Hunter's Mark"],
+		"passives": ["Shadow's Shadow"],
+		"class": ["Technique", "Beastmastery"],
+		"prof": ["WeaponBasic", "Tool"],
+	},
+	"Blighter":
+	{
+		"name": "Blighter",
+		"description": "",
+		"moves": ["Stealth", "Brew", "Weapon Coating"],
+		"passives": ["Poison Proficiency"],
+		"class": ["Technique", "Alchemy"],
+		"prof": ["WeaponBasic", "Tool"],
+		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Blighter's Brew"]
+	},
+	"Thief":
+	{
+		"name": "Thief",
+		"description": "",
+		"moves": ["Stealth", "Tinker", "Pilfer"],
+		"passives": ["Pickpocketing"],
+		"class": ["Technique", "Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+	},
 	"Artificer":
 	{
 		"name": "Artificer",

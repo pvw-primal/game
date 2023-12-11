@@ -30,6 +30,7 @@
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
+				"message": "was paralyzed!",
 				"effects":{
 					"debuff":{
 						"type" : "Paralysis",
@@ -219,5 +220,20 @@
 			},
 			"recipe":["Reagent", "Fertilizer", "Frost"],
 			"requires":["Alchemy", "Shamanism"]
+		},
+		
+	"Blighter's Brew":
+		{
+			"name": "Blighter's Brew",
+			"description": "Deals damage with toxic spines.",
+			"flavor": "The simplest solution is often the best; filling a flask with caustic spikes is efficient and effective.",
+			"mesh": null,
+			"consumable": true,
+			"move":{
+				"useTooltip": "Throw",
+				"custom": "Blighter's Brew"
+			},
+			"recipe":["Reagent", "Sharp"],
+			"requires":["Alchemy", "Technique"]
 		}
 }

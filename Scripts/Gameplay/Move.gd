@@ -50,16 +50,17 @@ func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] 
 		attackEffects.call(attacker, defender)
 	else:
 		await attacker.Wait(waittime)
-	
+		
+	if !manualOnMoveUse && is_instance_valid(defender):
+		attacker.OnMoveUse.emit(attacker, defender, name)
+	else:
+		attacker.OnMoveUse.emit(attacker, null, name)
+		
 	if reveals:
 		attacker.RemoveStatus("Stealth")
 	attacker.lastAction = Move.ActionType.attack
 	
-	if !manualOnMoveUse:
-		attacker.OnMoveUse.emit(attacker, name)
-		
 	if !manualEndTurn:
-		
 		attacker.endTurn.emit()
 		
 func Effects(attacker : Entity, defender : Entity = null):
@@ -88,18 +89,14 @@ static func DefaultMagical():
 	move.magic = true
 	return move
 
-static func DefaultProjectile(applyMove : Move, r : int = 7):
+static func DefaultProjectile(mesh : PackedScene, effects : Callable, r : int = 7):
 	var proj = func(e : Entity, t : Entity):
 		var dir = e.facingPos - e.gridPos
 		var def = e.CheckDirection(dir, r) if t == null else [t.gridPos, t]
 		if def[1] == null:
-			e.gridmap.SpawnProjectile(e, def[0], 3, applyMove.projectileMesh)
+			e.gridmap.SpawnProjectile(e, def[0], 3, mesh)
 		else:
-			applyMove.playAnimation = false
-			applyMove.manualEndTurn = true
-			applyMove.RemoveCheck()
-			applyMove.waittime = .1
-			e.gridmap.SpawnProjectileTarget(e, def[1], applyMove, 3, applyMove.projectileMesh)
+			e.gridmap.SpawnProjectileTarget(e, def[1], effects, 3, mesh)
 	
 	var move = Move.new("Projectile", proj)
 	move.manualEndTurn = true

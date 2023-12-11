@@ -2,7 +2,6 @@ class_name Status
 extends Resource
 
 var name : String
-var turnsRemaining : int = 0
 var OnTurnStart : Callable
 var OnStatCheck : Callable
 var OnPercentStatCheck : Callable
@@ -23,8 +22,6 @@ func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck =
 	if percentstatcheck != null:
 		OnPercentStatCheck = percentstatcheck
 	icon = i
-
-
 
 #temporary
 static func InitStatus():
@@ -49,7 +46,7 @@ static func AttackBuff():
 static func MagicBuff():
 	if "MagicBuff" not in status:
 		var atk = func(sum : Array[float]):
-			sum[1] += .3
+			sum[2] += .3
 			return sum
 		status["MagicBuff"] = Status.new("MagicBuff", null, null, atk, genericBuff)
 	return status["MagicBuff"]
@@ -57,7 +54,7 @@ static func MagicBuff():
 static func DefenseBuff():
 	if "DefenseBuff" not in status:
 		var atk = func(sum : Array[float]):
-			sum[2] += .3
+			sum[1] += .3
 			return sum
 		status["DefenseBuff"] = Status.new("DefenseBuff", null, null, atk, genericBuff)
 	return status["DefenseBuff"]
@@ -69,6 +66,15 @@ static func ResistenceBuff():
 			return sum
 		status["ResistenceBuff"] = Status.new("ResistenceBuff", null, null, atk, genericBuff)
 	return status["ResistenceBuff"]
+
+static func DefResDebuff():
+	if "DefResDebuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[1] -= .3
+			sum[3] -= .3
+			return sum
+		status["DefResDebuff"] = Status.new("DefResDebuff", null, null, atk, genericDebuff)
+	return status["DefResDebuff"]
 
 static func Stun():
 	if "Stun" not in status:
@@ -98,7 +104,7 @@ static func Paralysis():
 static func Burning():
 	if "Burning" not in status:
 		var burn = func(e : Entity):
-			var damage = randi_range(1, 4)
+			var damage = randi_range(1, 3)
 			e.animator.Damage()
 			e.text.AddLine(e.Name + " was burned for " + str(damage) + " damage!\n")
 			e.TakeDamage(damage)
@@ -146,7 +152,7 @@ static func Bleed():
 	if "Bleed" not in status:
 		var bleed = func(e : Entity):
 			e.animator.Damage()
-			e.text.AddLine(e.Name + " bled for " + str(1) + " damage!\n")
-			e.TakeDamage(1)
+			e.text.AddLine(e.Name + " bled for " + str(2) + " damage!\n")
+			e.TakeDamage(2)
 		status["Bleed"] = Status.new("Bleed", bleed, null, null, preload("res://Assets/Icons/Status/Bleed.png"))
 	return status["Bleed"]

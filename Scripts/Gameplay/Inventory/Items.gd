@@ -121,6 +121,12 @@ func _ready():
 	bloommove.noTargets = true
 	Move.moves["Blooming Brew"] = bloommove
 	
+	var blight = func(e : Entity, t : Entity):
+		if t != null:
+			e.text.AddLine(t.Name + " was pincushioned by toxic spikes for 3 damage!\n")
+			t.TakeDamage(3, e)
+	Move.moves["Blighter's Brew"] = Move.new("Blighter's Brew", blight)
+	
 	LoadItems()
 	
 func Add(i : Item):
@@ -156,25 +162,35 @@ func LoadMove(itemData) -> Move:
 		return Move.moves[itemData["move"]["custom"]]
 		
 	var m = Move.new(itemData["name"])
+	var effects : Callable
 	
-	if "damage" in itemData["move"]["effects"]:
-		m.magic = itemData["move"]["effects"]["damage"]["magic"]
+	
 	if "heal" in itemData["move"]["effects"]:
-		m.attackEffects =  func(e : Entity, _d : Entity = null):
+		effects =  func(e : Entity, _d : Entity = null):
 			var healAmount : int = int((itemData["move"]["effects"]["heal"]["amount"] / 100) * e.stats.maxHP) if itemData["move"]["effects"]["heal"]["amountType"] == "%" else itemData["move"]["effects"]["heal"]["amount"]
 			e.text.AddLine(e.Name + " healed for " + str(e.Heal(healAmount)) + " HP!\n") 
 	if "debuff" in itemData["move"]["effects"]:
-		m.attackEffects = func(e : Entity, t : Entity):
+		effects = func(e : Entity, t : Entity):
 			t.AddStatus(Status.status[itemData["move"]["effects"]["debuff"]["type"]], itemData["move"]["effects"]["debuff"]["duration"])
 			if "message" in itemData["move"]:
 				e.text.AddLine(t.Name + " " + itemData["move"]["message"] + "\n")
+			t.animator.Damage()
 	if "tileEffect" in itemData["move"]["effects"]:
-		m.attackEffects = func(e : Entity, _t : Entity):
+		effects = func(e : Entity, _t : Entity):
 			e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.GetTileEffect(itemData["move"]["effects"]["tileEffect"]["type"]), e)
 			if "message" in itemData["move"]:
 				e.text.AddLine(e.Name + " " + itemData["move"]["message"] + "\n")
-		
-	
+				
+	m.attackEffects = effects
+	if "damage" in itemData["move"]["effects"]:
+		m.magic = itemData["move"]["effects"]["damage"]["magic"]
+		#this function is not used for non-projectile versions of moves
+		effects = func(attacker : Entity, defender : Entity):
+			var damage : int = Stats.GetDamage(attacker.stats, defender.stats, itemData["move"]["effects"]["damage"]["magic"])
+			attacker.text.AddLine(attacker.Name + " attacked " + defender.Name + " with " + itemData["name"] +  " for " + str(damage) + " damage!" + "\n")
+			defender.animator.Damage()
+			defender.TakeDamage(damage, attacker)
+			
 	if "playAnimation" in itemData["move"]:
 		m.playAnimation = itemData["move"]["playAnimation"]
 	if "manualEndTurn" in itemData["move"]:
@@ -185,8 +201,8 @@ func LoadMove(itemData) -> Move:
 		m.reveals = itemData["move"]["reveals"]
 	
 	if "projectile" in itemData["move"]["effects"]:
-		m.projectileMesh = load(itemData["move"]["effects"]["projectile"]["mesh"]) if "mesh" in itemData["move"]["effects"]["projectile"] else load("res://Assets/Items/Machining/Javelin.tscn")
-		var p : Move = Move.DefaultProjectile(m, itemData["move"]["effects"]["projectile"]["range"])
+		var projectileMesh = load(itemData["move"]["effects"]["projectile"]["mesh"]) if "mesh" in itemData["move"]["effects"]["projectile"] else load("res://Assets/Items/Machining/Javelin.tscn")
+		var p : Move = Move.DefaultProjectile(projectileMesh, effects, itemData["move"]["effects"]["projectile"]["range"])
 		return p
 	return m
 

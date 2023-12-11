@@ -32,6 +32,7 @@ var Name : String = "Unassigned"
 var originalStats : Stats
 var stats : Stats
 var statuses : Dictionary
+var statusDuration : Dictionary
 var statsChanged : bool = false
 var equippedMove : Move = null
 var moves : Array[Move] = []
@@ -39,7 +40,7 @@ var cooldown : Array[int]
 var classE : Class
 signal HPChange(currentHP : int, maxHP : int)
 
-signal OnMoveUse(e : Entity, name : String)
+signal OnMoveUse(e : Entity, t : Entity, name : String)
 
 var inventory : Array[Item] = []
 var inventorySize : int = 12
@@ -172,12 +173,14 @@ func EndTurn():
 	turn = false
 	var statusChanged = false
 	for SN in statuses.keys():
-		statuses[SN].turnsRemaining -= 1
-		if statuses[SN].turnsRemaining <= 0:
+		statusDuration[SN] -= 1
+		if statusDuration[SN] <= 0:
 			statusChanged = true
 			if !statuses[SN].OnStatCheck.is_null() || !statuses[SN].OnPercentStatCheck.is_null():
 				statsChanged = true
+			var sn = statuses[SN].name
 			statuses.erase(statuses[SN].name)
+			statusDuration.erase(sn)
 	
 	if statusChanged:
 		UpdateStatusUI()
@@ -269,12 +272,12 @@ func AddStatus(status : Status, turns : int):
 			statusUI.Enable()
 		if !status.OnStatCheck.is_null() || !status.OnPercentStatCheck.is_null():
 			UpdateStats()
-	statuses[status.name].turnsRemaining = turns
-		
+	statusDuration[status.name] = turns
 		
 func RemoveStatus(status : String):
 	if status in statuses:
 		statuses.erase(status)
+		statusDuration.erase(status)
 		UpdateStats()
 		UpdateStatusUI()
 

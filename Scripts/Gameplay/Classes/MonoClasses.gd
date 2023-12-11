@@ -14,25 +14,6 @@ func _ready():
 	shamanMove.icon = preload("res://Assets/Icons/Move/Shaman.png")
 	Move.moves["Unleash Elements"] = shamanMove
 	
-	var arcanaApply = Move.new("Aspected Blast", Arcana1Apply)
-	arcanaApply.playAnimation = false
-	arcanaApply.manualEndTurn = true
-	arcanaApply.manualOnMoveUse = true
-	arcanaApply.RemoveCheck()
-	arcanaApply.magic = true
-	arcanaApply.waittime = .1
-	var Arcana1 = func (e : Entity, t : Entity):
-		if e.equipped == -1:
-			e.endTurn.emit()
-			return
-		var mods : Dictionary = e.inventory[e.equipped].prefixes
-		var r = 3 if "Air" in mods else 2
-		var def = e.CheckDirection(e.facingPos - e.gridPos, r) if t == null else [t.gridPos, t]
-		
-		if def[1] == null:
-			e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
-		else:
-			e.gridmap.SpawnProjectileTarget(e, def[1], arcanaApply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
 	var arcanistMove = Move.new("Aspected Blast", Arcana1)
 	arcanistMove.manualEndTurn = true
 	arcanistMove.noTargets = true
@@ -50,7 +31,7 @@ func _ready():
 	rogueMove.playAnimation = false
 	rogueMove.noTargets = true
 	rogueMove.reveals = false
-	rogueMove.cooldown = 3
+	rogueMove.cooldown = 4
 	rogueMove.icon = preload("res://Assets/Icons/Move/Rogue.png")
 	Move.moves["Stealth"] = rogueMove
 	
@@ -117,10 +98,23 @@ func ShamanAttack(e : Entity, id : int):
 	e.StartCooldownName("Unleash Elements")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
-	e.OnMoveUse.emit(e, "Unleash Elements")
+	e.OnMoveUse.emit(e, null, "Unleash Elements")
 	e.endTurn.emit()
 
 #ARCANA
+func Arcana1(e : Entity, t : Entity):
+	if e.equipped == -1:
+		e.endTurn.emit()
+		return
+	var mods : Dictionary = e.inventory[e.equipped].prefixes
+	var r = 3 if "Air" in mods else 2
+	var def = e.CheckDirection(e.facingPos - e.gridPos, r) if t == null else [t.gridPos, t]
+	
+	if def[1] == null:
+		e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+	else:
+		e.gridmap.SpawnProjectileTarget(e, def[1], Arcana1Apply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+		
 func Arcana1Apply (e : Entity, t : Entity):
 	var mods : Dictionary = e.inventory[e.equipped].prefixes
 	var additiveMod = 1
@@ -134,9 +128,10 @@ func Arcana1Apply (e : Entity, t : Entity):
 		additiveMod += .2
 	if "Lightning" in mods && randf_range(0, 1) < .2:
 		t.AddStatus(Status.Paralysis(), 1)
-	var damage = Stats.GetDamage(e.stats, t.stats, false, 2) if "Shadow" in mods else Stats.GetDamage(e.stats, t.stats)
+	var damage = Stats.GetDamage(e.stats, t.stats, true, 2) if "Shadow" in mods else Stats.GetDamage(e.stats, t.stats, true)
 	damage *= additiveMod
 	e.text.AddLine(e.Name + " attacked " + t.Name + " with " + "Aspected Blast" +  " for " + str(int(damage)) + " damage!" + "\n")
+	t.animator.Damage()
 	t.TakeDamage(damage, e)
 	if "Radiant" in mods:
 		e.Heal(damage * .25)
@@ -190,8 +185,7 @@ func Arms1(e : Entity, t : Entity):
 			e.text.AddLine(e.Name + " attacked " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage)) + " damage!" + "\n")
 			targets[i].animator.Damage()
 			targets[i].TakeDamage(damage, e)
-		
-	await e.Wait(.65)
+		await e.Wait(.5)
 	
 #TECHNIQUE
 func Technique1(e : Entity, _t = null):
@@ -272,7 +266,7 @@ func CraftAlchemy(e : Entity, id : int):
 	e.text.AddLine(e.name + " brewed 1 " + item.name + ".\n")
 	e.inventory.append(item)
 	e.StartCooldownName("Brew")
-	e.OnMoveUse.emit(e, "Brew")
+	e.OnMoveUse.emit(e, null, "Brew")
 	e.endTurn.emit()
 	
 #MACHINING
@@ -308,5 +302,5 @@ func CraftMachining(e : Entity, id : int):
 	e.text.AddLine(e.name + " crafted 1 " + item.name + ".\n")
 	e.inventory.append(item)
 	e.StartCooldownName("Tinker")
-	e.OnMoveUse.emit(e, "Tinker")
+	e.OnMoveUse.emit(e, null, "Tinker")
 	e.endTurn.emit()
