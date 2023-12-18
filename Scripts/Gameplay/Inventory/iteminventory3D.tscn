@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://80bydr05ytrh"]
+
+[ext_resource type="Script" path="res://Scripts/Gameplay/Inventory/ItemInventory.gd" id="1_uravn"]
+
+[node name="item" type="Node3D"]
+script = ExtResource("1_uravn")

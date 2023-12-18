@@ -10,8 +10,12 @@ var allies : Array[Entity]
 
 signal OnAllyDeath(player : Player, ally : Entity)
 
+@onready var inventoryUI : InventoryViewport = get_node("/root/Root/InventoryUI3D")
 @onready var option : OptionMenu = get_node("/root/Root/OptionUI")
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
+
+var equippedMove : Move = null
+var equipped : int = -1
 
 func _ready():
 	SetMesh("res://Assets/Enemy/MortalPester/MortalPester.tscn")
@@ -29,6 +33,7 @@ func init(pos : Vector2i, num : int):
 	partialInit(pos, num)
 	Name = "Player"
 	startTurn.connect(Start)
+	onDeath.connect(Die)
 	
 func partialInit(pos : Vector2i, num : int):
 	entityNum = num
@@ -41,9 +46,9 @@ func SetClass(c : Class, i : Item):
 	cooldown.fill(0)
 	for passive in classE.passives:
 		passive.PassiveApply.call(self)
-	inventory = [i, Items.items["Tunneling Tools"], Items.items["Salvaging Kit"], Items.items["Javelin"], Items.items["Fibrous Net"]]
-	equipped = 0
-	equippedMove = inventory[equipped].move
+	var inventory : Array[Item] = [i, Items.items["Tunneling Tools"], Items.items["Paralysis Draught"], Items.items["Flamefroth Tincture"], Items.items["Blighter's Brew"], Items.items["Pebblepod"]]
+	inventoryUI.init(inventory, 12)
+	inventoryUI.Equip(0)
 
 func _process(delta):
 	Update(delta)
@@ -127,6 +132,18 @@ func _process(delta):
 				Rotate(pos)
 				return
 			lastAction = Move.ActionType.move
+
+func GetItem(i : int) -> Item:
+	return inventoryUI.inventory[i].item
+
+func Die():
+	get_tree().quit()
+
+func PickupItem(i : Item):
+	inventoryUI.AddItem(i)
+
+func IsInventoryFull() -> bool:
+	return inventoryUI.InventoryFull()
 
 func UpdateAllies():
 	for i in range(allies.size()):

@@ -24,6 +24,8 @@ const OCCUPIED_WEIGHT : float = 10
 signal startTurn
 signal endTurn
 signal move(pos : Vector2i, dir : Vector2i)
+signal onDeath
+
 var turn : bool = false
 var usedTurn : bool = false
 var lastAction : Move.ActionType = Move.ActionType.other
@@ -34,18 +36,13 @@ var stats : Stats
 var statuses : Dictionary
 var statusDuration : Dictionary
 var statsChanged : bool = false
-var equippedMove : Move = null
+
 var moves : Array[Move] = []
 var cooldown : Array[int]
 var classE : Class
 signal HPChange(currentHP : int, maxHP : int)
 
 signal OnMoveUse(e : Entity, t : Entity, name : String)
-
-var inventory : Array[Item] = []
-var inventorySize : int = 12
-var equipped : int = -1
-var equippedTool : int = -1
 
 var mesh : Node3D
 var animator : Animator
@@ -192,25 +189,6 @@ func EndTurn():
 		UpdateStats()
 		statsChanged = false
 		
-func Die():
-	if Type == "Player":
-		get_tree().quit()
-		return
-	gridmap.Pathfinding.set_point_weight_scale(gridPos, 1)
-	gridmap.SetMapPos(gridPos, -1)
-	text.AddLine(Name + " was defeated!" + "\n")
-	turnhandler.RemoveEntity(entityNum)
-	for i in inventory:
-		gridmap.PlaceItem(gridPos, i)
-	if gridmap.minimap.get_cell_source_id(0, gridPos) != -1:
-		gridmap.minimap.Reveal(gridPos)
-	endTurn.emit()
-	usedTurn = true
-	if Type == "Ally":
-		turnhandler.Entities[turnhandler.player].OnAllyDeath.emit(turnhandler.Entities[turnhandler.player], self)
-		turnhandler.Entities[turnhandler.player].UpdateAllies()
-	queue_free.call_deferred()
-		
 func Wait(time : float):
 	timer.one_shot = true
 	timer.start(time)
@@ -298,7 +276,7 @@ func TakeDamage(damage : int, source : Entity = null):
 		targetGridPos = source.gridPos
 	HPChange.emit(stats.HP, stats.maxHP)
 	if stats.HP < 1:
-		Die()
+		onDeath.emit()
 
 func Heal(healing : int):
 	var originalHP = stats.HP
@@ -307,27 +285,6 @@ func Heal(healing : int):
 		stats.HP = stats.maxHP
 	HPChange.emit(stats.HP, stats.maxHP)
 	return stats.HP - originalHP
-
-func HasItem(n : String) -> int:
-	for i in range(inventory.size()):
-		if inventory[i].name == n:
-			return i
-	return -1
-	
-func RemoveItemAt(itemPos : int):
-	inventory.remove_at(itemPos)
-	if itemPos < equipped:
-		equipped -= 1
-	if itemPos < equippedTool:
-		equippedTool -= 1
-	
-func Equip(id : int):
-	equipped = id
-	equippedMove = inventory[id].move
-
-func Unequip():
-	equipped = -1
-	equippedMove = null
 
 func StartCooldown(id : int, cd : int = -1):
 	cooldown[id] = moves[id].cooldown if cd == -1 else cd
@@ -340,7 +297,4 @@ func StartCooldownName(n : String, cd : int = -1):
 	
 func OnCooldown(id : int):
 	return cooldown[id] > 0
-
-func Remove():
-	pass
 	

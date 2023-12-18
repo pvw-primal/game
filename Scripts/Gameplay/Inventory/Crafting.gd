@@ -18,10 +18,11 @@ func CanCraft(e : Entity):
 	locations.fill(-1)
 	
 	for t in range(recipe.size()):
-		for i in range(0, e.inventory.size()):
-			if i in locations:
+		for i in range(e.inventoryUI.lastSlot + 1):
+			var item = e.GetItem(i)
+			if i in locations || item == null:
 				continue
-			if recipe[t] in e.inventory[i].crafting.tags:
+			if recipe[t] in item.crafting.tags:
 				locations[t] = i
 				break
 				

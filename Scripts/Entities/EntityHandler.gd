@@ -3,7 +3,7 @@ extends Node
 
 @onready var gridmap : MapGenerator = get_node("/root/Root/GridMap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
-@onready var inventoryUI : InventoryUI = get_node("/root/Root/InventoryUI")
+@onready var inventoryUI : InventoryViewport = get_node("/root/Root/InventoryUI3D")
 @onready var option : OptionMenu = get_node("/root/Root/OptionUI")
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
@@ -110,7 +110,7 @@ func tempClassSet (e : Entity, id : int):
 		#also for testing
 		var i = Item.new("Starting Weapon", "A starter piece of equipment.", "")
 		i.SetEquipment(Move.DefaultPhysical(), Classes.Proficiency.WeaponBasic, { Items.RandomModifier(Classes.Proficiency.WeaponBasic):null })
-		player.SetClass(Classes.GetClass(Classes.BaseClass.Machining, Classes.BaseClass.Technique), i)
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Alchemy, Classes.BaseClass.Technique), i)
 	else:
 		get_tree().quit()
 	e.option.OptionSelected.disconnect(tempClassSet)
@@ -158,7 +158,6 @@ func Reset():
 	for e in get_children():
 		if e.Type == "Player" || e.Type == "Ally":
 			continue
-		e.Remove()
 		e.queue_free()
 	player = null
 	entityNum = 0

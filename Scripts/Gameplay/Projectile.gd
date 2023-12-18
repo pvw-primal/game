@@ -35,7 +35,9 @@ func Complete():
 	if move != null:
 		if def != null:
 			await move.call(atk, def)
-		await atk.Wait(.65)
+			await atk.Wait(.65)
+		else:
+			await atk.Wait(.2)
 	atk.endTurn.emit()
 	queue_free()
 	

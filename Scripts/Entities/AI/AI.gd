@@ -4,6 +4,9 @@ extends Entity
 var renderMove = false
 var shouldMove = false
 
+var inventory : Array[Item] = []
+var inventorySize : int = 12
+
 func _ready():
 	Initialize()
 	move.connect(UpdateMap)
@@ -11,6 +14,7 @@ func _ready():
 func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = []):
 	partialInit(pos, num)
 	startTurn.connect(FindAction)
+	onDeath.connect(Die)
 	classE = Classes.GetClass(Classes.BaseClass.Beastmastery)
 	
 	var enemyData = Loader.GetEnemyData(loadName)
@@ -78,5 +82,34 @@ func UpdateMap(pos : Vector2i, dir : Vector2i):
 	if gridmap.minimap.get_cell_source_id(0, pos) != -1 && renderMove:
 		gridmap.minimap.Reveal(pos - dir)
 		gridmap.minimap.Reveal(pos)
-		
 
+func Die():
+	gridmap.Pathfinding.set_point_weight_scale(gridPos, 1)
+	gridmap.SetMapPos(gridPos, -1)
+	text.AddLine(Name + " was defeated!" + "\n")
+	turnhandler.RemoveEntity(entityNum)
+	for i in inventory:
+		gridmap.PlaceItem(gridPos, i)
+	if gridmap.minimap.get_cell_source_id(0, gridPos) != -1:
+		gridmap.minimap.Reveal(gridPos)
+	endTurn.emit()
+	usedTurn = true
+	if Type == "Ally":
+		turnhandler.Entities[turnhandler.player].OnAllyDeath.emit(turnhandler.Entities[turnhandler.player], self)
+		turnhandler.Entities[turnhandler.player].UpdateAllies()
+	queue_free.call_deferred()
+
+func HasItem(n : String) -> int:
+	for i in range(inventory.size()):
+		if inventory[i].name == n:
+			return i
+	return -1
+	
+func RemoveItemAt(itemPos : int):
+	inventory.remove_at(itemPos)
+
+func PickupItem(i : Item):
+	inventory.append(i)
+
+func IsInventoryFull() -> bool:
+	return inventory.size() >= inventorySize

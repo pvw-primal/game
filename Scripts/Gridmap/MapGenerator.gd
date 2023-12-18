@@ -287,27 +287,27 @@ func TakeItems(pos : Vector2i, e : Entity):
 	if pos in items.keys():
 		if e.Type == "Player":
 			for x in range(items[pos].items.size()):
-				if e.inventory.size() >= e.inventorySize:
+				if e.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
 				var i = items[pos].PopItem()
-				e.inventory.append(i)
+				e.PickupItem(i)
 				e.text.AddLine("Picked up " + i.name + ".\n")
 		elif e.Type == "Ally":
 			var player = turnhandler.Entities[turnhandler.player]
 			for x in range(items[pos].items.size()):
-				if player.inventory.size() >= player.inventorySize:
+				if player.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
 				var i = items[pos].PopItem()
-				player.inventory.append(i)
+				player.PickupItem(i)
 				player.text.AddLine(e.Name + " picked up " + i.name + ".\n")
 		else:
 			for x in range(items[pos].items.size()):
-				if e.inventory.size() >= e.inventorySize:
+				if e.IsInventoryFull():
 					break
 				var i = items[pos].PopItem()
-				e.inventory.append(i)
+				e.PickupItem(i)
 				e.text.AddLine(e.Name + " picked up " + i.name + ".\n")
 		if items[pos].items.size() <= 0:
 			items[pos].queue_free()

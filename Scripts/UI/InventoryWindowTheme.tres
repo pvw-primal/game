@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://brd5tnqyudafv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4wmxb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v5nix"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oa6kk"]
+
+[resource]
+ItemList/colors/guide_color = Color(0.701961, 0.701961, 0.701961, 0)
+ItemList/styles/focus = SubResource("StyleBoxEmpty_4wmxb")
+ItemList/styles/panel = SubResource("StyleBoxEmpty_v5nix")
+ItemList/styles/selected = SubResource("StyleBoxEmpty_oa6kk")

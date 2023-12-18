@@ -31,12 +31,21 @@ func GetDescription(showc : bool = false, showpf : bool = false) -> String:
 	var rs = description
 	rs += "\n\n" + flavor
 	if showpf:
+		var num = 0
 		for mod in prefixes.keys():
-			rs += mod + " "
+			rs += mod
+			if num < prefixes.keys().size() - 1:
+				rs += ", "
 		rs += "\n\n"
 	if showc:
-		for itemname in crafting.tags.keys():
-			rs += itemname + " "
+		var num = 0
+		if crafting.tags.keys().size() > 0:
+			rs += "Material Tags: "
+			for itemname in crafting.tags.keys():
+				rs += itemname
+				if num < crafting.tags.keys().size() - 1:
+					rs += ", "
+				num += 1
 	return rs
 
 func SetEquipment(m : Move, prof : Classes.Proficiency, pf : Dictionary = {}):

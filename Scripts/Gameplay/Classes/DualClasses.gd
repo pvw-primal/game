@@ -116,53 +116,44 @@ func DruidOnAllyDeath(e : Player, t : Entity):
 		e.classE.classVariables["transformMesh"] = null
 	
 #HERBALIST
-var HerbalistOptions : Array[String] = ["Charshroom: POW", "Windeelion: MAG", "Pebblepod: DEF", "Tarrime Bloom: RES"]
-func Herbalist1(e : Entity, _t = null):
+func Herbalist1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var items : Dictionary = {"Charshroom" : "Heat courses through your body, granting a POW buff when consumed.",
+	"Windeelion" : "The refreshing taste focuses your mind, granting a MAG buff when consumed.",
+	"Pebblepod" : "Reinforcing energies can be felt from the pods, granting a DEF buff when consumed.",
+	"Tarrime Bloom" : "Sharp bitterness keeps you steadfast, granting a RES buff when consumed."}
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.craftCompleted.connect(HerbalistAttack)
+	e.inventoryUI.PickerOpen(items)
+	
+func HerbalistAttack(e : Entity, item : Item):
 	if e.Type == "Player":
-		var disabled : Dictionary = {}
-		if e.HasItem("Charshroom") == -1:
-			disabled[0] = null
-		if e.HasItem("Windeelion") == -1:
-			disabled[1] = null
-		if e.HasItem("Pebblepod") == -1:
-			disabled[2] = null
-		if e.HasItem("Tarrime Bloom") == -1:
-			disabled[3] = null
-		e.option.OptionSelected.connect(HerbalistAttack)
-		e.option.Open(HerbalistOptions, disabled, 250)
-	else:
-		HerbalistAttack(e, 0)
-		
-func HerbalistAttack(e : Entity, id : int):
-	if e.Type == "Player":
-		e.option.OptionSelected.disconnect(HerbalistAttack)
-		if id == -1:
-			e.Start.call_deferred()
+		e.inventoryUI.craftCompleted.disconnect(HerbalistAttack)
+		if item == null:
 			return
+		else:
+			e.action = true
 			
 	var effect : Status
 	var message : String
-	var removeSpot : int
-	if id == 0:
+	if item.name == "Charshroom":
 		effect = Status.AttackBuff()
 		message = e.Name + " ate a charshroom and felt stronger!\n"
-		removeSpot = e.HasItem("Charshroom")
-	elif id == 1:
+	elif item.name == "Windeelion":
 		effect = Status.MagicBuff()
 		message = e.Name + " ate a windeelion and felt more powerful!\n"
-		removeSpot = e.HasItem("Windeelion")
-	elif id == 2:
+	elif item.name == "Pebblepod":
 		effect = Status.DefenseBuff()
 		message = e.Name + " ate a pebblepod and felt tougher!\n"
-		removeSpot = e.HasItem("Pebblepod")
-	elif id == 3:
+	elif item.name == "Tarrime Bloom":
 		effect = Status.ResistenceBuff()
 		message = e.Name + " ate a tarrime bloom and felt more resistant!\n"
-		removeSpot = e.HasItem("Tarrime Bloom")
+	
 	e.StartCooldownName("Forager's Bounty")
 	e.AddStatus(effect, 3)
 	e.text.AddLine(message)
-	e.RemoveItemAt(removeSpot)
 	e.OnMoveUse.emit(e, null, "Forager's Bounty")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
@@ -264,33 +255,32 @@ func RangerPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(RangerOnMoveUse)
 
 #BLIGHTER
-var BlighterOptions : Array[String] = ["Coat Weapon:", "Flamefroth Tincture", "Paralysis Draught", "Blighter's Brew"]
-func Blighter1(e : Entity, _t : Entity):
-	if e.equipped == -1:
-		e.text.AddLine(e.Name + " has no weapon equipped to coat!\n")
-		e.OnMoveUse.emit(e, null, "Weapon Coating")
-		e.endTurn.emit()
+func Blighter1(g : Entity, _t : Entity):
+	if g.equipped == -1:
+		g.text.AddLine(g.Name + " has no weapon equipped to coat!\n")
+		g.OnMoveUse.emit(g, null, "Weapon Coating")
+		g.endTurn.emit()
 		return
-	if e.Type == "Player":
-		var disabled : Dictionary = { 0 : null }
-		for i in range(1, BlighterOptions.size()):
-			if e.HasItem(BlighterOptions[i]) == -1:
-				disabled[i] = null
-		e.option.OptionSelected.connect(BlighterAttack)
-		e.option.Open(BlighterOptions, disabled, 250)
+	var items : Dictionary = {"Flamefroth Tincture" : "Ingesting half the tincture and coating a weapon with the rest seems to be more efficient than either method on their own.",
+	"Paralysis Draught" : "With how effective the draught is on its own, applying it to a weapon is a no-brainer.",
+	"Blighter's Brew" : "Turn any weapon into a spiky maker of pincushions."}
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.craftCompleted.connect(BlighterAttack)
+	e.inventoryUI.PickerOpen(items)
 
-func BlighterAttack(e : Entity, id : int):
+func BlighterAttack(e : Entity, item : Item):
 	if e.Type == "Player":
-		e.option.OptionSelected.disconnect(BlighterAttack)
-		if id == -1:
-			e.Start.call_deferred()
+		e.inventoryUI.craftCompleted.disconnect(BlighterAttack)
+		if item == null:
 			return
-	var itemSpot = e.HasItem(BlighterOptions[id])
-	e.classE.classVariables["coatMove"] = e.inventory[itemSpot].move
+		else:
+			e.action = true
+			
+	e.classE.classVariables["coatMove"] = item.move
 	e.classE.classVariables["coatUses"] = 2
 	e.StartCooldownName("Weapon Coating")
-	e.text.AddLine(e.Name + " applyed a " + BlighterOptions[id] + " to their weapon!\n")
-	e.RemoveItemAt(itemSpot)
+	e.text.AddLine(e.Name + " applyed a " + item.name + " to their weapon!\n")
 	e.OnMoveUse.emit(e, null, "Weapon Coating")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
@@ -324,11 +314,11 @@ func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
 	if t != null && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
 		var removeSpot = randi_range(0, t.inventory.size() - 1)
 		var item : Item = t.inventory[removeSpot]
-		if e.inventory.size() >= e.inventorySize:
+		if e.IsInventoryFull():
 			e.gridmap.PlaceItem(t.gridPos, item)
 			e.text.AddLine(item.name + " fell to the floor!\n")
 		else:
-			e.inventory.append(item)
+			e.inventoryUI.AddItem(item)
 			e.text.AddLine(e.Name + " stole " + item.name + "!\n")
 		t.RemoveItemAt(removeSpot)
 		

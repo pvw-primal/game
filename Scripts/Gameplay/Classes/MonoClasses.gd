@@ -66,7 +66,6 @@ func _ready():
 	machiningMove.icon = preload("res://Assets/Icons/Move/Machining.png")
 	Move.moves["Tinker"] = machiningMove
 	
-	
 #SHAMANISM
 var ShamanOptions : Array[String] = ["Fire", "Frost", "Earth", "Air"]
 func Shaman1(e : Entity, _t = null):
@@ -102,11 +101,11 @@ func ShamanAttack(e : Entity, id : int):
 	e.endTurn.emit()
 
 #ARCANA
-func Arcana1(e : Entity, t : Entity):
-	if e.equipped == -1:
-		e.endTurn.emit()
+func Arcana1(g : Entity, t : Entity):
+	if g.equipped == -1 || g.Type != "Player":
 		return
-	var mods : Dictionary = e.inventory[e.equipped].prefixes
+	var e : Player = g
+	var mods : Dictionary = e.GetItem(e.equipped).prefixes
 	var r = 3 if "Air" in mods else 2
 	var def = e.CheckDirection(e.facingPos - e.gridPos, r) if t == null else [t.gridPos, t]
 	
@@ -115,8 +114,11 @@ func Arcana1(e : Entity, t : Entity):
 	else:
 		e.gridmap.SpawnProjectileTarget(e, def[1], Arcana1Apply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
 		
-func Arcana1Apply (e : Entity, t : Entity):
-	var mods : Dictionary = e.inventory[e.equipped].prefixes
+func Arcana1Apply (g : Entity, t : Entity):
+	if g.equipped == -1 || g.Type != "Player":
+		return
+	var e : Player = g
+	var mods : Dictionary = e.GetItem(e.equipped).prefixes
 	var additiveMod = 1
 	if "Fire" in mods:
 		t.AddStatus(Status.Burning(), 2)
@@ -138,10 +140,11 @@ func Arcana1Apply (e : Entity, t : Entity):
 		e.text.AddLine("The radiant light healed " + e.Name + " for " + str(int(damage * .25)) + " HP!" + "\n")
 		
 #ARMS
-func Arms1(e : Entity, t : Entity):
-	if e.equipped == -1:
+func Arms1(g : Entity, t : Entity):
+	if g.equipped == -1 || g.Type != "Player":
 		return
-	var mods : Dictionary = e.inventory[e.equipped].prefixes
+	var e : Player = g
+	var mods : Dictionary = e.GetItem(e.equipped).prefixes
 	var targets : Array[Entity] = []
 	if t != null && e.gridmap.NoCorners(e.gridPos, t.gridPos):
 		targets.append(t)
@@ -234,73 +237,45 @@ func TamerOnAllyDeath(p : Player, _e : Entity):
 	p.skillUI.UpdateAll()
 
 #ALCHEMY
-func Alchemy1(e : Entity, _t = null):
-	if e.Type == "Player":
-		var disabled : Dictionary = {}
-		var desc : Array[String] = []
-		var items = e.classE.craftBrew
-		for i in range(items.size()):
-			var cc = Items.items[items[i]].crafting.CanCraft(e)
-			desc.append(Items.items[items[i]].description + "\n")
-			if cc.size() <= 0:
-				disabled[i] = null
-				desc[i] += "Missing ingredients."
-		desc.append("Close the menu.")
-		e.option.OptionSelected.connect(CraftAlchemy)
-		e.option.Open(items, disabled, 250, desc, 200)
+func Alchemy1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.craftCompleted.connect(CraftAlchemy)
+	e.inventoryUI.CraftingOpen(e.classE.craftBrew)
 
-
-func CraftAlchemy(e : Entity, id : int):
+func CraftAlchemy(e : Entity, item : Item):
 	if e.Type == "Player":
-		e.option.OptionSelected.disconnect(CraftAlchemy)
-		if id == -1:
-			e.Start.call_deferred()
+		e.inventoryUI.craftCompleted.disconnect(CraftAlchemy)
+		if item == null:
 			return
-	var item = Items.items[e.classE.craftBrew[id]]
-	var remove = item.crafting.CanCraft(e)
-	remove.sort()
-	var removed = 0
-	for i in remove:
-		e.RemoveItemAt(i - removed)
-		removed += 1
+		else:
+			e.action = true
 	e.text.AddLine(e.name + " brewed 1 " + item.name + ".\n")
-	e.inventory.append(item)
+	e.inventoryUI.AddItem(item)
 	e.StartCooldownName("Brew")
 	e.OnMoveUse.emit(e, null, "Brew")
 	e.endTurn.emit()
 	
 #MACHINING
-func Machining1(e : Entity, _t = null):
-	if e.Type == "Player":
-		var disabled : Dictionary = {}
-		var desc : Array[String] = []
-		var items = e.classE.craftTinker
-		for i in range(items.size()):
-			var cc = Items.items[items[i]].crafting.CanCraft(e)
-			desc.append(Items.items[items[i]].description + "\n")
-			if cc.size() <= 0:
-				disabled[i] = null
-				desc[i] += "Missing materials."
-		desc.append("Close the menu.")
-		e.option.OptionSelected.connect(CraftMachining)
-		e.option.Open(items, disabled, 250, desc, 350)
+func Machining1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.craftCompleted.connect(CraftMachining)
+	e.inventoryUI.CraftingOpen(e.classE.craftTinker)
 
-
-func CraftMachining(e : Entity, id : int):
+func CraftMachining(e : Entity, item : Item):
 	if e.Type == "Player":
-		e.option.OptionSelected.disconnect(CraftMachining)
-		if id == -1:
-			e.Start.call_deferred()
+		e.inventoryUI.craftCompleted.disconnect(CraftMachining)
+		if item == null:
 			return
-	var item = Items.items[e.classE.craftTinker[id]]
-	var remove = item.crafting.CanCraft(e)
-	remove.sort()
-	var removed = 0
-	for i in remove:
-		e.RemoveItemAt(i - removed)
-		removed += 1
+		else:
+			e.action = true
 	e.text.AddLine(e.name + " crafted 1 " + item.name + ".\n")
-	e.inventory.append(item)
+	e.inventoryUI.AddItem(item)
 	e.StartCooldownName("Tinker")
 	e.OnMoveUse.emit(e, null, "Tinker")
 	e.endTurn.emit()
