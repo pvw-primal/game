@@ -177,10 +177,10 @@ nodes/output/position = Vector2(560, 340)
 node_connections = [&"output", 0, &"Animation"]
 
 [node name="Item" type="Node3D"]
-transform = Transform3D(-0.106066, 0, -0.106066, 0, 0.15, 0, 0.106066, 0, -0.106066, 0, 0, 0)
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, -0.09)
 
 [node name="Rod" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -2.75862e-08, -0.86631, 0, 0.631098, -3.78676e-08, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, -2.75862e-08, -0.86631, 0, 0.631098, -3.78676e-08, 0, 0.9, 0)
 mesh = SubResource("ArrayMesh_v8ccc")
 skeleton = NodePath("")
 

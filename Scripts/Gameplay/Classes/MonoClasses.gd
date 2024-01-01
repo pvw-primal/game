@@ -17,11 +17,13 @@ func _ready():
 	var arcanistMove = Move.new("Aspected Blast", Arcana1)
 	arcanistMove.manualEndTurn = true
 	arcanistMove.noTargets = true
-	arcanistMove.cooldown = 3
+	arcanistMove.cooldown = 5
 	arcanistMove.icon = preload("res://Assets/Icons/Move/Arcanist.png")
 	Move.moves["Aspected Blast"] = arcanistMove
 	
 	var fighterMove = Move.new("Skilled Strike", Arms1)
+	fighterMove.playAnimation = false
+	fighterMove.manualOnMoveUse = true
 	fighterMove.noTargets = true
 	fighterMove.cooldown = 2
 	fighterMove.icon = preload("res://Assets/Icons/Move/Fighter.png")
@@ -83,16 +85,16 @@ func ShamanAttack(e : Entity, id : int):
 			return
 	if id == 0:
 		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Fire, e)
-		e.text.AddLine(e.Name + " ignited the ground!\n")
+		e.text.AddLine(e.GetLogName() + " ignited the ground!\n")
 	elif id == 1:
 		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Frost, e)
-		e.text.AddLine(e.Name + " froze the ground!\n")
+		e.text.AddLine(e.GetLogName() + " froze the ground!\n")
 	elif id == 2:
 		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Earth, e)
-		e.text.AddLine(e.Name + " reinforced the earth!\n")
+		e.text.AddLine(e.GetLogName() + " reinforced the earth!\n")
 	elif id == 3:
 		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Air, e)
-		e.text.AddLine(e.Name + " called the wind!\n")
+		e.text.AddLine(e.GetLogName() + " called the wind!\n")
 	e.animator.Attack()
 	e.StartCooldownName("Unleash Elements")
 	if e.Type == "Player":
@@ -110,9 +112,9 @@ func Arcana1(g : Entity, t : Entity):
 	var def = e.CheckDirection(e.facingPos - e.gridPos, r) if t == null else [t.gridPos, t]
 	
 	if def[1] == null:
-		e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+		e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Moves/AspectedBlast.tscn"))
 	else:
-		e.gridmap.SpawnProjectileTarget(e, def[1], Arcana1Apply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+		e.gridmap.SpawnProjectileTarget(e, def[1], Arcana1Apply, 3, preload("res://Assets/Moves/AspectedBlast.tscn"))
 		
 func Arcana1Apply (g : Entity, t : Entity):
 	if g.equipped == -1 || g.Type != "Player":
@@ -132,68 +134,26 @@ func Arcana1Apply (g : Entity, t : Entity):
 		t.AddStatus(Status.Paralysis(), 1)
 	var damage = Stats.GetDamage(e.stats, t.stats, true, 2) if "Shadow" in mods else Stats.GetDamage(e.stats, t.stats, true)
 	damage *= additiveMod
-	e.text.AddLine(e.Name + " attacked " + t.Name + " with " + "Aspected Blast" +  " for " + str(int(damage)) + " damage!" + "\n")
+	e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " with " + "Aspected Blast" +  " for " + LogText.GetDamageNum(int(damage), true) + " damage!" + "\n")
 	t.animator.Damage()
 	t.TakeDamage(damage, e)
 	if "Radiant" in mods:
 		e.Heal(damage * .25)
-		e.text.AddLine("The radiant light healed " + e.Name + " for " + str(int(damage * .25)) + " HP!" + "\n")
+		e.text.AddLine("The radiant light healed " + e.GetLogName() + " for " + LogText.GetHealNum(int(damage * .25)) + " HP!" + "\n")
 		
 #ARMS
 func Arms1(g : Entity, t : Entity):
-	if g.equipped == -1 || g.Type != "Player":
+	if g.Type != "Player":
 		return
 	var e : Player = g
-	var mods : Dictionary = e.GetItem(e.equipped).prefixes
-	var targets : Array[Entity] = []
-	if t != null && e.gridmap.NoCorners(e.gridPos, t.gridPos):
-		targets.append(t)
-	elif "Reach" in mods:
-		var target = e.CheckDirection(e.facingPos - e.gridPos, 2)
-		if target[1] != null:
-			targets.append(target[1])
-	if "Cleave" in mods:
-		var adj = e.AdjacentTiles()
-		adj.shuffle()
-		var additional = 0
-		for pos in adj:
-			var entity = e.GetEntity(pos)
-			if entity != null && entity not in targets:
-				targets.append(entity)
-				additional += 1
-				if additional >= 2:
-					break
-				
-	var additiveMod : float = 1
-	if "Blitz" in mods && e.lastAction == Move.ActionType.move:
-		additiveMod += .4
-	elif "Bold" in mods && e.lastAction != Move.ActionType.move:
-		additiveMod += .2
-	if "Runed" in mods:
-		additiveMod += .2
-	
-	await e.Wait(.3)
-	for i in range(targets.size()):
-		if "Bleed" in mods:
-			targets[i].AddStatus(Status.Bleed(), 2)
-		if "Crush" in mods && randf_range(0, 1) < .2:
-			targets[i].AddStatus(Status.Stun(), 1)
-		var damage = Stats.GetDamage(e.stats, targets[i].stats, false, 2) if "Bludgeon" in mods else Stats.GetDamage(e.stats, targets[i].stats)
-		damage *= additiveMod
-		if i > 0:
-			e.text.AddLine(e.Name + " cleaved " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage / 2)) + " damage!" + "\n")
-			targets[i].animator.Damage()
-			targets[i].TakeDamage(int(damage / 2), e)
-		else:
-			e.text.AddLine(e.Name + " attacked " + targets[i].Name + " with " + "Skilled Strike" +  " for " + str(int(damage)) + " damage!" + "\n")
-			targets[i].animator.Damage()
-			targets[i].TakeDamage(damage, e)
-		await e.Wait(.5)
+	if e.equipped == -1:
+		return
+	await Equipment.WeaponCrit(e, t, e.inventoryUI.inventory[e.equipped].item, "Skilled Strike")
 	
 #TECHNIQUE
 func Technique1(e : Entity, _t = null):
 	e.AddStatus(Status.Stealth(), 3)
-	e.text.AddLine(e.Name + " hid in the shadows!\n")
+	e.text.AddLine(e.GetLogName() + " hid in the shadows!\n")
 
 #BEASTMASTERY
 func Beastmastery1(e : Entity, t : Entity):
@@ -210,11 +170,14 @@ func Beastmastery1(e : Entity, t : Entity):
 	
 	if t.Type == "AI":
 		if TameChance(t):
-			e.text.AddLine(t.Name + " was tamed!\n")
-			t.Type = "Ally"
+			t.nameColor = Color.LIME_GREEN
 			t.Name = "Ally " + t.Name
+			e.text.AddLine(t.GetLogName() + " was tamed!\n")
+			t.Type = "Ally"
 			e.allies.append(t)
 			t.gridmap.minimap.Reveal(t.gridPos)
+			t.tamer = e
+			e.OnTame.emit(e, t)
 		else:
 			e.text.AddLine("Tame failed!\n")
 
@@ -252,7 +215,7 @@ func CraftAlchemy(e : Entity, item : Item):
 			return
 		else:
 			e.action = true
-	e.text.AddLine(e.name + " brewed 1 " + item.name + ".\n")
+	e.text.AddLine(e.GetLogName() + " brewed 1 " + item.GetLogName() + ".\n")
 	e.inventoryUI.AddItem(item)
 	e.StartCooldownName("Brew")
 	e.OnMoveUse.emit(e, null, "Brew")
@@ -274,7 +237,7 @@ func CraftMachining(e : Entity, item : Item):
 			return
 		else:
 			e.action = true
-	e.text.AddLine(e.name + " crafted 1 " + item.name + ".\n")
+	e.text.AddLine(e.GetLogName() + " crafted 1 " + item.GetLogName() + ".\n")
 	e.inventoryUI.AddItem(item)
 	e.StartCooldownName("Tinker")
 	e.OnMoveUse.emit(e, null, "Tinker")

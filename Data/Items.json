@@ -44,7 +44,7 @@
 	"Flamefroth Tincture":
 		{
 			"name": "Flamefroth Tincture",
-			"description": "Breathe fire in the area.",
+			"description": "Breathe fire in an area.",
 			"flavor": "Though highly effective, frequent use incinerates phlegm and other particulates in the throat, causing embers and ash to accumulate around the mouth.",
 			"mesh": "res://Assets/Items/Alchemy/FlamefrothTincture.tscn",
 			"consumable": true,
@@ -68,6 +68,7 @@
 			"description": "Throw to deal damage at a distance.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Machining/Javelin.tscn",
+			"topdown": true,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
@@ -106,27 +107,31 @@
 			"recipe": ["Adhesive", "Fiber"],
 			"requires": ["Machining"]
 		},
-	"Salvaging Kit":
+	"Salvaging Tools":
 		{
-			"name": "Salvaging Kit",
+			"name": "Salvaging Tools",
 			"description": "Salvage materials from the environment or from a creature.",
 			"flavor": "",
-			"mesh": null,
+			"rarity": 1,
+			"mesh": "res://Assets/Items/Machining/SalvagingKit.tscn",
+			"topdown": true,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Salvage",
 				"custom": "Salvage"
 			},
-			"recipe": ["Adhesive", "Fiber", "Sharp"],
+			"recipe": ["Adhesive", "Fiber", "Stone"],
 			"requires": ["Machining"]
 		},
 	
 	"Tunneling Tools":
 		{
 			"name": "Tunneling Tools",
-			"description": "Use to descend to the next level.",
+			"description": "A fragile but efficient pickaxe that can be used to descend to the next level.",
 			"flavor": "Basically cheating.",
-			"mesh": null,
+			"rarity": 2,
+			"mesh": "res://Assets/Items/Drops/TunnelingTools.tscn",
+			"topdown": true,
 			"consumable": true,
 			"move":{
 				"useTooltip": "Use",
@@ -140,6 +145,7 @@
 			"description": "A claw shorn from a Russ. The marrow can be used as a base for potions and poisons.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Drops/RussTalon.tscn",
+			"topdown": true,
 			"tags": ["Reagent", "Sharp"]
 		},
 	"Eidolon Mass":
@@ -195,7 +201,7 @@
 			"name": "Bonder's Bulb",
 			"description": "These small, stringy plants release a curative sap that was once used as a type of glue.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/Bonder's Bulb.tscn",
 			"tags": ["Healing", "Adhesive", "Fiber"]
 		},
 	"Pestail":
@@ -204,6 +210,7 @@
 			"description": "The hard, regenerative tails of a Mortal Pester. Both the stony exterior and fleshy interior could likely be utilized.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Drops/Pestail.tscn",
+			"topdown": true,
 			"tags": ["Healing", "Stone"]
 		},
 	
@@ -212,7 +219,8 @@
 			"name": "Blooming Brew",
 			"description": "Grows plants in areas with field effects.",
 			"flavor": "This complex mixture harnesses and absorbs latent magic, converting them into a quick burst of cultivating energies.",
-			"mesh": null,
+			"rarity": 1,
+			"mesh": "res://Assets/Items/Alchemy/BloomingBrew.tscn",
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",
@@ -221,13 +229,36 @@
 			"recipe":["Reagent", "Fertilizer", "Frost"],
 			"requires":["Alchemy", "Shamanism"]
 		},
-		
+	"Whetstone Oil":
+		{
+			"name": "Whetstone Oil",
+			"description": "Apply a honing oil to your weapon, increasing CRIT chance by 50% for 3 turns.",
+			"flavor": "Small particulates in the oil strengthen most material on a microscopic level.",
+			"mesh": "res://Assets/Items/Alchemy/WhetstoneOil.tscn",
+			"consumable": true,
+			"move":{
+				"useTooltip": "Apply",
+				"message": "applyed a Whetstone Oil!",
+				"playAnimation": false,
+				"noTargets": true,
+				"reveals": false,
+				"effects":{
+					"buff":{
+						"type" : "CritBuff",
+						"duration" : 4
+					}
+				}
+			},
+			"recipe":["Reagent", "Sharp", "Stone"],
+			"requires": ["Alchemy", "Arms"]
+		},
 	"Blighter's Brew":
 		{
 			"name": "Blighter's Brew",
 			"description": "Deals damage with toxic spines.",
 			"flavor": "The simplest solution is often the best; filling a flask with caustic spikes is efficient and effective.",
-			"mesh": null,
+			"rarity": 1,
+			"mesh": "res://Assets/Items/Alchemy/BlightersBrew.tscn",
 			"consumable": true,
 			"move":{
 				"useTooltip": "Throw",

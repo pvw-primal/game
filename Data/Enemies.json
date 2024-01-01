@@ -12,7 +12,7 @@
 			"name": "Mortal Pester",
 			"path": "res://Assets/Enemy/MortalPester/MortalPester.tscn",
 			"move_name": "Scratch",
-			"drops": ["Pestail", "Charshroom", "Bonder's Bulb"],
+			"drops": ["Pestail", "Bonder's Bulb"],
 			"class":["Alchemy"]
 		}
 }

@@ -28,7 +28,7 @@ func AddEntity(entity : Entity):
 
 func RemoveEntity(entityNum : int):
 	for i in range(TurnOrder.size()):
-		if TurnOrder[i] == entityNum:
+		if !is_instance_valid(Entities[TurnOrder[i]]) || TurnOrder[i] == entityNum:
 			continue
 		Entities[TurnOrder[i]].targetGridPos = Entities[player].gridPos
 		Entities[TurnOrder[i]].targetGridPosChanged = true
@@ -51,7 +51,7 @@ func HandleNextTurn(skipDisconnect : bool = false):
 		currentTurn += 1
 		
 	if TurnOrder[currentTurn] in RemovalQueue:
-		HandleNextTurn(true)
+		await HandleNextTurn(true)
 		return
 		
 	var entity = Entities[TurnOrder[currentTurn]]
@@ -65,7 +65,7 @@ func HandleNextTurn(skipDisconnect : bool = false):
 		entity.renderMove = dist < MAX_MOVE_RENDER
 		entity.shouldMove = dist < MAX_MOVE_DISTANCE
 	entity.endTurn.connect(HandleNextTurn)
-	entity.startTurn.emit()
+	await entity.startTurn.emit()
 	
 func ReorderTurns():
 	TurnOrder.sort_custom(SortPlayerDistance)

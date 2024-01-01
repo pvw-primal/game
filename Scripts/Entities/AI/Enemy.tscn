@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/StatusUI.gd" id="2_7cdkr"]
 
 [node name="Enemy" type="Node3D"]
-transform = Transform3D(1, 2.77396e-10, 0, 7.77618e-11, 1, 0, 0, 0, 1, 0, 0.05, 0)
+transform = Transform3D(1, 2.77396e-10, 0, 7.77618e-11, 1, 0, 0, 0, 1, 0, 0.02, 0)
 script = ExtResource("1_dbi6m")
 
 [node name="Timer" type="Timer" parent="."]

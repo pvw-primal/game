@@ -3,16 +3,19 @@ extends Resource
 
 var move : Move
 var moveTooltip : String
+
 var name : String
 var description : String
 var flavor : String
 var mesh : PackedScene
+var topdown : bool
 var consumable : bool
-var equipment : bool
 
-var requiredProf : Classes.Proficiency = Classes.Proficiency.None
 var crafting : Crafting
-var prefixes : Dictionary
+
+var rarity : Items.Rarity
+
+var equipment : bool
 
 func _init(Name : String, Description : String, Flavor : String = "", t : PackedScene = null, Use : Move = null, UseTT : String = "", Consumable : bool = false):
 	name = Name
@@ -23,35 +26,35 @@ func _init(Name : String, Description : String, Flavor : String = "", t : Packed
 	consumable = Consumable
 	mesh = t
 	crafting = Crafting.new()
+	rarity = Items.Rarity.Common
+	topdown = false
+	equipment = false
 	
 func CanUse():
 	return move != null && !equipment
 
-func GetDescription(showc : bool = false, showpf : bool = false) -> String:
-	var rs = description
-	rs += "\n\n" + flavor
-	if showpf:
-		var num = 0
-		for mod in prefixes.keys():
-			rs += mod
-			if num < prefixes.keys().size() - 1:
-				rs += ", "
-		rs += "\n\n"
-	if showc:
-		var num = 0
-		if crafting.tags.keys().size() > 0:
-			rs += "Material Tags: "
-			for itemname in crafting.tags.keys():
-				rs += itemname
-				if num < crafting.tags.keys().size() - 1:
-					rs += ", "
-				num += 1
-	return rs
+func GetLogName():
+	return"[color=#" + Items.RarityColor(rarity).to_html() + "]" + name + "[/color]"
 
-func SetEquipment(m : Move, prof : Classes.Proficiency, pf : Dictionary = {}):
-	equipment = true
-	move = m
-	requiredProf = prof
-	move.name = name
-	prefixes = pf
-	
+func GetDescription() -> String:
+	var rs = "[indent][color=#" + Items.RarityColor(rarity).to_html() + "][b]"
+	@warning_ignore("integer_division")
+	rs += "[font_size=" + str((1100 / name.length())) + "]" + name + ":[/font_size]" if name.length() >= 20 else name + ":"
+	rs += "[/b]\n"
+	if consumable:
+		rs += "[font_size=28]consumable[/font_size]"
+	if crafting.tags.keys().size() > 0:
+		var num = 0
+		rs += "[font_size=28]"
+		for itemname in crafting.tags.keys():
+			rs += itemname
+			if num < crafting.tags.keys().size() - 1:
+				rs += ", "
+			num += 1
+		rs += " material[/font_size]"
+		
+	rs += "[/color]\n\n" + description
+	if flavor != "":
+		rs += "\n\n[i][font_size=24]" + flavor + "[/font_size][/i]"
+	rs += "\n [/indent]"
+	return rs

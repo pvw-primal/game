@@ -39,5 +39,5 @@ func UpdateSkill(id : int, cooldown : int):
 func UpdateHP(currentHP : int, maxHP : int):
 	HPBar.max_value = maxHP
 	HPBar.value = currentHP
-	HPText.text = str(currentHP) + "/" + str(maxHP)
+	HPText.text = str(currentHP) + "Û" + str(maxHP)
 	

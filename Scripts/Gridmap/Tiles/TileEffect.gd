@@ -15,6 +15,7 @@ var gridPos : Vector2i
 
 var effect : Effect
 var applyEffect : Callable
+var applyOnEnter : bool
 var remainingTurns : int
 
 func init(pos : Vector3, eff : Effect, grid : Vector2i):
@@ -23,9 +24,11 @@ func init(pos : Vector3, eff : Effect, grid : Vector2i):
 	remainingTurns = TILE_EFFECT_TURNS
 	var e
 	effect = eff
+	applyOnEnter = true
 	if effect == Effect.Fire:
 		e = fire.instantiate()
 		applyEffect = FireEffect
+		applyOnEnter = false
 	elif effect == Effect.Frost:
 		e = frost.instantiate()
 		applyEffect = FrostEffect

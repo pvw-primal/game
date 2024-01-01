@@ -7,6 +7,8 @@ var shouldMove = false
 var inventory : Array[Item] = []
 var inventorySize : int = 12
 
+var tamer : Player
+
 func _ready():
 	Initialize()
 	move.connect(UpdateMap)
@@ -23,6 +25,7 @@ func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = [
 	cooldown.fill(0)
 	Name = enemyData["name"]
 	SetMesh(enemyData["path"])
+	tamer = null
 	if color.size() > 2:
 		SetColor(color[0], color[1], color[2])
 	
@@ -46,7 +49,7 @@ func FindAction():
 		targetGridPosChanged = false
 	if path.size() > 0 && targetEntity.stats.CanBeTargeted:
 		if !stats.CanMove:
-			text.AddLine(Name + " can't move!\n")
+			text.AddLine(GetLogName() + " can't move!\n")
 			lastAction = Move.ActionType.other
 			endTurn.emit()
 			return
@@ -65,12 +68,12 @@ func FindAction():
 			targetGridPos = GetEntity(nextMove).gridPos
 	if shouldMove && !(Type == "Ally" && targetEntity.Type == "Player") && targetEntity.stats.CanBeTargeted: # attacking check
 		if !stats.CanAttack:
-			text.AddLine(Name + " can't attack!\n")
+			text.AddLine(GetLogName() + " can't attack!\n")
 		elif moves[0].InRange(self, targetEntity):
 			Rotate(targetGridPos)
 			await Wait(.5)
 			if is_instance_valid(targetEntity):
-				moves[0].Use(self, targetEntity)
+				await moves[0].Use(self, targetEntity)
 			else:
 				endTurn.emit()
 			return
@@ -86,7 +89,7 @@ func UpdateMap(pos : Vector2i, dir : Vector2i):
 func Die():
 	gridmap.Pathfinding.set_point_weight_scale(gridPos, 1)
 	gridmap.SetMapPos(gridPos, -1)
-	text.AddLine(Name + " was defeated!" + "\n")
+	text.AddLine(GetLogName() + " was defeated!" + "\n")
 	turnhandler.RemoveEntity(entityNum)
 	for i in inventory:
 		gridmap.PlaceItem(gridPos, i)

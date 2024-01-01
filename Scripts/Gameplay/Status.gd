@@ -34,6 +34,7 @@ static func InitStatus():
 	Earth()
 	Stealth()
 	Bleed()
+	CritBuff()
 
 static func AttackBuff():
 	if "AttackBuff" not in status:
@@ -76,6 +77,22 @@ static func DefResDebuff():
 		status["DefResDebuff"] = Status.new("DefResDebuff", null, null, atk, genericDebuff)
 	return status["DefResDebuff"]
 
+static func CritBuff():
+	if "CritBuff" not in status:
+		var atk = func(sum : Array[float]):
+			sum[4] += .5
+			return sum
+		status["CritBuff"] = Status.new("CritBuff", null, null, atk, genericBuff)
+	return status["CritBuff"]
+
+static func SureCrit():
+	if "SureCrit" not in status:
+		var atk = func(sum : Array[float]):
+			sum[4] += 1
+			return sum
+		status["SureCrit"] = Status.new("SureCrit", null, null, atk, genericBuff)
+	return status["SureCrit"]
+
 static func Stun():
 	if "Stun" not in status:
 		var stun = func(stat: Stats):
@@ -106,7 +123,8 @@ static func Burning():
 		var burn = func(e : Entity):
 			var damage = randi_range(1, 3)
 			e.animator.Damage()
-			e.text.AddLine(e.Name + " was burned for " + str(damage) + " damage!\n")
+			e.Wait(.3)
+			e.text.AddLine(e.GetLogName() + " was burned for " + LogText.GetDamageNum(damage, true) + " damage!\n")
 			e.TakeDamage(damage)
 		status["Burning"] = Status.new("Burning", burn, null, null, preload("res://Assets/Icons/Status/Burning.png"))
 	return status["Burning"]
@@ -116,7 +134,7 @@ static func Air():
 		var air = func(e : Entity):
 			var healing = e.Heal(1)
 			if healing > 0:
-				e.text.AddLine("The cool breeze healed " + e.Name + " for " + str(healing) + " HP!\n")
+				e.text.AddLine("The cool breeze healed " + e.GetLogName() + " for " + LogText.GetHealNum(healing) + " HP!\n")
 		status["Refreshing Breeze"] = Status.new("Refreshing Breeze", air, null, null, preload("res://Assets/Icons/Status/Breeze.png"))
 	return status["Refreshing Breeze"]
 	
@@ -152,7 +170,8 @@ static func Bleed():
 	if "Bleed" not in status:
 		var bleed = func(e : Entity):
 			e.animator.Damage()
-			e.text.AddLine(e.Name + " bled for " + str(2) + " damage!\n")
+			e.Wait(.3)
+			e.text.AddLine(e.GetLogName() + " bled for " + LogText.GetDamageNum(2) + " damage!\n")
 			e.TakeDamage(2)
 		status["Bleed"] = Status.new("Bleed", bleed, null, null, preload("res://Assets/Icons/Status/Bleed.png"))
 	return status["Bleed"]

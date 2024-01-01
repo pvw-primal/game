@@ -87,6 +87,8 @@ func _ready():
 	var numItems = randi_range(8, 15)
 	for i in range(numItems):
 		var spot = GetRandomRoomPos()
+		while spot in exits:
+			spot = GetRandomRoomPos()
 		PlaceItem(spot, level.RandomItem())
 				
 func GenerateMapLayout(pos: Vector2i, numRooms: int):
@@ -290,25 +292,25 @@ func TakeItems(pos : Vector2i, e : Entity):
 				if e.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
-				var i = items[pos].PopItem()
+				var i : Item = items[pos].PopItem()
 				e.PickupItem(i)
-				e.text.AddLine("Picked up " + i.name + ".\n")
+				e.text.AddLine("Picked up " + i.GetLogName() + ".\n")
 		elif e.Type == "Ally":
 			var player = turnhandler.Entities[turnhandler.player]
 			for x in range(items[pos].items.size()):
 				if player.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
-				var i = items[pos].PopItem()
+				var i : Item = items[pos].PopItem()
 				player.PickupItem(i)
-				player.text.AddLine(e.Name + " picked up " + i.name + ".\n")
+				player.text.AddLine(e.GetLogName() + " picked up " + i.GetLogName() + ".\n")
 		else:
 			for x in range(items[pos].items.size()):
 				if e.IsInventoryFull():
 					break
-				var i = items[pos].PopItem()
+				var i : Item = items[pos].PopItem()
 				e.PickupItem(i)
-				e.text.AddLine(e.Name + " picked up " + i.name + ".\n")
+				e.text.AddLine(e.GetLogName() + " picked up " + i.GetLogName() + ".\n")
 		if items[pos].items.size() <= 0:
 			items[pos].queue_free()
 			items.erase(pos)

@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://c6lcjyg56bap4"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://c6lcjyg56bap4"]
 
-[ext_resource type="FontFile" uid="uid://bt0kndx58ndvl" path="res://Assets/SHPinscher-Regular.otf" id="1_fypoo"]
+[ext_resource type="FontFile" uid="uid://dwipc15a2nmj3" path="res://Assets/Fonts/Comicoro.ttf" id="1_edcfw"]
+[ext_resource type="FontFile" uid="uid://bqto4t50l7ac8" path="res://Assets/Fonts/atlantis.text-bold.ttf" id="1_m3qb5"]
+[ext_resource type="FontFile" uid="uid://ku0jnv7864rm" path="res://Assets/Fonts/pixel_dingbats-7.ttf" id="2_adkmm"]
+[ext_resource type="FontFile" uid="uid://ch0806fnhlnf5" path="res://Assets/Fonts/zelda-dx-tt-brk.regular.ttf" id="3_hkuio"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7wist"]
 
@@ -13,9 +16,13 @@ bg_color = Color(0.364706, 0.364706, 0.364706, 0.615686)
 bg_color = Color(0, 0, 0, 0.8)
 
 [resource]
-default_font = ExtResource("1_fypoo")
-default_font_size = 35
+default_font = ExtResource("1_edcfw")
+default_font_size = 46
 ItemList/styles/focus = SubResource("StyleBoxEmpty_7wist")
 ItemList/styles/panel = SubResource("StyleBoxFlat_yc8pl")
 ProgressBar/styles/background = SubResource("StyleBoxEmpty_oetqq")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_7msx8")
+RichTextLabel/fonts/bold_font = ExtResource("1_m3qb5")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_adkmm")
+RichTextLabel/fonts/italics_font = ExtResource("3_hkuio")
+RichTextLabel/styles/normal = null

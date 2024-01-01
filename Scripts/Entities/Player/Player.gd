@@ -8,17 +8,17 @@ var action = false
 
 var allies : Array[Entity]
 
+signal OnTame(player : Player, ally : Entity)
 signal OnAllyDeath(player : Player, ally : Entity)
 
 @onready var inventoryUI : InventoryViewport = get_node("/root/Root/InventoryUI3D")
 @onready var option : OptionMenu = get_node("/root/Root/OptionUI")
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
-var equippedMove : Move = null
 var equipped : int = -1
 
 func _ready():
-	SetMesh("res://Assets/Enemy/MortalPester/MortalPester.tscn")
+	SetMesh("res://Assets/Enemy/Russ/RussShaded.tscn")
 	Initialize()
 	originalStats = Stats.new(40, 5, 1, 5, 1)
 	stats = originalStats.Copy()
@@ -39,26 +39,27 @@ func partialInit(pos : Vector2i, num : int):
 	entityNum = num
 	startingPos = pos
 
-func SetClass(c : Class, i : Item):
+func SetClass(c : Class):
 	classE = c
 	moves = classE.moves
 	cooldown.resize(moves.size())
 	cooldown.fill(0)
 	for passive in classE.passives:
 		passive.PassiveApply.call(self)
-	var inventory : Array[Item] = [i, Items.items["Tunneling Tools"], Items.items["Paralysis Draught"], Items.items["Flamefroth Tincture"], Items.items["Blighter's Brew"], Items.items["Pebblepod"]]
+	var inventory : Array[Item] = [Items.items["Tunneling Tools"], Items.items["Javelin"], Items.items["Salvaging Tools"], Items.items["Pestail"], Items.items["Eidolon Mass"]]
+	#var inventory : Array[Item] = [Items.RandomEquipment(false, Items.Rarity.Mythic, false, "Cleave"), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true)]
+	#var inventory : Array[Item] = [Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false)]
 	inventoryUI.init(inventory, 12)
-	inventoryUI.Equip(0)
 
 func _process(delta):
 	Update(delta)
 	if inputCD > 0:
 		inputCD -= delta
 	elif turn && !moving && !ignoreInput && !action && stats.CanAttack:
-		if Input.is_action_just_pressed("EquipAttack") && equippedMove != null:
+		if Input.is_action_just_pressed("EquipAttack") && equipped != -1:
 			action = true
 			var e = GetEntity(facingPos)
-			await equippedMove.Use(self, e)
+			await inventoryUI.inventory[equipped].item.Use(self, e, stats.CRIT)
 			if e != null && e.Type != "Ally":
 				for ally in allies:
 					ally.targetEntity = e

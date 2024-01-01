@@ -4,6 +4,7 @@ const EnemyData = "res://Data/Enemies.json"
 const ItemData = "res://Data/Items.json"
 const LevelData = "res://Data/Levels.json"
 const ClassData = "res://Data/Classes.json"
+const EquipmentData = "res://Data/Equipment.json"
 
 static var EnemyDataCache : Dictionary
 
@@ -90,3 +91,9 @@ static func GetClassData():
 		return
 	return json.data
 
+static func GetEquipmentData():
+	var json = JSON.new()
+	if json.parse(LoadFile(EquipmentData)) != OK:
+		print(json.get_error_message())
+		return
+	return json.data

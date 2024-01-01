@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/StatusUI.gd" id="3_3wcti"]
 
 [node name="Player" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 script = ExtResource("1_uop2e")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -15,12 +15,12 @@ script = ExtResource("2_mqi0o")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, -1.60653e-08, -1.04844e-08, 7.68523e-11, -4.37722e-08, 1, 0, -1, -4.42378e-08, 0, 5, 0)
+visible = false
 light_energy = 0.5
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.0
 light_size = 1.0
 light_bake_mode = 0
-shadow_enabled = true
 shadow_blur = 4.0
 spot_range = 25.0
 spot_attenuation = 0.0179484

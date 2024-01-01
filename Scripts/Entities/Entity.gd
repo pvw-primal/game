@@ -31,6 +31,8 @@ var usedTurn : bool = false
 var lastAction : Move.ActionType = Move.ActionType.other
 
 var Name : String = "Unassigned"
+var nameColor : Color = Color.WHITE
+
 var originalStats : Stats
 var stats : Stats
 var statuses : Dictionary
@@ -50,7 +52,7 @@ var animator : Animator
 @onready var timer : Timer = get_node("Timer")
 @onready var gridmap : MapGenerator = get_node("/root/Root/GridMap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
-@onready var text : TextScroll = get_node("/root/Root/Log/ScrollContainer")
+@onready var text : LogText = get_node("/root/Root/Log/LogText")
 @onready var statusUI : StatusUI = get_node("StatusUI")
 
 func Initialize():
@@ -229,7 +231,7 @@ func SetColor(cR : Color, cG : Color, cB: Color):
 
 func UpdateStats():
 	var statcopy = originalStats.Copy()
-	var additiveMod : Array[float] = [1, 1, 1, 1] #POW, DEF, MAG, RES
+	var additiveMod : Array[float] = [1, 1, 1, 1, 0] #POW, DEF, MAG, RES
 	for SN in statuses.keys():
 		if !statuses[SN].OnStatCheck.is_null():
 			statuses[SN].OnStatCheck.call(statcopy)
@@ -298,3 +300,5 @@ func StartCooldownName(n : String, cd : int = -1):
 func OnCooldown(id : int):
 	return cooldown[id] > 0
 	
+func GetLogName() -> String:
+	return "[color=#" + nameColor.to_html() + "]" + Name + "[/color]"

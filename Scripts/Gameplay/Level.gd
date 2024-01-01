@@ -52,7 +52,7 @@ func RandomItem():
 	#rare : 10%
 	var chance = randf_range(0, 1)
 	if chance > .9:
-		return Items.RandomEquipment()
+		return Items.RandomEquipment(true)
 	elif chance > .6:
 		return Items.items[commonItems[randi_range(0, commonItems.size() - 1)]]
 	elif chance > .1:

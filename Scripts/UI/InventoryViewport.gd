@@ -26,8 +26,6 @@ var player : Player
 var selected : int
 var popupSelect : int
 
-var equipped = -1
-
 var recipe : Array[String] = []
 var currentRecipeSlot : int = 0
 var craftingSlots : Dictionary
@@ -125,6 +123,8 @@ func init(items : Array[Item], slots : int):
 	
 func Open():
 	visible = true
+	description.visible = true
+	bottomBar.visible = false
 	selected = 0
 	player.ignoreInput = true
 	crafting = false
@@ -145,22 +145,28 @@ func Display(id : int):
 	selected = id
 	if inventory[id].item != null:
 		description.visible = true
-		var showCrafting : bool = player.classE.craftTinker.size() > 0 || player.classE.craftBrew.size() > 0
-		description.text = inventory[id].item.name + ":\n" + inventory[id].item.GetDescription(showCrafting, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
+		description.text = inventory[id].item.GetDescription()
 	else:
 		description.visible = false
-		description.text = ""
 
 func OpenMenu(id : int):
-	if inventory[id].item == null:
+	if inventory[id].item == null && player.equipped == -1:
 		return
+	
 	popup.clear()
 	popup.visible = true
 	showPopup = true
 	popup.grab_focus()
 	popupSelect = 0
+	if inventory[id].item == null && player.equipped != -1:
+		popup.add_item("Unequip")
+		popup.add_item("Back")
+		popup.select(popupSelect)
+		popup.item_selected.emit(popupSelect)
+		return
+		
 	if inventory[id].item.equipment && player.classE.HasProf(inventory[id].item.requiredProf):
-		if equipped == id:
+		if player.equipped == id:
 			popup.add_item("Unequip")
 		else:
 			popup.add_item("Equip")
@@ -173,13 +179,24 @@ func OpenMenu(id : int):
 	popup.item_selected.emit(popupSelect)
 	
 func DismissMenu(id : int):
+	if inventory[selected].item == null && player.equipped != -1:
+		if id == 0:
+			Unequip()
+			player.endTurn.emit()
+			player.lastAction = Move.ActionType.other
+			Close.call_deferred()
+		else:
+			list.grab_focus()
+			popup.visible = false
+			showPopup = false
+			list.select(selected)
+			list.item_selected.emit(selected)
+		return
 	if id == popup.item_count - 2:
-		player.text.AddLine("Dropped " + inventory[selected].item.name + ". \n")
+		player.text.AddLine("Dropped " + inventory[selected].item.GetLogName() + ". \n")
 		player.endTurn.emit()
 		player.lastAction = Move.ActionType.other
 		player.gridmap.PlaceItem(player.gridPos, inventory[selected].item)
-		if selected == player.equipped:
-			Unequip()
 		RemoveItem(selected)
 		Close.call_deferred()
 		return
@@ -234,11 +251,12 @@ func CraftingSelectCraft(id : int):
 		popup.select(popupSelect)
 		return
 	popupSelect = id
+	description.visible = true
 	if id == popup.item_count - 1:
 		description.text = "Cancel crafting."
 		bottomBar.text = ""
 	else:
-		description.text = Items.items[popup.get_item_text(popupSelect)].name + ":\n" + Items.items[popup.get_item_text(popupSelect)].description
+		description.text = Items.items[popup.get_item_text(popupSelect)].GetDescription()
 		bottomBar.text = DisplayRecipe(Items.items[popup.get_item_text(popupSelect)].crafting.recipe)
 	
 func CraftingActivateCraft(id : int):
@@ -263,8 +281,7 @@ func CraftingSelectItem(id : int):
 		return
 	selected = id
 	if inventory[id].item != null:
-		var showCrafting : bool = player.classE.craftTinker.size() > 0 || player.classE.craftBrew.size() > 0
-		description.text = inventory[id].item.name + ":\n" + inventory[id].item.GetDescription(showCrafting, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
+		description.text = inventory[id].item.GetDescription()
 	else:
 		description.text = ""
 	bottomBar.text = DisplayRecipe(recipe)
@@ -283,11 +300,15 @@ func CraftingActivateItem(id : int):
 	list.set_item_icon(id, selectedicon)
 	if craftingSlots.keys().size() == recipe.size():
 		#adding items should be handled in move
+		var shouldNotConsume : bool = recipe.size() > 1 && "notConsumeMaterialChance" in player.classE.classVariables
 		for slot in craftingSlots.keys():
 			list.set_item_icon(slot, testicon)
-			RemoveItem(slot)
+			if !shouldNotConsume || randf_range(0, 1) > player.classE.classVariables["notConsumeMaterialChance"]:
+				RemoveItem(slot)
+			else:
+				player.text.AddLine(inventory[slot].item.GetLogName() + " was not consumed while crafting!\n")
+				shouldNotConsume = false
 		craftCompleted.emit(player, Items.items[popup.get_item_text(popupSelect)])
-		CraftingShowMaterial("")
 		Close()
 		return
 	currentRecipeSlot += 1
@@ -295,7 +316,7 @@ func CraftingActivateItem(id : int):
 	bottomBar.text = DisplayRecipe(recipe)
 
 func DisplayRecipe(r : Array[String]) -> String:
-	var s = Items.items[popup.get_item_text(popupSelect)].name + " requires: "
+	var s = "[indent]" + Items.items[popup.get_item_text(popupSelect)].name + " requires: "
 	for i in range(r.size()):
 		s += r[i] if i == r.size() - 1 else r[i] + ", "
 	if !showPopup:
@@ -305,13 +326,17 @@ func DisplayRecipe(r : Array[String]) -> String:
 		for id in craftingSlots.keys():
 			s += inventory[id].item.name + ", "
 	
-	return s
+	return s + "[/indent]\n "
 
 func CraftingShowMaterial(tag : String):
+	if tag == "":
+		for i in range(lastSlot + 1):
+			list.set_item_icon(i, testicon)
+		return
 	for i in range(lastSlot + 1):
 		if inventory[i].item == null || list.get_item_icon(i) == selectedicon:
 			continue
-		if tag in inventory[i].item.crafting.tags || tag == "":
+		if tag in inventory[i].item.crafting.tags:
 			list.set_item_icon(i, testicon)
 		else:
 			list.set_item_icon(i, disabledicon)
@@ -326,6 +351,7 @@ func CraftingBack():
 
 func PickerOpen(viableItems : Dictionary):
 	visible = true
+	bottomBar.visible = false
 	selected = 0
 	player.ignoreInput = true
 	crafting = false
@@ -348,10 +374,9 @@ func PickerSelected(id : int):
 		popup.visible = false
 		showPopup = false
 		description.visible = true
-		var showCrafting : bool = player.classE.craftTinker.size() > 0 || player.classE.craftBrew.size() > 0
-		description.text = inventory[id].item.name + ":\n" + inventory[id].item.GetDescription(showCrafting, player.classE.HasBase(Classes.BaseClass.Arcana) || player.classE.HasBase(Classes.BaseClass.Arms))
+		description.text = inventory[id].item.GetDescription()
 		bottomBar.visible = true
-		bottomBar.text = searchItems[inventory[id].item.name]
+		bottomBar.text = "[indent]" + searchItems[inventory[id].item.name] + "[/indent]"
 	else:
 		description.visible = false
 		bottomBar.visible = false
@@ -360,7 +385,6 @@ func PickerActivated(id : int):
 	if inventory[id].item != null && inventory[id].item.name in searchItems.keys():
 		craftCompleted.emit(player, inventory[id].item)
 		inventory[id].Remove()
-		PickerSetSlots(true)
 		Close()
 
 func PickerSetSlots(reset : bool = false):
@@ -375,7 +399,6 @@ func PickerSetSlots(reset : bool = false):
 func Close(craftcomplete : bool = true):
 	visible = false
 	popup.visible = false
-	description.text = ""
 	bottomBar.visible = false
 	player.ignoreInput = false
 	if crafting:
@@ -383,9 +406,11 @@ func Close(craftcomplete : bool = true):
 		popup.item_activated.disconnect(CraftingActivateCraft)
 		list.item_selected.disconnect(CraftingSelectItem)
 		list.item_activated.disconnect(CraftingActivateItem)
+		CraftingShowMaterial("")
 	elif picking:
 		list.item_selected.disconnect(PickerSelected)
 		list.item_activated.disconnect(PickerActivated)
+		PickerSetSlots(true)
 	else:
 		list.item_selected.disconnect(Display)
 		list.item_activated.disconnect(OpenMenu)
@@ -405,19 +430,34 @@ func RemoveItem(slot : int):
 	inventory[slot].Remove()
 	if slot < firstOpenSlot || firstOpenSlot == -1:
 		firstOpenSlot = slot
-	if slot < equipped:
-		equipped -= 1
-		player.equipped -= 1
-	
+	if slot == player.equipped:
+		Unequip()
+
+func SwapItem(slot1 : int, slot2 : int):
+	if inventory[slot1].item == null:
+		inventory[slot1].ChangeItem(inventory[slot2].item)
+		inventory[slot2].Remove()
+		if slot2 < slot1:
+			firstOpenSlot = slot2
+	else:
+		var temp : Item = inventory[slot2].item
+		inventory[slot2].ChangeItem(inventory[slot1].item)
+		inventory[slot1].ChangeItem(temp)
+
 func InventoryFull() -> bool:
 	return firstOpenSlot == -1
 
 func Equip(id : int):
-	equipped = id
-	player.equipped = id
-	player.equippedMove = inventory[id].item.move
-
+	SwapItem(lastSlot + 1, id)
+	player.equipped = lastSlot + 1
+	
 func Unequip():
-	equipped = -1
+	if firstOpenSlot == -1:
+		return
+	SwapItem(firstOpenSlot, lastSlot + 1)
 	player.equipped = -1
-	player.equippedMove = null
+	for x in range(lastSlot + 1):
+		if inventory[x] != null && inventory[x].item == null:
+			firstOpenSlot = x
+			return
+	firstOpenSlot = -1

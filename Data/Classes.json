@@ -56,7 +56,7 @@
 		"moves": ["Tinker"],
 		"class": ["Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin"]
 	},
 	"Druid":
 	{
@@ -85,12 +85,30 @@
 		"class": ["Arms", "Technique"],
 		"prof": ["WeaponBasic", "WeaponMartial"]
 	},
+	"Warden":
+	{
+		"name": "Warden",
+		"description": "",
+		"moves": ["Skilled Strike", "Tame", "Wild Composure"],
+		"passives": ["Forgotten Bond", "Combative Adaptation"],
+		"class": ["Arms", "Beastmastery"],
+		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic"]
+	},
+	"Tuner":
+	{
+		"name": "Tuner",
+		"description": "",
+		"moves": ["Skilled Strike", "Brew", "Tune Up"],
+		"class": ["Arms", "Alchemy"],
+		"prof": ["WeaponBasic", "WeaponMartial", "Tool"],
+		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Whetstone Oil"]
+	},
 	"Ranger":
 	{
 		"name": "Ranger",
 		"description": "",
 		"moves": ["Stealth", "Tame", "Hunter's Mark"],
-		"passives": ["Shadow's Shadow"],
+		"passives": ["Forgotten Bond", "Shadow's Shadow"],
 		"class": ["Technique", "Beastmastery"],
 		"prof": ["WeaponBasic", "Tool"],
 	},
@@ -112,7 +130,17 @@
 		"passives": ["Pickpocketing"],
 		"class": ["Technique", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin"]
+	},
+	"Scavenger":
+	{
+		"name": "Scavenger",
+		"description": "",
+		"moves": ["Tame", "Tinker", "Scour"],
+		"passives": ["Forgotten Bond", "Resourcefulness"],
+		"class": ["Beastmastery", "Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin"]
 	},
 	"Artificer":
 	{
@@ -123,6 +151,6 @@
 		"class": ["Alchemy", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"],
-		"craftTinker": ["Salvaging Kit", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin"]
 	}
 }

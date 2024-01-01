@@ -76,7 +76,6 @@ _data = {
 animation = &"Drop"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_s6mjv"]
-graph_offset = Vector2(171, 251)
 nodes/Drop/node = SubResource("AnimationNodeAnimation_h50cl")
 nodes/Drop/position = Vector2(400, 320)
 nodes/output/position = Vector2(600, 320)

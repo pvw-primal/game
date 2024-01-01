@@ -27,7 +27,7 @@ func NextLevel():
 	await Start(level.name + "\n" + level.floorPrefix + str(floorNum))
 	
 	var player : Player = turnhandler.Entities[turnhandler.player]
-	player.text.label.text = "\n\n\n\n"
+	player.text.text = "\n\n\n\n"
 	turnhandler.Reset()
 	entityhandler.Reset()
 	mapgenerator.Reset()

@@ -18,8 +18,13 @@ func ChangeItem(i : Item, animate : bool = true):
 	item = i
 	var im = i.mesh if i.mesh != null else itemMesh
 	mesh = im.instantiate()
+	if item.topdown:
+		mesh.rotation_degrees = Vector3(-35, randf_range(-1, 7), -92)
+		mesh.position.y = .235
+	else:
+		mesh.rotation_degrees = Vector3(0, randf_range(-1, 7), randf_range(-1, 7))
+		mesh.position.y = 0
 	add_child(mesh)
-	rotation_degrees = Vector3(0, randf_range(-1, 7), randf_range(-1, 7))
 	if animate:
 		var anim : ItemAnimator = mesh.get_node("AnimationTree")
 		anim.Drop()

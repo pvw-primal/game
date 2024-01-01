@@ -1,0 +1,411 @@
+{
+	"Weapon":
+		{
+			"Rarity":
+				{
+					"Common":
+						{
+							"Modifiers":
+								{
+									"Bleed":
+										{
+											"Prefix": ["", "Jagged", "Mangled", "Ruined", "Spiked"],
+											"Suffix": ["Axe", "Hatchet", "Handaxe", "Sabre"]
+										},
+									"Bold":
+										{
+											"Prefix": ["", "Wooden", "Training", "Squire's", "Trainee"],
+											"Suffix": ["Sword", "Shortsword", "Blade", "Rapier"]
+										},
+									"Blitz":
+										{
+											"Prefix": ["", "Broken", "Light", "Handheld", "Hasty"],
+											"Suffix": ["Dagger", "Knife", "Dirk", "Claws"]
+										},
+									"Bludgeon":
+										{
+											"Prefix": ["", "Worn", "Used", "Rounded", "Dull"],
+											"Suffix": ["Mace", "Club", "Hammer", "Mallet"]
+										}
+								}
+						},
+					"Uncommon":
+						{
+							"Modifiers":
+								{
+									"Bleed":
+										{
+											"Prefix": ["Sharpened", "Keen", "Cutting", "Stinging"],
+											"Suffix": ["Axe", "Battleaxe", "Cutlass", "Waraxe"]
+										},
+									"Bold":
+										{
+											"Prefix": ["Branded", "Emboldened", "Warrior's", "Noble"],
+											"Suffix": ["Sword", "Shortsword", "Rapier", "Longsword", "Sabre"]
+										},
+									"Blitz":
+										{
+											"Prefix": ["Quick", "Swift", "Nimble", "Brisk"],
+											"Suffix": ["Dagger", "Dirk", "Kris", "Knife", "Gauntlet", "Claws"]
+										},
+									"Bludgeon":
+										{
+											"Prefix": ["Heavy", "Leaden", "Iron", "Solid", "Steel"],
+											"Suffix": ["Mace", "Club", "Greatclub", "Hammer"]
+										},
+									"Runed":
+										{
+											"Prefix": ["Forgotten", "Bewitched", "Enchanted", "Twisted"],
+											"Suffix": ["Quarterstaff", "Staff", "Gauntlet", "Falchion"]
+										},
+									"Reach":
+										{
+											"Prefix": ["Extended", "Commanding", "Precise", "Far-reaching"],
+											"Suffix": ["Whip", "Flail", "Lance", "Spear"]
+										},
+									"Cleave":
+										{
+											"Prefix": ["Rending", "Sundering", "Harvester's", "Wide"],
+											"Suffix": ["Greatsword", "Zweihander", "Glaive", "Scythe", "Claymore"]
+										},
+									"Crush":
+										{
+											"Prefix": ["Fell", "Giant", "Bulky", "Massive"],
+											"Suffix": ["Warhammer", "Greatclub", "Maul", "Pickaxe"]
+										}
+								}
+						},
+					"Rare":
+						{
+							"Modifiers":
+								{
+									"Bleed":
+										{
+											"Prefix": ["Serrated", "Lacerating", "Biting", "Severing", "Immortal"],
+											"Suffix": ["Axe", "Battleaxe", "Cutlass", "Waraxe", "Halberd"]
+										},
+									"Bold":
+										{
+											"Prefix": ["Lost Lord's", "Invincible", "Forgotten Conquerer's", "Fallen Champion's", "Mourned Hero's"],
+											"Suffix": ["Sword", "Shortsword", "Rapier", "Longsword", "Blade"]
+										},
+									"Blitz":
+										{
+											"Prefix": ["Lightning-fast", "Unparalleled", "Demonic", "Manic", "Deadly"],
+											"Suffix": ["Dagger", "Dirk", "Kris", "Knife", "Gauntlet", "Claws"]
+										},
+									"Bludgeon":
+										{
+											"Prefix": ["Intense", "Shattering", "Old Smith's", "Forged", "Alloy"],
+											"Suffix": ["Mace", "Club", "Greatclub", "Hammer", "Fellhammer"]
+										},
+									"Runed":
+										{
+											"Prefix": ["Arcane", "Taboo", "God-touched", "Celestial", "Unreal", "Otherworldly"],
+											"Suffix": ["Quarterstaff", "Staff", "Gauntlet", "Falchion"]
+										},
+									"Reach":
+										{
+											"Prefix": ["Inescapable", "Inevitable", "Untouchable", "Imminent", "Foe-doomed"],
+											"Suffix": ["Whip", "Flail", "Lance", "Spear", "Trident", "Chainwhip"]
+										},
+									"Cleave":
+										{
+											"Prefix": ["Reaper's", "Berserker's", "Warlord's"],
+											"Suffix": ["Greatsword", "Zweihander", "Glaive", "Scythe", "Greatscythe"]
+										},
+									"Crush":
+										{
+											"Prefix": ["Immense", "Colossal", "Monumental", "Leviathan's", "Behemoth's"],
+											"Suffix": ["Warhammer", "Greatclub", "Maul", "Pickaxe", "Greatmace"]
+										}
+								}
+						},
+					"Mythic":
+						{
+							"Modifiers":
+								{
+									"Bleed":
+										{
+											"Owner": ["The Thornlord's"],
+											"Prefix": ["Incurable", "Infectious", "Plagued", "Unending", "Reclaimed"],
+											"Suffix": ["Axe", "Battleaxe", "Waraxe", "Halberd"],
+											"Single": ["Court of Barbs", "Law of the Leech"],
+											"FlavorFull": 
+											["The Thornlord once siphoned physical, arcane, and diplomatic powers from the land, leaving nothing untouched.",
+											"The Thornlord's once great court can be distinguished through the countless brutal instruments of torture they left behind.",
+											"Weapons of the Thornlord utilize thin serpentine blades for exsanguination, often doubling as instruments of torture."]
+										},
+									"Bold":
+										{
+											"Owner": ["The Gallant's"],
+											"Prefix": ["Radiant", "Holy", "Treasured", "Prized", "Crowned"],
+											"Suffix": ["Sword", "Beacon", "Rapier", "Relic", "Blade"],
+											"Single": ["Reliquary", "Grail Ward"],
+											"FlavorFull": 
+											["Thought to be the strongest of their sevenfold assembly, the Gallant was written to be able to conquer cities singlehandedly.",
+											"\"Peerless mage, tyrannical barbarian, fierce cavalier, ghostly killer, unmatched bowman, immortal lancer, and the Gallant knight, most noble of all.\" -recovered inscription of the Gallant",
+											"Thousands of relics can be attributed to the Gallant throughout mausoleums and shrines, though few are as coveted as their blades."]
+										},
+									"Blitz":
+										{
+											"Owner": ["The Shenaniganer's"],
+											"Prefix": ["Unseen", "Hidden", "Grinning", "Lunatic", "Deranged"],
+											"Suffix": ["Dagger", "Dirk", "Kris", "Knife", "Gauntlet", "Claws", "Shank"],
+											"Single": ["Frenzy", "The Shenaniganer's Old Tooth"],
+											"FlavorFull": 
+											["Most relics' mysteries originate from time or lack of information; the mysteries of the Shenaniganer's relics originate from obvious lunacy.",
+											"The Shenaniganer's erratic actions support the claim that multiple individuals shared the title. Their bloodlust would still be difficult to explain."]
+										},
+									"Bludgeon":
+										{
+											"Owner": ["The Meld-God's"],
+											"Prefix": ["Perfected", "Artificed", "Frostwelded", "Fused", "United"],
+											"Suffix": ["Anvil", "Craft", "Make", "Hammer"],
+											"Single": ["Amalgam", "Hybrid"],
+											"FlavorFull":
+											["Scattered records of the Meld-God's experiments can be connected to the birth of many warped creatures, and the creation of many warped weapons.",
+											"Tests done by the Meld-God are linked to the thawing of many frigid ancient areas. The extent and methods of these changes are unknown."]
+										},
+									"Runed":
+										{
+											"Owner": ["The Leyline's"],
+											"Prefix": ["Sentient", "Fluxed", "Warped", "Fated"],
+											"Suffix": ["Quarterstaff", "Staff", "Gauntlet", "Falchion"],
+											"Single": ["Remnant", "Residuum"],
+											"FlavorFull":
+											["The prehistoric sentient veins of the world known as the Leylines directed arcane energies. Their energies occasionally coalesce into powerful artifacts.",
+											"As the Leylines were tapped for power, warped defenders flickered into being, written to have distorted entire ecosystems."]
+										},
+									"Reach":
+										{
+											"Owner": ["The Discerners'"],
+											"Prefix": ["Watching", "Scrying", "All-reaching", "Beholding"],
+											"Suffix": ["Flail", "Lance", "Spear", "Trident"],
+											"Single": ["Observe & Response", "Cause & Effect"],
+											"FlavorFull": 
+											["Twin watchers, the Discerners rarely acted upon the world; there is reason to believe they never existed at all.",
+											"Their tendency to abstain from conflict makes a weapon of the twin Discerners as rare as they are powerful.",]
+										},
+									"Cleave":
+										{
+											"Owner": ["The Hoarder's"],
+											"Prefix": ["Covetous", "Voracious", "Yearning", "Famished"],
+											"Suffix": ["Woe", "Replete", "Hunger", "Scythe", "Greatscythe"],
+											"Single": ["Dust", "Leftovers"],
+											"FlavorFull": 
+											["Though their former vaults are well-documented, little remains of whatever else the Hoarder possessed.",
+											"Opulent beyond material measure, the Hoarder's weapons are as awe-insiring as they are deadly."]
+										},
+									"Crush":
+										{
+											"Owner": ["The Spireshroud's"],
+											"Prefix": ["Apex", "Zenith", "Crested", "Pinnacle"],
+											"Suffix": ["Devastator", "Demolisher", "Shatterer", "Ruiner", "Ravager"],
+											"Single": ["Might Makes Right", "Rule of Nature"],
+											"FlavorFull": 
+											["Though long dead, the Spireshroud left many scars on the world; great bodies of water formed from footprints and new mountains shaped in its wake.",
+											"The life of the Spireshroud is a rare case of well-evidenced ancient history; its death however is a complete mystery.",
+											"Unmatched and with as few allies as adversaries, it is difficult to comprehend what could have killed such a behemoth."]
+										}
+								}
+						}
+				}
+		},
+	"Focus":
+		{
+			"Rarity":
+				{
+					"Common":
+						{
+							"Modifiers":
+								{
+									"Fire":
+										{
+											"Prefix": ["Warm", "Ember", "Ashen", "Slag"]
+										},
+									"Frost":
+										{
+											"Prefix": ["Chilly", "Frosted", "Cold", "Brisk"]
+										},
+									"Earth":
+										{
+											"Prefix": ["Reclaimed", "Earthen", "Rocky", "Rusted"]
+										},
+									"Air":
+										{
+											"Prefix": ["Eroded", "Windy", "Breezy", "Gusty"]
+										}
+								},
+							"Suffix": ["Bauble", "Focus", "Trinket", "Knickknack", "Novelty", "Bead", "Chain", "Curio", "Coin"]
+						},
+					"Uncommon":
+						{
+							"Modifiers":
+								{
+									"Fire":
+										{
+											"Prefix": ["Cinder", "Flaming", "Branded", "Smoldering"]
+										},
+									"Frost":
+										{
+											"Prefix": ["Icy", "Frozen", "Cold", "Rime"]
+										},
+									"Earth":
+										{
+											"Prefix": ["Geode", "Quartz", "Amber", "Obsidian"]
+										},
+									"Air":
+										{
+											"Prefix": ["Wild", "Windswept", "Squall", "Storming"]
+										},
+									"Force":
+										{
+											"Prefix": ["Impetus", "Pressured", "Potent", "Impulse"]
+										},
+									"Lightning":
+										{
+											"Prefix": ["Sparking", "Shocking", "Zappy", "Electric", "Thunder"]
+										},
+									"Shadow":
+										{
+											"Prefix": ["Dark", "Shaded", "Gloom", "Dim"]
+										},
+									"Radiant":
+										{
+											"Prefix": ["Glowing", "Holy", "Blessed", "Bright"]
+										}
+								},
+							"Suffix": ["Talisman", "Amulet", "Scroll", "Tome", "Wand", "Scepter", "Gauntlet", "Brace", "Chalice", "Orb"]
+						},
+					"Rare":
+						{
+							"Modifiers":
+								{
+									"Fire":
+										{
+											"Prefix": ["Burning", "Inferno", "Blazing", "Scorched"]
+										},
+									"Frost":
+										{
+											"Prefix": ["Glacial", "Frigid", "Icebound", "Gelid"]
+										},
+									"Earth":
+										{
+											"Prefix": ["Diamond", "Emerald", "Sapphire", "Ruby", "Worldly"]
+										},
+									"Air":
+										{
+											"Prefix": ["Tempest", "Tornado", "Hurricane", "Cyclone", "Typhoon", "Whirlwind"]
+										},
+									"Force":
+										{
+											"Prefix": ["Gravity", "Magnitude", "Might", "Surging"]
+										},
+									"Lightning":
+										{
+											"Prefix": ["Voltaic", "Discharge", "Fulminating", "Thunderbolt"]
+										},
+									"Shadow":
+										{
+											"Prefix": ["Murk", "Umbra", "Nightfall", "Dusk", "Necrotic"]
+										},
+									"Radiant":
+										{
+											"Prefix": ["Illuminated", "Lustrous", "Consecrated", "Dawn", "Divine"]
+										}
+								},
+							"Suffix": ["Grimoire", "Artifact", "Vestige", "Spellbook", "Caster", "Crown", "Jewel", "Phylactery", "Circlet", "Crest"]
+						},
+					"Mythic":
+						{
+							"Modifiers":
+								{
+									"Fire":
+										{
+											"Owner": ["The Shenaniganer's"],
+											"Prefix": ["Immolating", "Wildflame", "Incalculable", "Erratic"],
+											"Suffix": ["Torch", "Bauble", "Coin", "Card"],
+											"Single": ["Pandemonicon", "Revelry's Chosen"],
+											"FlavorFull": 
+											["Most relics' mysteries originate from time or lack of information; the mysteries of the Shenaniganer's relics originate from obvious lunacy.",
+											"The Shenaniganer's erratic actions support the claim that multiple individuals shared the title. Their bloodlust would still be difficult to explain."]
+										},
+									"Frost":
+										{
+											"Owner": ["The Meld-God's"],
+											"Prefix": ["Faultless", "Crystalline", "Frostformed", "Perfect"],
+											"Suffix": ["Ingot", "Alloy", "Gemstone", "Gem", "Masterpiece"],
+											"Single": ["Iceberg Bulwark", "Melded Shield"],
+											"FlavorFull":
+											["Scattered records of the Meld-God's experiments can be connected to the birth of many warped creatures, and the creation of many warped weapons.",
+											"Tests done by the Meld-God are linked to the thawing of many frigid ancient areas. The extent and methods of these changes are unknown."]
+										},
+									"Earth":
+										{
+											"Owner": ["The Spireshroud's"],
+											"Prefix": ["Mighty", "Unmatched", "Dominant", "Indomitable"],
+											"Suffix": ["Prescence", "Scale", "Plate", "Scute", "Crest"],
+											"Single": ["Worldcloak", "Prehistoric Plume"],
+											"FlavorFull": 
+											["Though long dead, the Spireshroud left many scars on the world; great bodies of water formed from footprints and new mountains shaped in its wake.",
+											"The life of the Spireshroud is a rare case of well-evidenced ancient history; its death however is a complete mystery.",
+											"Unmatched and with as few allies as adversaries, it is difficult to comprehend what could have killed such a behemoth."]
+										},
+									"Air":
+										{
+											"Owner": ["The Leyline's"],
+											"Prefix": ["Diffused", "Scattered", "Dispersed"],
+											"Suffix": ["Tether", "Vein", "Fetter", "Binding"],
+											"Single": ["Warped Artery", "Unbound Current"],
+											"FlavorFull":
+											["The prehistoric sentient veins of the world known as the Leylines directed arcane energies. Their energies occasionally coalesce into powerful artifacts.",
+											"As the Leylines were tapped for power, warped defenders flickered into being, written to have distorted entire ecosystems."]
+										},
+									"Force":
+										{
+											"Owner": ["The Hoarder's"],
+											"Prefix": ["Gilded", "Amassed", "Sought", "Imposed"],
+											"Suffix": ["Burden", "Strain", "Bounty"],
+											"Single": ["Encumberance", "Greed"],
+											"FlavorFull": 
+											["Though their former vaults are well-documented, little remains of whatever else the Hoarder possessed.",
+											"Opulent beyond material measure, the Hoarder's weapons are as awe-insiring as they are deadly."]
+										},
+									"Lightning":
+										{
+											"Owner": ["The Discerners'"],
+											"Prefix": ["Electric", "Hellion", "Unblinking", "Perpetual"],
+											"Suffix": ["Eye", "Node", "Witness"],
+											"Single": ["Lightning & Thunder", "Hellion & Electric Eye"],
+											"FlavorFull": 
+											["Twin watchers, the Discerners rarely acted upon the world; there is reason to believe they never existed at all.",
+											"Their tendency to abstain from conflict makes a weapon of the twin Discerners as rare as they are powerful.",]
+										},
+									"Shadow":
+										{
+											"Owner": ["The Thornlord's"],
+											"Prefix": ["Tenebrous", "Corrupt", "Depraved", "Nefarious"],
+											"Suffix": ["Crown", "Scepter", "Court", "Crest"],
+											"Single": ["Predator", "The Thornlord's Rule"],
+											"FlavorFull": 
+											["The Thornlord once siphoned physical, arcane, and diplomatic powers from the land, leaving nothing untouched.",
+											"The Thornlord's once great court can be distinguished through the countless brutal instruments of torture they left behind.",
+											"Weapons of the Thornlord utilize thin serpentine blades for exsanguination, often doubling as instruments of torture."]
+										},
+									"Radiant":
+										{
+											"Owner": ["The Gallant's"],
+											"Prefix": ["Revered", "Brilliant", "Sacred", "Sanctified"],
+											"Suffix": ["Grail", "Relic", "Beacon", "Heirloom"],
+											"Single": ["Path of Radiance", "Hallow"],
+											"FlavorFull": 
+											["Thought to be the strongest of their sevenfold assembly, the Gallant was written to be able to conquer cities singlehandedly.",
+											"\"Peerless mage, tyrannical barbarian, fierce cavalier, ghostly killer, unmatched bowman, immortal lancer, and the Gallant knight, most noble of all.\" -recovered inscription of the Gallant",
+											"Thousands of relics can be attributed to the Gallant throughout mausoleums and shrines, though few are as coveted as their blades."]
+										}
+								}
+						}
+				}
+		}
+}

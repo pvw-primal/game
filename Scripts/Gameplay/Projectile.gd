@@ -13,7 +13,7 @@ func init(attacker : Entity, destination : Vector3, Speed : float, mesh : Packed
 	var model = mesh.instantiate()
 	add_child(model)
 	position = Vector3(attacker.position.x, position.y, attacker.position.z)
-	rotation.y = attacker.mesh.rotation.y - (3 * PI / 4)
+	rotation.y = attacker.mesh.rotation.y + (PI / 2)
 	targetPos = destination
 	speed = Speed
 	moving = true
@@ -24,8 +24,7 @@ func init(attacker : Entity, destination : Vector3, Speed : float, mesh : Packed
 	
 func _process(delta):
 	if moving:
-		position = position.lerp(targetPos, delta * speed / 2)
-		position = position.move_toward(targetPos, delta * speed / 2)
+		position = position.move_toward(targetPos, delta * speed)
 		if position.is_equal_approx(targetPos):
 			moving = false
 			Complete()

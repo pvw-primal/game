@@ -65,7 +65,7 @@ func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] 
 		
 func Effects(attacker : Entity, defender : Entity = null):
 	var damage : int = Stats.GetDamage(attacker.stats, defender.stats, magic)
-	attacker.text.AddLine(attacker.Name + " attacked " + defender.Name + " with " + name +  " for " + str(damage) + " damage!" + "\n")
+	attacker.text.AddLine(attacker.GetLogName() + " attacked " + defender.GetLogName() + " with " + name +  " for " + LogText.GetDamageNum(damage, magic) + " damage!" + "\n")
 	defender.TakeDamage(damage, attacker)
 	
 func InRange(attacker : Entity, defender : Entity):
@@ -94,9 +94,9 @@ static func DefaultProjectile(mesh : PackedScene, effects : Callable, r : int = 
 		var dir = e.facingPos - e.gridPos
 		var def = e.CheckDirection(dir, r) if t == null else [t.gridPos, t]
 		if def[1] == null:
-			e.gridmap.SpawnProjectile(e, def[0], 3, mesh)
+			e.gridmap.SpawnProjectile(e, def[0], 5, mesh)
 		else:
-			e.gridmap.SpawnProjectileTarget(e, def[1], effects, 3, mesh)
+			e.gridmap.SpawnProjectileTarget(e, def[1], effects, 5, mesh)
 	
 	var move = Move.new("Projectile", proj)
 	move.manualEndTurn = true

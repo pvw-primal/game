@@ -20,11 +20,27 @@ func _ready():
 	Move.moves["Forager's Bounty"] = herbalistMove
 	
 	var cutthroatMove = Move.new("Ambush", Cutthroat1)
+	cutthroatMove.playAnimation = false
 	cutthroatMove.cooldown = 2
 	cutthroatMove.noTargets = true
 	cutthroatMove.icon = preload("res://Assets/Icons/Move/Cutthroat.png")
 	Move.moves["Ambush"] = cutthroatMove
 	Passive.passives["Sneak Attack"] = Passive.new("Sneak Attack", CutthroatPassiveApply, CutthroatPassiveRemove)
+	
+	var wardenMove = Move.new("Wild Composure", Warden1)
+	wardenMove.playAnimation = false
+	wardenMove.cooldown = 9
+	wardenMove.noTargets = true
+	wardenMove.icon = preload("res://Assets/Icons/Move/Warden.png")
+	Move.moves["Wild Composure"] = wardenMove
+	Passive.passives["Combative Adaptation"] = Passive.new("Combative Adaptation", WardenPassiveApply, WardenPassiveRemove)
+	
+	var tunerMove = Move.new("Tune Up", Tuner1)
+	tunerMove.playAnimation = false
+	tunerMove.cooldown = 3
+	tunerMove.noTargets = true
+	tunerMove.icon = preload("res://Assets/Icons/Move/Tuner.png")
+	Move.moves["Tune Up"] = tunerMove
 	
 	var rangerMove = Move.new("Hunter's Mark", Ranger1)
 	rangerMove.manualEndTurn = true
@@ -51,15 +67,24 @@ func _ready():
 	Move.moves["Pilfer"] = thiefMove
 	Passive.passives["Pickpocketing"] = Passive.new("Pickpocketing", ThiefPassiveApply, ThiefPassiveRemove)
 	
+	var scavengerMove = Move.new("Scour", Scavenger1)
+	scavengerMove.noTargets = true
+	scavengerMove.cooldown = 6
+	scavengerMove.icon = preload("res://Assets/Icons/Move/Scavenger.png")
+	Move.moves["Scour"] = scavengerMove
+	Passive.passives["Resourcefulness"] = Passive.new("Resourcefulness", ScavengerPassiveApply, ScavengerPassiveRemove)
+	
 	Passive.passives["Combat Ingenuity"] = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
 	
 	Classes.LoadAllClasses()
+
+
 
 #DRUID
 #druid stat swapping is untested, test in detail when stat screen is implemented!
 func Druid1(e : Entity, _t = null):
 	if e.Type != "Player" || e.allies.size() < 1:
-		e.text.AddLine(e.Name + " has no ally to shapeshare with!\n")
+		e.text.AddLine(e.GetLogName() + " has no ally to shapeshare with!\n")
 		return
 		
 	var transformMesh : Node3D = e.classE.classVariables["transformMesh"]
@@ -70,7 +95,7 @@ func Druid1(e : Entity, _t = null):
 		e.animator = e.mesh.get_node("AnimationTree")
 		e.originalStats = e.classE.classVariables["originalOriginalStats"]
 		e.classE.classVariables["notOriginal"] = false
-		e.text.AddLine(e.Name + " returned to their true form!\n")
+		e.text.AddLine(e.GetLogName() + " returned to their true form!\n")
 	else:
 		if transformMesh == null:
 			transformMesh = e.allies[0].mesh.duplicate()
@@ -82,7 +107,7 @@ func Druid1(e : Entity, _t = null):
 		e.animator = transformMesh.get_node("AnimationTree")
 		e.originalStats = e.allies[0].originalStats
 		e.classE.classVariables["notOriginal"] = true
-		e.text.AddLine(e.Name + " assumed " + e.allies[0].Name + "'s form!\n")
+		e.text.AddLine(e.GetLogName() + " assumed " + e.allies[0].Name + "'s form!\n")
 
 func DruidPassiveApply(e : Entity):
 	e.classE.classVariables["originalMesh"] = e.mesh
@@ -110,7 +135,7 @@ func DruidOnAllyDeath(e : Player, t : Entity):
 		e.mesh.get_node("Armature").visible = true
 		e.animator = e.mesh.get_node("AnimationTree")
 		e.classE.classVariables["notOriginal"] = false
-		e.text.AddLine(e.Name + " was forced into their true form after " + t.Name + "'s death!\n")
+		e.text.AddLine(e.GetLogName() + " was forced into their true form after " + t.Name + "'s death!\n")
 	if e.classE.classVariables["transformMesh"] != null:
 		e.classE.classVariables["transformMesh"].queue_free()
 		e.classE.classVariables["transformMesh"] = null
@@ -140,16 +165,16 @@ func HerbalistAttack(e : Entity, item : Item):
 	var message : String
 	if item.name == "Charshroom":
 		effect = Status.AttackBuff()
-		message = e.Name + " ate a charshroom and felt stronger!\n"
+		message = e.GetLogName() + " ate a charshroom and felt stronger!\n"
 	elif item.name == "Windeelion":
 		effect = Status.MagicBuff()
-		message = e.Name + " ate a windeelion and felt more powerful!\n"
+		message = e.GetLogName() + " ate a windeelion and felt more powerful!\n"
 	elif item.name == "Pebblepod":
 		effect = Status.DefenseBuff()
-		message = e.Name + " ate a pebblepod and felt tougher!\n"
+		message = e.GetLogName() + " ate a pebblepod and felt tougher!\n"
 	elif item.name == "Tarrime Bloom":
 		effect = Status.ResistenceBuff()
-		message = e.Name + " ate a tarrime bloom and felt more resistant!\n"
+		message = e.GetLogName() + " ate a tarrime bloom and felt more resistant!\n"
 	
 	e.StartCooldownName("Forager's Bounty")
 	e.AddStatus(effect, 3)
@@ -167,60 +192,24 @@ func Cutthroat1(e : Entity, t : Entity):
 		if t == null:
 			return
 		var damage = Stats.GetDamage(e.stats, t.stats)
-		e.text.AddLine(e.Name + " attacked " + t.Name + " with Ambush for " + str(damage) + " damage!" + "\n")
-		return
-	var mods : Dictionary = e.inventory[e.equipped].prefixes
-	var targets : Array[Entity] = []
-	if t != null && e.gridmap.NoCorners(e.gridPos, t.gridPos):
-		targets.append(t)
-	elif "Reach" in mods:
-		var target = e.CheckDirection(e.facingPos - e.gridPos, 2)
-		if target[1] != null:
-			targets.append(target[1])
-	if "Cleave" in mods:
-		var adj = e.AdjacentTiles()
-		adj.shuffle()
-		var additional = 0
-		for pos in adj:
-			var entity = e.GetEntity(pos)
-			if entity != null && entity not in targets:
-				targets.append(entity)
-				additional += 1
-				if additional >= 2:
-					break
-				
-	var additiveMod : float = 1
-	if "Blitz" in mods && e.lastAction == Move.ActionType.move:
-		additiveMod += .4
-	elif "Bold" in mods && e.lastAction != Move.ActionType.move:
-		additiveMod += .2
-	if "Runed" in mods:
-		additiveMod += .2
-	
-	await e.Wait(.3)
-	for i in range(targets.size()):
-		if "Bleed" in mods:
-			targets[i].AddStatus(Status.Bleed(), 2)
-		if "Crush" in mods && randf_range(0, 1) < .2:
-			targets[i].AddStatus(Status.Stun(), 1)
-		var damage = Stats.GetDamage(e.stats, targets[i].stats, false, 2) if "Bludgeon" in mods else Stats.GetDamage(e.stats, targets[i].stats)
-		damage *= additiveMod
-		if i > 0:
-			e.text.AddLine(e.Name + " cleaved " + targets[i].Name + " with Ambush for " + str(int(damage / 2)) + " damage!" + "\n")
-			targets[i].animator.Damage()
-			targets[i].TakeDamage(int(damage / 2), e)
+		e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " with Ambush for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
+		e.animator.Attack()
+		await e.Wait(e.inventoryUI.inventory[e.equipped].item.move.waittime)
+		t.animator.Damage()
+		t.TakeDamage(damage, e)
+		if is_instance_valid(t):
+			e.OnMoveUse.emit(e, t, "Ambush")
 		else:
-			e.text.AddLine(e.Name + " ambushed " + targets[i].Name + " for " + str(int(damage)) + " damage!" + "\n")
-			targets[i].animator.Damage()
-			targets[i].TakeDamage(damage, e)
-		await e.Wait(.5)
+			e.OnMoveUse.emit(e, null, "Ambush")
+		return
+	await Equipment.WeaponCrit(e, t, e.inventoryUI.inventory[e.equipped].item, "Ambush")
 
 func CutthroatOnMoveUse(e : Entity, t : Entity, movename : String):
-	if t != null && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys():
+	if t != null && e.equipped != 1 && movename == e.inventoryUI.inventory[e.equipped].item.move.name && "Stealth" in e.statuses.keys():
 		var damage : int = int(Stats.GetDamage(e.stats, t.stats) / 2)
 		if damage <= 0:
 			damage = 1
-		e.text.AddLine(t.Name + " was surprised and took " + str(damage) + " damage!\n")
+		e.text.AddLine(t.GetLogName() + " was surprised and took " + LogText.GetDamageNum(damage) + " damage!\n")
 		t.TakeDamage(damage, e)
 
 func CutthroatPassiveApply(e : Entity):
@@ -229,17 +218,79 @@ func CutthroatPassiveApply(e : Entity):
 func CutthroatPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(CutthroatOnMoveUse)
 
+#WARDEN
+func Warden1(e : Entity, _t : Entity):
+	e.AddStatus(Status.SureCrit(), 10)
+	if e.allies.size() > 0:
+		e.allies[0].AddStatus(Status.SureCrit(), 10)
+		e.text.AddLine(e.GetLogName() + " and " + e.allies[0].GetLogName() + " gained composure!\n")
+	else:
+		e.text.AddLine(e.GetLogName() + " gained composure!\n")
+
+func WardenOnMoveUse(e : Entity, _t : Entity, movename : String):
+	if "SureCrit" in e.statuses.keys() && e.equipped != 1 && movename == e.inventoryUI.inventory[e.equipped].item.move.name:
+		e.RemoveStatus("SureCrit")
+
+func WardenTameMove(e : Entity, t : Entity):
+	if t == null:
+		return
+	if e.tamer.equipped == -1:
+		await e.tamer.classE.classVariables[e.Name + "originalMove"].Use(e, t)
+		return
+	var chance = 1.1 if "SureCrit" in e.statuses.keys() else e.tamer.stats.CRIT + e.tamer.inventoryUI.inventory[e.tamer.equipped].item.critChance
+	if randf() < chance:
+		e.RemoveStatus("SureCrit")
+		if e.tamer.inventoryUI.inventory[e.tamer.equipped].item.move.magic:
+			await Equipment.FocusCrit(e, t, e.tamer.inventoryUI.inventory[e.tamer.equipped].item, e.moves[0].name)
+		else:
+			await Equipment.WeaponCrit(e, t, e.tamer.inventoryUI.inventory[e.tamer.equipped].item, e.moves[0].name)
+	else:
+		await e.tamer.classE.classVariables[e.Name + "originalMove"].Use(e, t)
+		
+func WardenOnTame(e : Entity, t : Entity):
+	e.classE.classVariables[t.Name + "originalMove"] = t.moves[0]
+	var newMove : Move = Move.new(t.moves[0].name, WardenTameMove)
+	newMove.playAnimation = false
+	t.moves[0] = newMove
+	
+func WardenOnAllyDeath(e : Entity, t : Entity):
+	e.classE.classVariables.erase(t.Name + "originalMove")
+
+func WardenPassiveApply(e : Entity):
+	e.OnMoveUse.connect(WardenOnMoveUse)
+	e.OnTame.connect(WardenOnTame)
+	e.OnAllyDeath.connect(WardenOnAllyDeath)
+	
+func WardenPassiveRemove(e : Entity):
+	e.OnMoveUse.disconnect(WardenOnMoveUse)
+	e.OnTame.disconnect(WardenOnTame)
+	e.OnAllyDeath.disconnect(WardenOnAllyDeath)
+	#this solution will NOT work for Warden + Summoner, look into better solution
+	for ally in e.allies:
+		ally.moves[0] = e.classE.classVariables[ally.Name + "originalMove"]
+		e.classE.classVariables.erase(ally.Name + "originalMove")
+		
+#TUNER
+func Tuner1(e : Entity, _t : Entity):
+	var healing = e.stats.CRIT
+	if e.equipped != -1:
+		healing += e.inventoryUI.inventory[e.equipped].item.critChance
+	healing = floorf(e.stats.maxHP * healing)
+	var actualHeal : int = e.Heal(healing)
+	if actualHeal > 0:
+		e.text.AddLine(e.GetLogName() + " was tuned up for " + LogText.GetHealNum(actualHeal) + " HP!\n")
+
 #RANGER
 func Ranger1(e : Entity, t : Entity):
 	var def = e.CheckDirection(e.facingPos - e.gridPos, 5) if t == null else [t.gridPos, t]
 	if def[1] == null:
-		e.gridmap.SpawnProjectile(e, def[0], 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+		e.gridmap.SpawnProjectile(e, def[0], 5, preload("res://Assets/Moves/HuntersMark.tscn"))
 	else:
-		e.gridmap.SpawnProjectileTarget(e, def[1], RangerApply, 3, preload("res://Assets/Items/Alchemy/HealingPotion.tscn"))
+		e.gridmap.SpawnProjectileTarget(e, def[1], RangerApply, 5, preload("res://Assets/Moves/HuntersMark.tscn"))
 
 func RangerApply(e : Entity, t : Entity):
 	var damage = int(Stats.GetDamage(e.stats, t.stats) / 2)
-	e.text.AddLine(t.Name + " was marked for " + str(damage) + " damage!\n")
+	e.text.AddLine(t.GetLogName() + " was marked for " + LogText.GetDamageNum(damage) + " damage!\n")
 	t.AddStatus(Status.DefResDebuff(), 3)
 	t.animator.Damage()
 	t.TakeDamage(damage)
@@ -257,7 +308,7 @@ func RangerPassiveRemove(e : Entity):
 #BLIGHTER
 func Blighter1(g : Entity, _t : Entity):
 	if g.equipped == -1:
-		g.text.AddLine(g.Name + " has no weapon equipped to coat!\n")
+		g.text.AddLine(g.GetLogName() + " has no weapon equipped to coat!\n")
 		g.OnMoveUse.emit(g, null, "Weapon Coating")
 		g.endTurn.emit()
 		return
@@ -280,14 +331,14 @@ func BlighterAttack(e : Entity, item : Item):
 	e.classE.classVariables["coatMove"] = item.move
 	e.classE.classVariables["coatUses"] = 2
 	e.StartCooldownName("Weapon Coating")
-	e.text.AddLine(e.Name + " applyed a " + item.name + " to their weapon!\n")
+	e.text.AddLine(e.GetLogName() + " applyed a " + item.name + " to their weapon!\n")
 	e.OnMoveUse.emit(e, null, "Weapon Coating")
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
 	e.endTurn.emit()
 
 func BlighterOnMoveUse(e : Entity, t : Entity, movename : String):
-	if t != null && e.equippedMove != null && movename == e.equippedMove.name && e.classE.classVariables["coatMove"] != null:
+	if t != null && e.equipped != 1 && movename == e.inventoryUI.inventory[e.equipped].item.move.name && e.classE.classVariables["coatMove"] != null:
 		e.classE.classVariables["coatMove"].attackEffects.call(e, t)
 		e.classE.classVariables["coatUses"] -= 1
 		if e.classE.classVariables["coatUses"] <= 0:
@@ -307,7 +358,7 @@ func BlighterPassiveRemove(e : Entity):
 func Thief1(e : Entity, t : Entity):
 	var pierce : int = 2 if t.inventory.size() == 0 else 0
 	var damage : int = Stats.GetDamage(e.stats, t.stats, false, pierce)
-	e.text.AddLine(e.Name + " attacked " + t.Name + " with Pilfer for " + str(damage) + " damage!" + "\n")
+	e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " with Pilfer for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
 	t.TakeDamage(damage, e)
 	
 func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
@@ -319,7 +370,7 @@ func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
 			e.text.AddLine(item.name + " fell to the floor!\n")
 		else:
 			e.inventoryUI.AddItem(item)
-			e.text.AddLine(e.Name + " stole " + item.name + "!\n")
+			e.text.AddLine(e.GetLogName() + " stole " + item.name + "!\n")
 		t.RemoveItemAt(removeSpot)
 		
 func ThiefPassiveApply(e : Entity):
@@ -328,6 +379,56 @@ func ThiefPassiveApply(e : Entity):
 func ThiefPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(ThiefOnMoveUse)
 
+#SCAVENGER
+func Scavenger1(g : Entity, t : Entity):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	var tame : Entity = e.allies[0] if e.allies.size() > 0 else null
+	var itemchance : float = 0
+	var potentialItems
+	if t != null && t.Type != "Ally":
+		itemchance = .15
+		potentialItems = Loader.GetEnemyData(t.Name)["drops"]
+		var pierce = 0
+		if tame != null:
+			tame.animator.Attack()
+			tame.Rotate(t.gridPos)
+			itemchance += .1
+			pierce = 2
+		var damage : int = Stats.GetDamage(e.stats, t.stats, false, pierce)
+		e.text.AddLine(e.GetLogName() + " scoured " + t.GetLogName() + " for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
+		t.animator.Damage()
+		t.TakeDamage(damage, e)
+	else:
+		potentialItems = e.gridmap.level.materials
+		if tame != null:
+			tame.animator.Attack()
+			tame.Rotate(e.facingPos)
+			itemchance = .05
+	
+	if randf_range(0, 1) < itemchance:
+		e.text.AddLine(e.GetLogName() + " found an item while scavenging!\n")
+		var placePos = e.facingPos if e.gridmap.GetMapPos(e.facingPos) != -2 else e.gridPos
+		e.gridmap.PlaceItem(placePos, Items.items[potentialItems[randi_range(0, potentialItems.size() - 1)]])
+	else:
+		e.text.AddLine(e.GetLogName() + " didn't find anything!\n")
+
+func ScavengerPassiveApply(e : Entity):
+	if "notConsumeMaterialPassives" in e.classE.classVariables:
+		e.classE.classVariables["notConsumeMaterialPassives"] += 1
+		e.classE.classVariables["notConsumeMaterialChance"] += .15
+	else:
+		e.classE.classVariables["notConsumeMaterialPassives"] = 1
+		e.classE.classVariables["notConsumeMaterialChance"] = .15
+		
+func ScavengerPassiveRemove(e : Entity):
+	e.classE.classVariables["notConsumeMaterialPassives"] -= 1
+	e.classE.classVariables["notConsumeMaterialChance"] -= .15
+	if e.classE.classVariables["notConsumeMaterialPassives"] < 1:
+		e.classE.classVariables.erase("notConsumeMaterialChance")
+		e.classE.classVariables.erase("notConsumeMaterialPassives")
+		
 #ARTIFICER
 func ArtificerOnMoveUse(e : Entity, _t : Entity, movename : String):
 	if movename == "Tinker":
