@@ -24,6 +24,7 @@ const OCCUPIED_WEIGHT : float = 10
 signal startTurn
 signal endTurn
 signal move(pos : Vector2i, dir : Vector2i)
+var dead : bool = false
 signal onDeath
 
 var turn : bool = false
@@ -155,12 +156,24 @@ func SetMesh(meshPath : String):
 	mesh.rotation = oldRotate
 	add_child(mesh)
 	animator = get_node("Mesh/AnimationTree")
+	
+func SetMeshCopy(node : Node3D):
+	var oldRotate = Vector3.ZERO
+	if mesh != null:
+		oldRotate = mesh.rotation
+		mesh.queue_free()
+	mesh = node.duplicate()
+	mesh.rotation = oldRotate
+	add_child(mesh)
+	animator = get_node("Mesh/AnimationTree")
 
 func StartTurn():
 	Heal(1)
 	for SN in statuses.keys():
 		if !statuses[SN].OnTurnStart.is_null():
-			statuses[SN].OnTurnStart.call(self)
+			await statuses[SN].OnTurnStart.call(self)
+			if dead:
+				return
 	for i in range(cooldown.size()):
 		if cooldown[i] != 0:
 			cooldown[i] -= 1

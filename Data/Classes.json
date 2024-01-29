@@ -76,6 +76,24 @@
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Blooming Brew"]
 	},
+	"War Caster":
+	{
+		"name": "War Caster",
+		"description": "",
+		"moves": ["Aspected Blast", "Skilled Strike", "Expert's Stance"],
+		"passives" : ["All-Rounder"],
+		"class": ["Arcana", "Arms"],
+		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic", "FocusAdvanced"],
+	},
+	"Enchanter":
+	{
+		"name": "Enchanter",
+		"description": "",
+		"moves": ["Aspected Blast", "Tinker", "Disenchanting Surge"],
+		"class": ["Arcana", "Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "FocusAdvanced", "Tool"],
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin", "Enchanted Attuner"]
+	},
 	"Cutthroat":
 	{
 		"name": "Cutthroat",
@@ -102,6 +120,15 @@
 		"class": ["Arms", "Alchemy"],
 		"prof": ["WeaponBasic", "WeaponMartial", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Whetstone Oil"]
+	},
+	"Weaponsmith":
+	{
+		"name": "Weaponsmith",
+		"description": "",
+		"moves": ["Skilled Strike", "Tinker", "Abrading Assault"],
+		"class": ["Arms", "Machining"],
+		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic", "Tool"],
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin", "Smithing Gear"]
 	},
 	"Ranger":
 	{

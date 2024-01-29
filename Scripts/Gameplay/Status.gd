@@ -5,8 +5,10 @@ var name : String
 var OnTurnStart : Callable
 var OnStatCheck : Callable
 var OnPercentStatCheck : Callable
-
+var checkLast : bool
 var icon : Texture2D
+
+const WAIT_TIME : float = .75
 
 static var status : Dictionary
 
@@ -22,6 +24,7 @@ func _init(Name : String, turnstart = null, statcheck = null, percentstatcheck =
 	if percentstatcheck != null:
 		OnPercentStatCheck = percentstatcheck
 	icon = i
+	checkLast = false
 
 #temporary
 static func InitStatus():
@@ -121,10 +124,10 @@ static func Paralysis():
 static func Burning():
 	if "Burning" not in status:
 		var burn = func(e : Entity):
-			var damage = randi_range(1, 3)
 			e.animator.Damage()
-			e.Wait(.3)
+			var damage = ceili(float(e.stats.maxHP) * .2)
 			e.text.AddLine(e.GetLogName() + " was burned for " + LogText.GetDamageNum(damage, true) + " damage!\n")
+			await e.Wait(WAIT_TIME)
 			e.TakeDamage(damage)
 		status["Burning"] = Status.new("Burning", burn, null, null, preload("res://Assets/Icons/Status/Burning.png"))
 	return status["Burning"]
@@ -170,8 +173,9 @@ static func Bleed():
 	if "Bleed" not in status:
 		var bleed = func(e : Entity):
 			e.animator.Damage()
-			e.Wait(.3)
-			e.text.AddLine(e.GetLogName() + " bled for " + LogText.GetDamageNum(2) + " damage!\n")
-			e.TakeDamage(2)
+			var damage = ceili(float(e.stats.maxHP) * .1)
+			e.text.AddLine(e.GetLogName() + " bled for " + LogText.GetDamageNum(damage) + " damage!\n")
+			await e.Wait(WAIT_TIME)
+			e.TakeDamage(damage)
 		status["Bleed"] = Status.new("Bleed", bleed, null, null, preload("res://Assets/Icons/Status/Bleed.png"))
 	return status["Bleed"]

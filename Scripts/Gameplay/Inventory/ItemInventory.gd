@@ -4,6 +4,7 @@ extends Node3D
 var itemMesh
 
 var item : Item
+var uses : int
 var mesh : Node3D
 
 func init(pos : Vector3):
@@ -12,10 +13,14 @@ func init(pos : Vector3):
 	mesh = null
 	position = pos
 		
-func ChangeItem(i : Item, animate : bool = true):
+func ChangeItem(i : Item, animate : bool = true, u : int = -1):
 	if item != null:
 		mesh.queue_free()
 	item = i
+	if i.consumable && u == -2:
+		uses = i.maxUses
+	elif u > 0:
+		uses = u
 	var im = i.mesh if i.mesh != null else itemMesh
 	mesh = im.instantiate()
 	if item.topdown:
@@ -33,3 +38,4 @@ func Remove():
 	item = null
 	mesh.queue_free()
 	mesh = null
+	uses = -1

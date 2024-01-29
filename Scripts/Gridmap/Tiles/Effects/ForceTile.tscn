@@ -59,12 +59,13 @@ size = Vector2(0.03, 0.03)
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(2.5, 0, 0, 0, -1.09278e-07, 2.5, 0, -2.5, -1.09278e-07, 0, 0.01, 0)
-modulate = Color(1, 1, 1, 0.721569)
+modulate = Color(1, 1, 1, 0.807843)
 double_sided = false
 alpha_cut = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_xr34r")
 autoplay = "default"
+frame_progress = 0.16722
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.246645, 0)

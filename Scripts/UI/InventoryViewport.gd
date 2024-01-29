@@ -36,6 +36,14 @@ signal craftCompleted(e : Entity, i : Item)
 var picking : bool
 var searchItems : Dictionary
 
+var modularPicking : bool
+var criteria : Array[Callable]
+var criteriaDesc : Array[String]
+var picked : Array[int]
+signal pickingComplete(e : Player, ids : Array[int])
+
+var using : int
+
 func _ready():
 	var i : int = 0
 	for y in range(INVENTORY_HEIGHT):
@@ -73,11 +81,7 @@ func _process(_delta):
 			elif Input.is_action_just_pressed("UISelect"):
 				popup.item_activated.emit(popupSelect)
 			elif Input.is_action_just_pressed("UIBack"):
-				if crafting:
-					Close(false)
-					return
-				else:
-					DismissMenu(popup.item_count - 1)
+				Back()
 #
 		else:
 			if Input.is_action_just_pressed("MoveRight"):
@@ -99,18 +103,7 @@ func _process(_delta):
 			elif Input.is_action_just_pressed("UISelect"):
 				list.item_activated.emit(selected)
 			elif Input.is_action_just_pressed("UIBack"):
-				if crafting:
-					if craftingSlots.size() == 0:
-						showPopup = true
-						popup.grab_focus()
-						popup.select(popupSelect)
-						popup.item_selected.emit(popupSelect)
-						CraftingShowMaterial("")
-						return
-					else:
-						CraftingBack()
-				else:
-					Close(false)
+				Back()
 
 func init(items : Array[Item], slots : int):
 	for i in range(slots):
@@ -129,6 +122,7 @@ func Open():
 	player.ignoreInput = true
 	crafting = false
 	picking = false
+	modularPicking = false
 	showPopup = false
 	
 	list.item_selected.connect(Display)
@@ -145,7 +139,7 @@ func Display(id : int):
 	selected = id
 	if inventory[id].item != null:
 		description.visible = true
-		description.text = inventory[id].item.GetDescription()
+		description.text = inventory[id].item.GetDescription(inventory[id].uses)
 	else:
 		description.visible = false
 
@@ -196,7 +190,7 @@ func DismissMenu(id : int):
 		player.text.AddLine("Dropped " + inventory[selected].item.GetLogName() + ". \n")
 		player.endTurn.emit()
 		player.lastAction = Move.ActionType.other
-		player.gridmap.PlaceItem(player.gridPos, inventory[selected].item)
+		player.gridmap.PlaceItem(player.gridPos, inventory[selected].item, inventory[selected].uses)
 		RemoveItem(selected)
 		Close.call_deferred()
 		return
@@ -207,7 +201,6 @@ func DismissMenu(id : int):
 		list.select(selected)
 		list.item_selected.emit(selected)
 		return
-	Close.call_deferred()
 	if inventory[selected].item.equipment:
 		if selected == player.equipped:
 			Unequip()
@@ -215,10 +208,19 @@ func DismissMenu(id : int):
 			Equip(selected)
 		player.lastAction = Move.ActionType.other
 		player.endTurn.emit()
+		Close()
 		return
-	inventory[selected].item.move.Use(player, player.GetEntity(player.facingPos))
-	if inventory[selected].item.consumable:
-		RemoveItem(selected)
+	Close()
+	var preselected = selected
+	inventory[preselected].item.move.Use(player, player.GetEntity(player.facingPos))
+	if inventory[preselected].item.consumable:
+		if inventory[preselected].item.move.manualCooldown:
+			using = preselected
+			return
+		if inventory[preselected].uses > 1:
+			inventory[preselected].uses -= 1
+		else:
+			RemoveItem(preselected)
 		
 func CraftingOpen(items : Array[String]):
 	visible = true
@@ -229,6 +231,7 @@ func CraftingOpen(items : Array[String]):
 	craftingSlots.clear()
 	crafting = true
 	picking = false
+	modularPicking = false
 	
 	popup.clear()
 	for itemname in items:
@@ -256,8 +259,9 @@ func CraftingSelectCraft(id : int):
 		description.text = "Cancel crafting."
 		bottomBar.text = ""
 	else:
-		description.text = Items.items[popup.get_item_text(popupSelect)].GetDescription()
-		bottomBar.text = DisplayRecipe(Items.items[popup.get_item_text(popupSelect)].crafting.recipe)
+		var i : Item = Items.items[popup.get_item_text(popupSelect)]
+		description.text = i.GetDescription(i.maxUses)
+		bottomBar.text = DisplayRecipe(i.crafting.recipe)
 	
 func CraftingActivateCraft(id : int):
 	if !showPopup:
@@ -281,7 +285,7 @@ func CraftingSelectItem(id : int):
 		return
 	selected = id
 	if inventory[id].item != null:
-		description.text = inventory[id].item.GetDescription()
+		description.text = inventory[id].item.GetDescription(inventory[id].uses)
 	else:
 		description.text = ""
 	bottomBar.text = DisplayRecipe(recipe)
@@ -356,6 +360,7 @@ func PickerOpen(viableItems : Dictionary):
 	player.ignoreInput = true
 	crafting = false
 	picking = true
+	modularPicking = false
 	showPopup = false
 	
 	list.item_selected.connect(PickerSelected)
@@ -374,7 +379,7 @@ func PickerSelected(id : int):
 		popup.visible = false
 		showPopup = false
 		description.visible = true
-		description.text = inventory[id].item.GetDescription()
+		description.text = inventory[id].item.GetDescription(inventory[id].uses)
 		bottomBar.visible = true
 		bottomBar.text = "[indent]" + searchItems[inventory[id].item.name] + "[/indent]"
 	else:
@@ -396,6 +401,86 @@ func PickerSetSlots(reset : bool = false):
 		else:
 			list.set_item_icon(i, disabledicon)
 
+#callable structure:
+#func Example(i : Item, lastSelected : Item):
+#return "Description of effect" if good else null
+func ModPickerOpen(Criteria : Array[Callable], Desc : Array[String]):
+	visible = true
+	bottomBar.visible = false
+	selected = 0
+	player.ignoreInput = true
+	crafting = false
+	picking = false
+	modularPicking = true
+	showPopup = false
+	
+	list.item_selected.connect(ModPickerSelected)
+	list.item_activated.connect(ModPickerActivated)
+	
+	criteria = Criteria
+	criteriaDesc = Desc
+	picked = []
+	currentRecipeSlot = 0
+	ModPickerSetSlots()
+	
+	list.grab_focus()
+	list.select(selected)
+	list.item_selected.emit(selected)
+	
+func ModPickerSelected(id : int):
+	if list.get_item_icon(id) != disabledicon:
+		selected = id
+		popup.visible = false
+		showPopup = false
+		description.visible = true
+		description.text = inventory[id].item.GetDescription(inventory[id].uses)
+		bottomBar.visible = true
+		var lastSelected : Item = null if picked.size() < 1 else inventory[picked[currentRecipeSlot - 1]].item
+		var crit = criteria[currentRecipeSlot].call(inventory[id].item, lastSelected)
+		if crit != null:
+			bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "\n\n" + crit + "[/indent]"
+		else:
+			bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "[/indent]"
+	else:
+		description.visible = false
+		bottomBar.visible = true
+		bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "[/indent]"
+
+func ModPickerActivated(id : int):
+	if list.get_item_icon(id) != disabledicon:
+		picked.append(id)
+		currentRecipeSlot += 1
+		if picked.size() == criteria.size():
+			pickingComplete.emit(player, picked)
+			Close()
+			return
+		list.set_item_icon(id, selectedicon)
+		ModPickerSetSlots()
+		ModPickerSelected(id)
+
+func ModPickerBack():
+	if picked.size() < 1:
+		Close()
+	else:
+		list.set_item_icon(picked.pop_back(), testicon)
+		currentRecipeSlot -= 1
+		ModPickerSetSlots()
+		ModPickerSelected(selected)
+
+func ModPickerSetSlots(reset : bool = false):
+	var lastSelected : Item = null if picked.size() < 1 else inventory[picked[currentRecipeSlot - 1]].item
+	for i in range(lastSlot + 1):
+		if reset:
+			list.set_item_icon(i, testicon)
+			continue
+		if list.get_item_icon(i) == selectedicon:
+			continue
+		var crit = criteria[currentRecipeSlot].call(inventory[i].item, lastSelected)
+		if crit == null:
+			list.set_item_icon(i, disabledicon)
+		else:
+			list.set_item_icon(i, testicon)
+
 func Close(craftcomplete : bool = true):
 	visible = false
 	popup.visible = false
@@ -411,6 +496,15 @@ func Close(craftcomplete : bool = true):
 		list.item_selected.disconnect(PickerSelected)
 		list.item_activated.disconnect(PickerActivated)
 		PickerSetSlots(true)
+	elif modularPicking:
+		list.item_selected.disconnect(ModPickerSelected)
+		list.item_activated.disconnect(ModPickerActivated)
+		if picked.size() != criteria.size():
+			pickingComplete.emit(player, [] as Array[int])
+		criteria = []
+		criteriaDesc = []
+		picked = []
+		ModPickerSetSlots(true)
 	else:
 		list.item_selected.disconnect(Display)
 		list.item_activated.disconnect(OpenMenu)
@@ -418,8 +512,31 @@ func Close(craftcomplete : bool = true):
 	if !craftcomplete:
 		craftCompleted.emit(player, null)
 
-func AddItem(i : Item):
-	inventory[firstOpenSlot].ChangeItem(i)
+func Back():
+	if showPopup:
+		if crafting:
+			Close(false)
+			return
+		else:
+			DismissMenu(popup.item_count - 1)
+	else:
+		if crafting:
+			if craftingSlots.size() == 0:
+				showPopup = true
+				popup.grab_focus()
+				popup.select(popupSelect)
+				popup.item_selected.emit(popupSelect)
+				CraftingShowMaterial("")
+				return
+			else:
+				CraftingBack()
+		elif modularPicking:
+			ModPickerBack()
+		else:
+			Close(false)
+
+func AddItem(i : Item, uses : int = -1):
+	inventory[firstOpenSlot].ChangeItem(i, true, uses)
 	for x in range(lastSlot + 1):
 		if inventory[x] != null && inventory[x].item == null:
 			firstOpenSlot = x

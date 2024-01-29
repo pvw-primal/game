@@ -1,21 +1,25 @@
 class_name Controller
 extends Node
 
-@onready var mapgenerator : MapGenerator = get_node("/root/Root/GridMap")
-@onready var entityhandler : EntityHandler = get_node("/root/Root/EntityHandler")
-@onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
-@onready var transitionscreen : TransitionScreen = get_node("TransitionScreen")
-
 var level : Level
 
-var floorNum : int = 0
+var floorNum : int
 
-var numEnemies : int = 7
-var statDistribution : int = 2
-var spawnChance : float = 0
+var numEnemies : int
+var statDistribution : int
+var spawnChance : float
 
 func _ready():
-	level = entityhandler.level
+	level = Global.level
+	numEnemies = 7
+	statDistribution = 2
+	spawnChance = 0
+	floorNum = 0
+	%EntityHandler.player = Global.player
+	
+	%GridMap.init()
+	%EntityHandler.init(numEnemies, statDistribution, true)
+	%TurnHandler.init(spawnChance)
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("Test"):
@@ -26,22 +30,22 @@ func NextLevel():
 	IncreaseDifficulty()
 	await Start(level.name + "\n" + level.floorPrefix + str(floorNum))
 	
-	var player : Player = turnhandler.Entities[turnhandler.player]
+	var player : Player = %TurnHandler.Entities[%TurnHandler.player]
 	player.text.text = "\n\n\n\n"
-	turnhandler.Reset()
-	entityhandler.Reset()
-	mapgenerator.Reset()
+	%TurnHandler.Reset()
+	%EntityHandler.Reset()
+	%GridMap.Reset()
 	
-	mapgenerator._ready()
+	%GridMap.init()
 	if player.turn:
-		player.endTurn.disconnect(turnhandler.HandleNextTurn)
-	turnhandler.AddEntity(player)
-	entityhandler._ready(player, numEnemies, statDistribution)
+		player.endTurn.disconnect(%TurnHandler.HandleNextTurn)
+	%TurnHandler.AddEntity(player)
+	%EntityHandler.init(numEnemies, statDistribution, false)
 	
-	await transitionscreen.Wait(.5)
+	await $TransitionScreen.Wait(.5)
 	await Stop()
 	
-	turnhandler._ready(spawnChance)
+	%TurnHandler.init(spawnChance)
 
 func IncreaseDifficulty():
 	var chance = randf_range(0, 1)
@@ -53,14 +57,14 @@ func IncreaseDifficulty():
 		spawnChance += .02
 
 func Start(text : String):
-	transitionscreen.visible = true
-	transitionscreen.transitiontext.visible = true
-	transitionscreen.transitiontext.text = text
-	transitionscreen.shouldVisible = true
-	transitionscreen.fullyVisible = false
-	await transitionscreen.ScreenVisible
+	$TransitionScreen.visible = true
+	$TransitionScreen.transitiontext.visible = true
+	$TransitionScreen.transitiontext.text = text
+	$TransitionScreen.shouldVisible = true
+	$TransitionScreen.fullyVisible = false
+	await $TransitionScreen.ScreenVisible
 	
 func Stop():
-	transitionscreen.shouldVisible = false
-	transitionscreen.transitiontext.visible = false
-	await transitionscreen.ScreenNotVisible
+	$TransitionScreen.shouldVisible = false
+	$TransitionScreen.transitiontext.visible = false
+	await $TransitionScreen.ScreenNotVisible

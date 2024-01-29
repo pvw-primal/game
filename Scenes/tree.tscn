@@ -1,0 +1,77 @@
+[gd_scene load_steps=7 format=3 uid="uid://cnbbui7bqe1as"]
+
+[ext_resource type="Script" path="res://Scripts/AbilityTree/AbilityTreeDisplay.gd" id="1_4l4os"]
+[ext_resource type="Script" path="res://Scripts/AbilityTree/AbilityTreePlayer.gd" id="2_373uh"]
+[ext_resource type="Theme" uid="uid://c6lcjyg56bap4" path="res://Scripts/UI/Theme.tres" id="3_yohfx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1pjl6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y2x1x"]
+bg_color = Color(0.364706, 0.364706, 0.364706, 0.615686)
+
+[sub_resource type="Theme" id="Theme_vu802"]
+Panel/styles/panel = SubResource("StyleBoxFlat_y2x1x")
+
+[node name="root" type="Node3D"]
+script = ExtResource("1_4l4os")
+
+[node name="tree" type="Node3D" parent="."]
+
+[node name="Player" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.555, 0)
+script = ExtResource("2_373uh")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-1, 6.3937e-08, -5.96222e-08, 0, 0.681998, 0.731354, 8.74228e-08, 0.731354, -0.681998, 0, 3.02, -1.88)
+
+[node name="Area3D" type="Area3D" parent="Player"]
+input_ray_pickable = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Area3D"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, -0.555, 0)
+shape = SubResource("BoxShape3D_1pjl6")
+
+[node name="Description" type="RichTextLabel" parent="."]
+y_sort_enabled = true
+offset_left = 37.0
+offset_top = 50.0
+offset_right = 718.0
+offset_bottom = 50.0
+theme = ExtResource("3_yohfx")
+theme_override_colors/default_color = Color(0.796078, 0.796078, 0.796078, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 5
+bbcode_enabled = true
+fit_content = true
+shortcut_keys_enabled = false
+
+[node name="Panel" type="Panel" parent="Description"]
+show_behind_parent = true
+z_index = -1
+custom_minimum_size = Vector2(634, 700)
+layout_mode = 0
+offset_left = -20.0
+offset_right = 656.0
+offset_bottom = 700.0
+theme = SubResource("Theme_vu802")
+
+[node name="Shadowlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+light_energy = 0.4
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+shadow_bias = 0.01
+shadow_blur = 3.0
+directional_shadow_pancake_size = 0.0
+
+[node name="Anglelight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.66262, -0.748956, 0, 0.748956, -0.66262, 0, 0, 0)
+light_energy = 0.3
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+shadow_opacity = 0.2
+directional_shadow_pancake_size = 0.0

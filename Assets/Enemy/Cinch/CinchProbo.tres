@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://baj21gvunkr3q"]
+
+[ext_resource type="Shader" path="res://Scripts/Shaders/Cinch.gdshader" id="1_1e4qx"]
+[ext_resource type="Texture2D" uid="uid://bgfkr0260hrep" path="res://Assets/Enemy/Cinch/Cinch_Probo.png" id="2_dl4mh"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1e4qx")
+shader_parameter/texture_albedo = ExtResource("2_dl4mh")
+shader_parameter/texture_emission = ExtResource("2_dl4mh")

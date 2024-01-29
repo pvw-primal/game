@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bfngvrypgmr2p"]
+
+[ext_resource type="Texture2D" uid="uid://d4in64m66emsq" path="res://Assets/Items/Alchemy/FlamefrothTincture_Cork.png" id="1_wk0ry"]
+
+[resource]
+albedo_texture = ExtResource("1_wk0ry")
+emission_enabled = true
+emission_texture = ExtResource("1_wk0ry")

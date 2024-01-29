@@ -5,7 +5,7 @@
 			"description": "Restores 50% HP.",
 			"flavor": "The taste and temperature vary drastically, seemingly adapting to the consumer's current needs and preferences.",
 			"mesh": "res://Assets/Items/Alchemy/HealingPotion.tscn",
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Drink",
 				"playAnimation": false,
@@ -27,7 +27,7 @@
 			"description": "Throw the draught directly in front of you, paralyzing a foe.",
 			"flavor": "Skin exposure causes profound numbness and impaired motor control, quickly rendering the recipient effectively immobile.",
 			"mesh": "res://Assets/Items/Alchemy/ParalysisDraught.tscn",
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Throw",
 				"message": "was paralyzed!",
@@ -47,7 +47,7 @@
 			"description": "Breathe fire in an area.",
 			"flavor": "Though highly effective, frequent use incinerates phlegm and other particulates in the throat, causing embers and ash to accumulate around the mouth.",
 			"mesh": "res://Assets/Items/Alchemy/FlamefrothTincture.tscn",
-			"consumable": true,
+			"consumable": 2,
 			"move":{
 				"useTooltip": "Drink",
 				"message": "breathed fire!",
@@ -65,11 +65,11 @@
 	"Javelin":
 		{
 			"name": "Javelin",
-			"description": "Throw to deal damage at a distance.",
-			"flavor": "",
+			"description": "A set of javelins, used to deal damage from a distance.",
+			"flavor": "Make sure to throw it pointy-end first.",
 			"mesh": "res://Assets/Items/Machining/Javelin.tscn",
 			"topdown": true,
-			"consumable": true,
+			"consumable": 3,
 			"move":{
 				"useTooltip": "Throw",
 				"effects":{
@@ -90,7 +90,7 @@
 			"description": "Throw to ensnare a creature, paralyzing them.",
 			"flavor": "",
 			"mesh": null,
-			"consumable": true,
+			"consumable": 2,
 			"move":{
 				"useTooltip": "Throw",
 				"message" : "was ensnared!",
@@ -115,7 +115,7 @@
 			"rarity": 1,
 			"mesh": "res://Assets/Items/Machining/SalvagingKit.tscn",
 			"topdown": true,
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Salvage",
 				"custom": "Salvage"
@@ -132,7 +132,7 @@
 			"rarity": 2,
 			"mesh": "res://Assets/Items/Drops/TunnelingTools.tscn",
 			"topdown": true,
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Use",
 				"custom": "Escape"
@@ -214,6 +214,71 @@
 			"tags": ["Healing", "Stone"]
 		},
 	
+	"Fire Mote":
+		{
+			"name": "Fire Mote",
+			"description": "Salvage; a small smoldering mass.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Fire Mote.tscn",
+			"tags": ["Fire"]
+		},
+	"Frost Mote":
+		{
+			"name": "Frost Mote",
+			"description": "Salvage; a frigid material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Frost Mote.tscn",
+			"tags": ["Frost"]
+		},
+	"Earth Mote":
+		{
+			"name": "Earth Mote",
+			"description": "Salvage; a hardy piece of earth.",
+			"flavor": "This just looks like a rock...",
+			"mesh": "res://Assets/Items/Salvage/Earth Mote.tscn",
+			"tags": ["Stone"]
+		},
+	"Air Mote":
+		{
+			"name": "Air Mote",
+			"description": "Salvage; a light airy material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Air Mote.tscn",
+			"tags": ["Air"]
+		},
+	"Shiny Scrap":
+		{
+			"name": "Air Mote",
+			"description": "Salvage; an emboldened, valuable material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Shiny Scrap.tscn",
+			"tags": ["Reagent"]
+		},
+	"Sharp Scrap":
+		{
+			"name": "Sharp Mote",
+			"description": "Salvage; an acute material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Sharp Scrap.tscn",
+			"tags": ["Sharp"]
+		},
+	"Heavy Scrap":
+		{
+			"name": "Heavy Mote",
+			"description": "Salvage; a weighty material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Heavy Scrap.tscn",
+			"tags": ["Heavy"]
+		},
+	"Light Scrap":
+		{
+			"name": "Light Mote",
+			"description": "Salvage; a nearly weightless material.",
+			"flavor": "",
+			"mesh": "res://Assets/Items/Salvage/Light Scrap.tscn",
+			"tags": ["Fiber"]
+		},
+	
 	"Blooming Brew":
 		{
 			"name": "Blooming Brew",
@@ -221,7 +286,7 @@
 			"flavor": "This complex mixture harnesses and absorbs latent magic, converting them into a quick burst of cultivating energies.",
 			"rarity": 1,
 			"mesh": "res://Assets/Items/Alchemy/BloomingBrew.tscn",
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Throw",
 				"custom": "Blooming Brew"
@@ -235,7 +300,7 @@
 			"description": "Apply a honing oil to your weapon, increasing CRIT chance by 50% for 3 turns.",
 			"flavor": "Small particulates in the oil strengthen most material on a microscopic level.",
 			"mesh": "res://Assets/Items/Alchemy/WhetstoneOil.tscn",
-			"consumable": true,
+			"consumable": 3,
 			"move":{
 				"useTooltip": "Apply",
 				"message": "applyed a Whetstone Oil!",
@@ -259,12 +324,43 @@
 			"flavor": "The simplest solution is often the best; filling a flask with caustic spikes is efficient and effective.",
 			"rarity": 1,
 			"mesh": "res://Assets/Items/Alchemy/BlightersBrew.tscn",
-			"consumable": true,
+			"consumable": 1,
 			"move":{
 				"useTooltip": "Throw",
 				"custom": "Blighter's Brew"
 			},
 			"recipe":["Reagent", "Sharp"],
 			"requires":["Alchemy", "Technique"]
+		},
+		
+	"Enchanted Attuner":
+		{
+			"name": "Enchanted Attuner",
+			"description": "Uses material to add an aspect to a focus. The type of aspect depends on the material used.",
+			"flavor": "Brute force application of restorative magic allows for slightly more arcane capacity than normal.",
+			"rarity": 1,
+			"mesh": null,
+			"consumable": 2,
+			"move":{
+				"useTooltip": "Enchant",
+				"custom": "Change Aspect"
+			},
+			"recipe":["Reagent", "Adhesive", "Healing"],
+			"requires":["Machining", "Arcana"]
+		},
+	"Smithing Gear":
+		{
+			"name": "Smithing Gear",
+			"description": "Uses material to add a modifier to a weapon. The modifier added depends on the material used.",
+			"flavor": "A combination of martial skill and mechanical know-how reveals a weapon's hidden potential.",
+			"rarity": 1,
+			"mesh": null,
+			"consumable": 2,
+			"move":{
+				"useTooltip": "Modify",
+				"custom": "Change Modifier"
+			},
+			"recipe":["Reagent", "Adhesive", "Fiber"],
+			"requires":["Machining", "Arms"]
 		}
 }

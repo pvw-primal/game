@@ -26,6 +26,10 @@
 										{
 											"Prefix": ["", "Worn", "Used", "Rounded", "Dull"],
 											"Suffix": ["Mace", "Club", "Hammer", "Mallet"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Fixed", "Changed", "Shaped", "Unstable"]
 										}
 								}
 						},
@@ -72,6 +76,10 @@
 										{
 											"Prefix": ["Fell", "Giant", "Bulky", "Massive"],
 											"Suffix": ["Warhammer", "Greatclub", "Maul", "Pickaxe"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Altered", "Reformed", "Wavering", "Adjusted", "Remade"]
 										}
 								}
 						},
@@ -118,6 +126,10 @@
 										{
 											"Prefix": ["Immense", "Colossal", "Monumental", "Leviathan's", "Behemoth's"],
 											"Suffix": ["Warhammer", "Greatclub", "Maul", "Pickaxe", "Greatmace"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Evolved", "Transformed", "Reborn", "Dynamic", "Mutated"]
 										}
 								}
 						},
@@ -235,6 +247,10 @@
 									"Air":
 										{
 											"Prefix": ["Eroded", "Windy", "Breezy", "Gusty"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Fixed", "Changed", "Shaped", "Unstable"]
 										}
 								},
 							"Suffix": ["Bauble", "Focus", "Trinket", "Knickknack", "Novelty", "Bead", "Chain", "Curio", "Coin"]
@@ -274,6 +290,10 @@
 									"Radiant":
 										{
 											"Prefix": ["Glowing", "Holy", "Blessed", "Bright"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Altered", "Reformed", "Wavering", "Adjusted", "Remade"]
 										}
 								},
 							"Suffix": ["Talisman", "Amulet", "Scroll", "Tome", "Wand", "Scepter", "Gauntlet", "Brace", "Chalice", "Orb"]
@@ -313,6 +333,10 @@
 									"Radiant":
 										{
 											"Prefix": ["Illuminated", "Lustrous", "Consecrated", "Dawn", "Divine"]
+										},
+									"Modified":
+										{
+											"Prefix": ["Evolved", "Transformed", "Reborn", "Dynamic", "Mutated"]
 										}
 								},
 							"Suffix": ["Grimoire", "Artifact", "Vestige", "Spellbook", "Caster", "Crown", "Jewel", "Phylactery", "Circlet", "Crest"]

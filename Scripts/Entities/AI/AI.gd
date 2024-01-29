@@ -6,16 +6,17 @@ var shouldMove = false
 
 var inventory : Array[Item] = []
 var inventorySize : int = 12
+var useMeta : Dictionary
 
 var tamer : Player
 
 func _ready():
 	Initialize()
+	startTurn.connect(FindAction)
 	move.connect(UpdateMap)
 	
 func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = []):
 	partialInit(pos, num)
-	startTurn.connect(FindAction)
 	onDeath.connect(Die)
 	classE = Classes.GetClass(Classes.BaseClass.Beastmastery)
 	
@@ -26,6 +27,7 @@ func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = [
 	Name = enemyData["name"]
 	SetMesh(enemyData["path"])
 	tamer = null
+	useMeta = {}
 	if color.size() > 2:
 		SetColor(color[0], color[1], color[2])
 	
@@ -38,6 +40,8 @@ func _process(delta):
 
 #handles the AI's turn
 func FindAction():
+	if timer.time_left > 0:
+		await timer.timeout
 	if usedTurn: #used for Swap()
 		endTurn.emit()
 		usedTurn = false
@@ -87,12 +91,16 @@ func UpdateMap(pos : Vector2i, dir : Vector2i):
 		gridmap.minimap.Reveal(pos)
 
 func Die():
+	if dead:
+		return
+	dead = true
 	gridmap.Pathfinding.set_point_weight_scale(gridPos, 1)
 	gridmap.SetMapPos(gridPos, -1)
 	text.AddLine(GetLogName() + " was defeated!" + "\n")
 	turnhandler.RemoveEntity(entityNum)
-	for i in inventory:
-		gridmap.PlaceItem(gridPos, i)
+	for i in range(inventory.size()):
+		var uses = useMeta[i] if i in useMeta else -1
+		gridmap.PlaceItem(gridPos, inventory[i], uses)
 	if gridmap.minimap.get_cell_source_id(0, gridPos) != -1:
 		gridmap.minimap.Reveal(gridPos)
 	endTurn.emit()
@@ -102,6 +110,9 @@ func Die():
 		turnhandler.Entities[turnhandler.player].UpdateAllies()
 	queue_free.call_deferred()
 
+func GetItem(i : int) -> Item:
+	return inventory[i]
+
 func HasItem(n : String) -> int:
 	for i in range(inventory.size()):
 		if inventory[i].name == n:
@@ -110,9 +121,16 @@ func HasItem(n : String) -> int:
 	
 func RemoveItemAt(itemPos : int):
 	inventory.remove_at(itemPos)
+	if itemPos in useMeta:
+		useMeta.erase(itemPos)
 
-func PickupItem(i : Item):
+func PickupItem(i : Item, uses : int):
 	inventory.append(i)
-
+	if i.consumable && uses == -2:
+		if i.maxUses > 1:
+			useMeta[inventory.size() - 1] = i.maxUses
+	elif uses > 0:
+		useMeta[inventory.size() - 1] = uses
+	
 func IsInventoryFull() -> bool:
 	return inventory.size() >= inventorySize

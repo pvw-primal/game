@@ -1,26 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://cfy5fet78vnv"]
+[gd_scene load_steps=10 format=3 uid="uid://cfy5fet78vnv"]
 
 [ext_resource type="ArrayMesh" uid="uid://cscriof1ksr7l" path="res://Assets/Environment/Wall2.obj" id="1_5wcbx"]
+[ext_resource type="Material" uid="uid://bwbsnrevrrsm3" path="res://Scripts/Gridmap/TileMaterial.tres" id="1_ng0a8"]
 [ext_resource type="Texture2D" uid="uid://c16ogvde06u1" path="res://Assets/Environment/Tile.png" id="1_xnl15"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1vj3c"]
-albedo_texture = ExtResource("1_xnl15")
-texture_filter = 0
+[ext_resource type="Material" uid="uid://dgd8rguj63ps8" path="res://Scripts/Gridmap/MapMaterial.tres" id="3_0yj6b"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_2or3j"]
-material = SubResource("StandardMaterial3D_1vj3c")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bopi7"]
-albedo_color = Color(0.854902, 0.831373, 0.854902, 1)
-albedo_texture = ExtResource("1_xnl15")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gq27o"]
-albedo_color = Color(0.964706, 0.956863, 0.964706, 1)
-albedo_texture = ExtResource("1_xnl15")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xflbw"]
-albedo_color = Color(0.964706, 0.945098, 0.964706, 1)
-albedo_texture = ExtResource("1_xnl15")
+material = ExtResource("1_ng0a8")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47dls"]
 albedo_color = Color(0.843137, 0.843137, 0.843137, 1)
@@ -63,30 +49,28 @@ shadow_mesh = SubResource("ArrayMesh_mfb65")
 
 [node name="Tile" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+visible = false
 mesh = SubResource("PlaneMesh_2or3j")
 
 [node name="Wall" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.472, 0, 0, 0, 0.5, 0, -0.758, 0)
-visible = false
 gi_mode = 0
 mesh = ExtResource("1_5wcbx")
-surface_material_override/0 = SubResource("StandardMaterial3D_bopi7")
 
 [node name="Wall2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.585, 0, 0, 0, 0.5, 0, -0.595, 0)
-visible = false
 gi_mode = 0
 mesh = ExtResource("1_5wcbx")
-surface_material_override/0 = SubResource("StandardMaterial3D_gq27o")
+surface_material_override/0 = ExtResource("3_0yj6b")
 
 [node name="Wall3" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.55, 0, 0, 0, 0.47, 0, 0, 0, 0.55, 0, -0.595, 0)
-visible = false
 gi_mode = 0
 mesh = ExtResource("1_5wcbx")
-surface_material_override/0 = SubResource("StandardMaterial3D_xflbw")
+surface_material_override/0 = ExtResource("3_0yj6b")
 
 [node name="ExitTile" type="MeshInstance3D" parent="."]
 transform = Transform3D(2.27299e-08, -0.718, -8.45378e-08, -0.52, -3.13848e-08, 0, -1.98711e-15, 6.27696e-08, -0.967, 0, -0.135, 0.35)
+visible = false
 mesh = SubResource("ArrayMesh_0p1ab")
 skeleton = NodePath("")

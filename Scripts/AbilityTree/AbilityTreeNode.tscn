@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4hqpwshne8yo"]
+
+[ext_resource type="Script" path="res://Scripts/AbilityTree/AbilityTreeNode.gd" id="1_bo1nj"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_a1hf6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_01alm"]
+
+[node name="Node" type="Node3D"]
+script = ExtResource("1_bo1nj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_a1hf6")
+
+[node name="Area3D" type="Area3D" parent="."]
+input_ray_pickable = false
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_01alm")

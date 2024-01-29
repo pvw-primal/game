@@ -14,5 +14,13 @@
 			"move_name": "Scratch",
 			"drops": ["Pestail", "Bonder's Bulb"],
 			"class":["Alchemy"]
+		},
+	"Cinch":
+		{
+			"name": "Cinch",
+			"path": "res://Assets/Enemy/Cinch/Cinch.tscn",
+			"move_name": "Slash",
+			"drops": ["Eidolon Mass"],
+			"class":["Technique"]
 		}
 }

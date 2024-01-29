@@ -181,6 +181,15 @@ static func RarityColor(rarity : Rarity):
 	else:
 		return Color.GOLD
 		
+static func ChangePrefixName(e : Equipment, prefix : String = "Modified"):
+	if e.rarity == Rarity.Mythic || e.modified:
+		return
+	var suffix : String = e.name.get_slice(" ", 1) if e.name.get_slice_count(" ") == 2 else e.name
+	var prefixes = equipmentData["Focus"]["Rarity"][Rarity.keys()[e.rarity]]["Modifiers"][prefix]["Prefix"] if e.move.magic else equipmentData["Weapon"]["Rarity"][Rarity.keys()[e.rarity]]["Modifiers"][prefix]["Prefix"]
+	e.name = prefixes[randi_range(0, prefixes.size() - 1)] + " " + suffix
+	e.move.name = e.GetLogName()
+	e.modified = true
+
 static var items : Dictionary = {}
 static var equipmentData : Dictionary
 
@@ -280,7 +289,8 @@ func LoadItems():
 			item.move = LoadMove(itemData)
 			item.moveTooltip = itemData["move"]["useTooltip"]
 		if "consumable" in itemData:
-			item.consumable = itemData["consumable"]
+			item.consumable = true
+			item.maxUses = itemData["consumable"]
 		if "topdown" in itemData:
 			item.topdown = itemData["topdown"]
 		if "recipe" in itemData:

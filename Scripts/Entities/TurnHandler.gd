@@ -15,7 +15,7 @@ const MAX_MOVE_DISTANCE : float = 17
 
 signal EndTurnOrder
 
-func _ready(sc : float = 0):
+func init(sc : float = 0):
 	Entities[currentTurn].endTurn.connect(HandleNextTurn)
 	Entities[currentTurn].startTurn.emit()
 	spawnChance = sc

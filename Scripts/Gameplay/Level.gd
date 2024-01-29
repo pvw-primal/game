@@ -12,6 +12,8 @@ var commonItems : Array
 var rareItems : Array
 var materials : Array
 
+var color : Color
+
 func _init(type : String):
 	var levelDetails : Dictionary = Loader.GetLevelData(type)
 	if "name" in levelDetails:
@@ -41,6 +43,11 @@ func _init(type : String):
 		for drop in enemyDrops:
 			if drop not in materials:
 				materials.append(drop)
+	if "color" in levelDetails:
+		var colorR = levelDetails["color"]["R"]
+		var colorG = levelDetails["color"]["G"]
+		var colorB = levelDetails["color"]["B"]
+		color = Color(randf_range(colorR[0], colorR[1]), randf_range(colorG[0], colorG[1]), randf_range(colorB[0], colorB[1]))
 				
 func GetRandomEnemyColor(enemyName : String):
 	return enemies[enemyName][randi_range(0, NUM_COLOR_VARIATIONS - 1)]

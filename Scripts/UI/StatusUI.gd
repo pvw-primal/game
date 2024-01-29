@@ -1,7 +1,7 @@
 class_name StatusUI
 extends Sprite3D
 
-const SHOW_TIME : float = 2
+const SHOW_TIME : float = 1
 var time : float = 0
 
 var current = 0

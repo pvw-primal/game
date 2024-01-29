@@ -19,6 +19,31 @@ func _ready():
 	herbalistMove.icon = preload("res://Assets/Icons/Move/Herbalist.png")
 	Move.moves["Forager's Bounty"] = herbalistMove
 	
+	var warcasterMove = Move.new("Expert's Stance", WarCaster1)
+	warcasterMove.playAnimation = false
+	warcasterMove.noTargets = true
+	warcasterMove.cooldown = 3
+	warcasterMove.manualEndTurn = true
+	warcasterMove.manualOnMoveUse = true
+	warcasterMove.manualCooldown = true
+	warcasterMove.icon = preload("res://Assets/Icons/Move/WarCaster.png")
+	Move.moves["Expert's Stance"] = warcasterMove
+	Passive.passives["All-Rounder"] = Passive.new("All-Rounder", WarCasterPassiveApply, WarCasterPassiveRemove)
+	
+	var enchanterMove = Move.new("Disenchanting Surge", Enchanter1)
+	enchanterMove.playAnimation = false
+	enchanterMove.manualOnMoveUse = true
+	enchanterMove.noTargets = true
+	enchanterMove.cooldown = 1
+	enchanterMove.icon = preload("res://Assets/Icons/Move/Enchanter.png")
+	Move.moves["Disenchanting Surge"] = enchanterMove
+	var enchanterItemMove = Move.new("Change Aspect", ChangeAspect1)
+	enchanterItemMove.playAnimation = false
+	enchanterItemMove.noTargets = true
+	enchanterItemMove.manualEndTurn = true
+	enchanterItemMove.manualCooldown = true
+	Move.moves["Change Aspect"] = enchanterItemMove
+	
 	var cutthroatMove = Move.new("Ambush", Cutthroat1)
 	cutthroatMove.playAnimation = false
 	cutthroatMove.cooldown = 2
@@ -41,6 +66,20 @@ func _ready():
 	tunerMove.noTargets = true
 	tunerMove.icon = preload("res://Assets/Icons/Move/Tuner.png")
 	Move.moves["Tune Up"] = tunerMove
+	
+	var weaponsmithMove = Move.new("Abrading Assault", Weaponsmith1)
+	weaponsmithMove.playAnimation = false
+	weaponsmithMove.manualOnMoveUse = true
+	weaponsmithMove.noTargets = true
+	weaponsmithMove.cooldown = 1
+	weaponsmithMove.icon = preload("res://Assets/Icons/Move/Weaponsmith.png")
+	Move.moves["Abrading Assault"] = weaponsmithMove
+	var weaponsmithItemMove = Move.new("Change Modifier", ChangeModifier1)
+	weaponsmithItemMove.playAnimation = false
+	weaponsmithItemMove.noTargets = true
+	weaponsmithItemMove.manualEndTurn = true
+	weaponsmithItemMove.manualCooldown = true
+	Move.moves["Change Modifier"] = weaponsmithItemMove
 	
 	var rangerMove = Move.new("Hunter's Mark", Ranger1)
 	rangerMove.manualEndTurn = true
@@ -77,8 +116,6 @@ func _ready():
 	Passive.passives["Combat Ingenuity"] = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
 	
 	Classes.LoadAllClasses()
-
-
 
 #DRUID
 #druid stat swapping is untested, test in detail when stat screen is implemented!
@@ -184,6 +221,162 @@ func HerbalistAttack(e : Entity, item : Item):
 		e.skillUI.UpdateAll()
 	e.endTurn.emit()
 
+#WAR CASTER
+func WarCaster1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	var criteria : Array[Callable]
+	var critDesc : Array[String]
+	if e.equipped == -1:
+		criteria = [WarCasterEquipCriteria]
+		critDesc = ["Select a weapon or focus."]
+	else:
+		if !e.GetItem(e.equipped).move.magic:
+			criteria = [WarCasterFocusCriteria]
+			critDesc = ["Select a focus."]
+		else:
+			criteria = [WarCasterWeaponCriteria]
+			critDesc = ["Select a weapon."]
+	
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(WarCasterPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func WarCasterFocusCriteria(i : Item, _last : Item):
+	if i != null && i.equipment && i.move.magic:
+		return "Valid focus."
+	else:
+		return null
+		
+func WarCasterWeaponCriteria(i : Item, _last : Item):
+	if i != null && i.equipment && !i.move.magic:
+		return "Valid weapon."
+	else:
+		return null
+		
+func WarCasterEquipCriteria(i : Item, _last : Item):
+	if i != null && i.equipment:
+		return "Valid equippable."
+	else:
+		return null
+
+func WarCasterPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(WarCasterPickComplete)
+	if ids.size() < 1:
+		return
+	e.inventoryUI.Equip(ids[0])
+	e.OnMoveUse.emit(e, null, "Expert's Stance")
+	e.StartCooldownName("Expert's Stance")
+	e.skillUI.UpdateAll()
+	#this move does not end turn intentionally
+	
+func WarCasterOnMoveUse(e : Entity, _t : Entity, movename : String):
+	if e.Type != "Player" || e.equipped == -1:
+		return
+	var magic = e.GetItem(e.equipped).move.magic
+	if movename == "Skilled Strike" && magic:
+		e.AddStatus(Status.MagicBuff(), 4)
+	elif movename == "Aspected Blast" && !magic:
+		e.AddStatus(Status.AttackBuff(), 4)
+
+func WarCasterPassiveApply(e : Entity):
+	e.OnMoveUse.connect(WarCasterOnMoveUse)
+
+func WarCasterPassiveRemove(e : Entity):
+	e.OnMoveUse.disconnect(WarCasterOnMoveUse)
+
+#TRANSMUTER
+func Transmuter1(_e : Entity, _t = null):
+	pass
+
+func EquipmentToSalvage(equipment : Equipment) -> Array[Item]:
+	if equipment.prefixes.size() < 1:
+		return []
+	var key = equipment.prefixes.keys()[randi_range(0, equipment.prefixes.keys().size() - 1)]
+	var prefix : String = equipment.prefixes[key]
+	if equipment.requiredProf == Classes.Proficiency.FocusBasic:
+		var basicFocus : Dictionary = { "Fire":[Items.items["Fire Mote"]], "Frost":[Items.items["Frost Mote"]], "Earth":[Items.items["Earth Mote"]], "Air":[Items.items["Air Mote"]] }
+		return basicFocus[prefix]
+	elif equipment.requiredProf == Classes.Proficiency.FocusAdvanced:
+		var advancedFocus : Dictionary = {"Force":[Items.items["Earth Mote"], Items.items["Heavy Scrap"]], "Lightning":[Items.items["Air Mote"], Items.items["Sharp Scrap"]], "Radiant":[Items.items["Fire Mote"], Items.items["Shiny Scrap"]], "Shadow":[Items.items["Light Scrap"], Items.items["Frost Mote"]] }
+		return advancedFocus[prefix]
+	elif equipment.requiredProf == Classes.Proficiency.WeaponBasic:
+		var basicWeapon : Dictionary = { "Bold":[Items.items["Shiny Scrap"]], "Blitz":[Items.items["Light Scrap"]], "Bludgeon":[Items.items["Heavy Scrap"]], "Bleed":[Items.items["Sharp Scrap"]] }
+		return basicWeapon[prefix]
+	elif equipment.requiredProf == Classes.Proficiency.WeaponMartial:
+		var martialWeapon : Dictionary = { "Cleave":[Items.items["Fire Mote"], Items.items["Sharp Scrap"]], "Reach": [Items.items["Air Mote"], ["Light Scrap"]], "Runed":[Items.items["Frost Mote"], Items.items["Shiny Scrap"]], "Crush":[Items.items["Heavy Scrap"], Items.items["Earth Mote"]]}
+		return martialWeapon[prefix]
+	else:
+		return []
+
+#ENCHANTER
+func Enchanter1(g : Entity, t : Entity):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	if e.equipped == -1 || !e.GetItem(e.equipped).move.magic:
+		e.text.AddLine(e.GetLogName() + " is not using a focus!\n")
+		return
+	elif e.GetItem(e.equipped).prefixes.size() == 0:
+		e.text.AddLine(e.GetLogName() + "'s equipped focus has no aspects to disenchant!\n")
+		return
+	var startingMod = 1 + (.2 * e.GetItem(e.equipped).prefixes.size())
+	await Equipment.FocusCrit(e, t, e.GetItem(e.equipped), "Disenchanting Surge", startingMod)
+	e.text.AddLine(e.GetItem(e.equipped).GetLogName() + " was disenchanted!\n")
+	e.GetItem(e.equipped).prefixes = {}
+	Items.ChangePrefixName(e.GetItem(e.equipped))
+
+func ChangeAspect1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var criteria : Array[Callable] = [EnchanterFocusCriteria, EnchanterMaterialCriteria]
+	var critDesc : Array[String] = ["Select a focus.", "Select a Fire, Frost, Air, or Stone material."]
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(EnchanterPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func EnchanterFocusCriteria(i : Item, _last : Item):
+	if i != null && i.equipment && i.move.magic && i.prefixes.size() < 2:
+		return "Enchantable focus."
+	else:
+		return null
+
+func EnchanterMaterialCriteria(i : Item, last : Item):
+	if i != null :
+		var materials : Dictionary = { "Fire":null, "Frost":null, "Air":null, "Stone":null }
+		for tag in i.crafting.tags:
+			if tag not in materials || tag in last.prefixes || tag == "Stone" && "Earth" in last.prefixes:
+				continue
+			return "Usable material."
+
+	return null
+
+func EnchanterPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(EnchanterPickComplete)
+	if ids.size() < 1:
+		return
+	var focus : Equipment = e.GetItem(ids[0])
+	var tags = e.GetItem(ids[1]).crafting.tags.keys()
+	var possibleAspects : Array[String] = []
+	for tag in tags:
+		if tag == "Fire" || tag == "Frost" || tag == "Air":
+			possibleAspects.append(tag)
+		elif tag == "Stone":
+			possibleAspects.append("Earth")
+	var tag = possibleAspects[randi_range(0, possibleAspects.size() - 1)]
+	focus.prefixes[tag] = null
+	e.inventoryUI.RemoveItem(ids[1])
+	e.text.AddLine(focus.GetLogName() + " was enchanted with the power of " + tag + "!\n")
+	Items.ChangePrefixName(focus)
+	e.OnMoveUse.emit(e, null, "Enchanted Attuner")
+	if e.inventoryUI.inventory[e.inventoryUI.using].uses > 1:
+		e.inventoryUI.inventory[e.inventoryUI.using].uses -= 1
+	else:
+		e.inventoryUI.RemoveItem(e.inventoryUI.using)
+	e.endTurn.emit()
+
 #CUTTHROAT
 func Cutthroat1(e : Entity, t : Entity):
 	if e.equipped == -1:
@@ -280,6 +473,77 @@ func Tuner1(e : Entity, _t : Entity):
 	if actualHeal > 0:
 		e.text.AddLine(e.GetLogName() + " was tuned up for " + LogText.GetHealNum(actualHeal) + " HP!\n")
 
+#WEAPONSMITH
+func Weaponsmith1(g : Entity, t : Entity):
+	if g.Type != "Player":
+		return
+	var e : Player = g
+	if e.equipped == -1 || e.GetItem(e.equipped).move.magic:
+		e.text.AddLine(e.GetLogName() + " is not using a weapon!\n")
+		return
+	elif e.GetItem(e.equipped).prefixes.size() == 0:
+		e.text.AddLine(e.GetLogName() + "'s equipped weapon has no modifiers to abrade!\n")
+		return
+	var startingMod = 1 + (.2 * e.GetItem(e.equipped).prefixes.size())
+	await Equipment.WeaponCrit(e, t, e.GetItem(e.equipped), "Abrading Assault", startingMod)
+	e.text.AddLine(e.GetItem(e.equipped).GetLogName() + " was abraded!\n")
+	e.GetItem(e.equipped).prefixes = {}
+	Items.ChangePrefixName(e.GetItem(e.equipped))
+
+func ChangeModifier1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var criteria : Array[Callable] = [WeaponsmithWeaponCriteria, WeaponsmithMaterialCriteria]
+	var critDesc : Array[String] = ["Select a weapon.", "Select a Reagent, Sharp, Heavy, or Light material."]
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(WeaponsmithPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func WeaponsmithWeaponCriteria(i : Item, _last : Item):
+	if i != null && i.equipment && !i.move.magic && i.prefixes.size() < 2:
+		return "Modifiable weapon."
+	else:
+		return null
+
+func WeaponsmithMaterialCriteria(i : Item, last : Item):
+	if i != null :
+		var materials : Dictionary = { "Reagent":null, "Sharp":null, "Heavy":null, "Light":null }
+		for tag in i.crafting.tags:
+			if tag not in materials || (tag == "Reagent" && "Bold" in last.prefixes) || (tag == "Sharp" && "Bleed" in last.prefixes) || (tag == "Heavy" && "Bludgeon" in last.prefixes) || (tag == "Light" && "Blitz" in last.prefixes):
+				continue
+			return "Usable material."
+
+	return null
+
+func WeaponsmithPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(WeaponsmithPickComplete)
+	if ids.size() < 1:
+		return
+	var weapon : Equipment = e.GetItem(ids[0])
+	var tags = e.GetItem(ids[1]).crafting.tags.keys()
+	var possibleAspects : Array[String] = []
+	for tag in tags:
+		if tag == "Reagent":
+			possibleAspects.append("Bold")
+		elif tag == "Sharp":
+			possibleAspects.append("Bleed")
+		elif tag == "Heavy":
+			possibleAspects.append("Bludgeon")
+		elif tag == "Light":
+			possibleAspects.append("Blitz")
+	var tag = possibleAspects[randi_range(0, possibleAspects.size() - 1)]
+	weapon.prefixes[tag] = null
+	e.inventoryUI.RemoveItem(ids[1])
+	e.text.AddLine(weapon.GetLogName() + " was improved to have the " + tag + " modifier!\n")
+	Items.ChangePrefixName(weapon)
+	e.OnMoveUse.emit(e, null, "Smithing Gear")
+	if e.inventoryUI.inventory[e.inventoryUI.using].uses > 1:
+		e.inventoryUI.inventory[e.inventoryUI.using].uses -= 1
+	else:
+		e.inventoryUI.RemoveItem(e.inventoryUI.using)
+	e.endTurn.emit()
+
 #RANGER
 func Ranger1(e : Entity, t : Entity):
 	var def = e.CheckDirection(e.facingPos - e.gridPos, 5) if t == null else [t.gridPos, t]
@@ -363,13 +627,14 @@ func Thief1(e : Entity, t : Entity):
 	
 func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
 	if t != null && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
-		var removeSpot = randi_range(0, t.inventory.size() - 1)
+		var removeSpot = t.inventory.size() - 1
 		var item : Item = t.inventory[removeSpot]
+		var uses : int = t.useMeta[removeSpot]
 		if e.IsInventoryFull():
-			e.gridmap.PlaceItem(t.gridPos, item)
+			e.gridmap.PlaceItem(t.gridPos, item, uses)
 			e.text.AddLine(item.name + " fell to the floor!\n")
 		else:
-			e.inventoryUI.AddItem(item)
+			e.inventoryUI.AddItem(item, uses)
 			e.text.AddLine(e.GetLogName() + " stole " + item.name + "!\n")
 		t.RemoveItemAt(removeSpot)
 		
@@ -430,6 +695,9 @@ func ScavengerPassiveRemove(e : Entity):
 		e.classE.classVariables.erase("notConsumeMaterialPassives")
 		
 #ARTIFICER
+func Artificer1():
+	pass
+
 func ArtificerOnMoveUse(e : Entity, _t : Entity, movename : String):
 	if movename == "Tinker":
 		e.AddStatus(Status.AttackBuff(), 3)

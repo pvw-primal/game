@@ -134,6 +134,7 @@ func Arcana1Apply (g : Entity, t : Entity):
 		t.AddStatus(Status.Paralysis(), 1)
 	var damage = Stats.GetDamage(e.stats, t.stats, true, 2) if "Shadow" in mods else Stats.GetDamage(e.stats, t.stats, true)
 	damage *= additiveMod
+	damage *= .6
 	e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " with " + "Aspected Blast" +  " for " + LogText.GetDamageNum(int(damage), true) + " damage!" + "\n")
 	t.animator.Damage()
 	t.TakeDamage(damage, e)
@@ -216,7 +217,7 @@ func CraftAlchemy(e : Entity, item : Item):
 		else:
 			e.action = true
 	e.text.AddLine(e.GetLogName() + " brewed 1 " + item.GetLogName() + ".\n")
-	e.inventoryUI.AddItem(item)
+	e.inventoryUI.AddItem(item, -2)
 	e.StartCooldownName("Brew")
 	e.OnMoveUse.emit(e, null, "Brew")
 	e.endTurn.emit()
@@ -238,7 +239,7 @@ func CraftMachining(e : Entity, item : Item):
 		else:
 			e.action = true
 	e.text.AddLine(e.GetLogName() + " crafted 1 " + item.GetLogName() + ".\n")
-	e.inventoryUI.AddItem(item)
+	e.inventoryUI.AddItem(item, -2)
 	e.StartCooldownName("Tinker")
 	e.OnMoveUse.emit(e, null, "Tinker")
 	e.endTurn.emit()

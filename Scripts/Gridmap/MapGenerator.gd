@@ -30,7 +30,6 @@ var map : Array[Array]
 var offsetX : int = 0
 var offsetY : int = 0
 
-var level : Level
 var exits : Dictionary = {}
 var items : Dictionary = {}
 var tileEffects : Dictionary = {}
@@ -38,12 +37,14 @@ var tileEffects : Dictionary = {}
 @onready var minimap : Minimap = get_node("/root/Root/MinimapContainer/Minimap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var controller : Controller = get_node("/root/Root/Controller")
+@onready var anglelight : DirectionalLight3D = get_node("/root/Root/Anglelight")
+@onready var shadowlight : DirectionalLight3D = get_node("/root/Root/Shadowlight")
 @onready var item = preload("res://Scripts/Gameplay/Inventory/item3D.tscn")
 @onready var tileEffect = preload("res://Scripts/Gridmap/Tiles/TileEffect.tscn")
 @onready var projectile = preload("res://Scripts/Gameplay/Projectile.tscn")
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func init():
 	GenerateRooms(GenerateMapLayout(ROOM_ORIGIN, NUM_ROOMS))
 	lastRoom = rooms.size() - 1
 	GenerateMapPaths()
@@ -82,14 +83,15 @@ func _ready():
 				set_cell_item(Vector3i(x, 0, y), randi_range(1, 3), get_orthogonal_index_from_basis(Basis(Vector3.UP, angles[randi_range(0, 1)])))
 				map[x - offsetX][y - offsetY] = -2
 	
-	if level == null:
-		level = Level.new("Forest")
 	var numItems = randi_range(8, 15)
 	for i in range(numItems):
 		var spot = GetRandomRoomPos()
 		while spot in exits:
 			spot = GetRandomRoomPos()
-		PlaceItem(spot, level.RandomItem())
+		PlaceItem(spot, controller.level.RandomItem(), -2)
+		
+	anglelight.light_color = controller.level.color
+	shadowlight.light_color = controller.level.color
 				
 func GenerateMapLayout(pos: Vector2i, numRooms: int):
 	var bound = Rect2i(pos.x, pos.y, randi_range(ROOM_MIN, ROOM_MAX), randi_range(ROOM_MIN, ROOM_MAX))
@@ -275,14 +277,14 @@ func ExitCheck(pos : Vector2i, _dir : Vector2i):
 	if pos in exits:
 		await controller.NextLevel()
 
-func PlaceItem(pos : Vector2i, i : Item, animate : bool = true):
+func PlaceItem(pos : Vector2i, i : Item, uses : int = -1):
 	if pos in items.keys():
-		items[pos].AddItem(i)
+		items[pos].AddItem(i, uses)
 	else:
 		var ni : ItemWorld = item.instantiate()
 		add_child(ni)
 		var placePos = map_to_local(Vector3i(pos.x, 0, pos.y))
-		ni.init([i], Vector3(placePos.x, ni.position.y, placePos.z), animate)
+		ni.init(i, Vector3(placePos.x, ni.position.y, placePos.z), uses)
 		items[pos] = ni
 		
 func TakeItems(pos : Vector2i, e : Entity):
@@ -292,8 +294,9 @@ func TakeItems(pos : Vector2i, e : Entity):
 				if e.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
+				var uses = items[pos].PopUseMeta()
 				var i : Item = items[pos].PopItem()
-				e.PickupItem(i)
+				e.PickupItem(i, uses)
 				e.text.AddLine("Picked up " + i.GetLogName() + ".\n")
 		elif e.Type == "Ally":
 			var player = turnhandler.Entities[turnhandler.player]
@@ -301,15 +304,17 @@ func TakeItems(pos : Vector2i, e : Entity):
 				if player.IsInventoryFull():
 					e.text.AddLine("Inventory is full!\n")
 					break
+				var uses = items[pos].PopUseMeta()
 				var i : Item = items[pos].PopItem()
-				player.PickupItem(i)
+				player.PickupItem(i, uses)
 				player.text.AddLine(e.GetLogName() + " picked up " + i.GetLogName() + ".\n")
 		else:
 			for x in range(items[pos].items.size()):
 				if e.IsInventoryFull():
 					break
+				var uses = items[pos].PopUseMeta()
 				var i : Item = items[pos].PopItem()
-				e.PickupItem(i)
+				e.PickupItem(i, uses)
 				e.text.AddLine(e.GetLogName() + " picked up " + i.GetLogName() + ".\n")
 		if items[pos].items.size() <= 0:
 			items[pos].queue_free()

@@ -18,7 +18,8 @@ signal OnAllyDeath(player : Player, ally : Entity)
 var equipped : int = -1
 
 func _ready():
-	SetMesh("res://Assets/Enemy/Russ/RussShaded.tscn")
+	if mesh == null:
+		SetMesh("res://Assets/Enemy/Cinch/Cinch.tscn")
 	Initialize()
 	originalStats = Stats.new(40, 5, 1, 5, 1)
 	stats = originalStats.Copy()
@@ -46,10 +47,11 @@ func SetClass(c : Class):
 	cooldown.fill(0)
 	for passive in classE.passives:
 		passive.PassiveApply.call(self)
-	var inventory : Array[Item] = [Items.items["Tunneling Tools"], Items.items["Javelin"], Items.items["Salvaging Tools"], Items.items["Pestail"], Items.items["Eidolon Mass"]]
+	var inventory : Array[Item] = [Items.items["Tunneling Tools"], Items.items["Windeelion"], Items.items["Eidolon Mass"], Items.RandomEquipment(false, Items.RandomRarity(), false), Items.RandomEquipment(false, Items.RandomRarity(), true)]
 	#var inventory : Array[Item] = [Items.RandomEquipment(false, Items.Rarity.Mythic, false, "Cleave"), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true), Items.RandomEquipment(false, Items.RandomRarity(), true)]
 	#var inventory : Array[Item] = [Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false), Items.RandomEquipment(false, Items.Rarity.Mythic, false)]
 	inventoryUI.init(inventory, 12)
+	PickupItem(Items.items["Smithing Gear"], -2)
 
 func _process(delta):
 	Update(delta)
@@ -140,8 +142,8 @@ func GetItem(i : int) -> Item:
 func Die():
 	get_tree().quit()
 
-func PickupItem(i : Item):
-	inventoryUI.AddItem(i)
+func PickupItem(i : Item, uses : int = -1):
+	inventoryUI.AddItem(i, uses)
 
 func IsInventoryFull() -> bool:
 	return inventoryUI.InventoryFull()

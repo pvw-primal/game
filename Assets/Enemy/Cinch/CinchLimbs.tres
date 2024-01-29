@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dqv5liykvl4y0"]
+
+[ext_resource type="Shader" path="res://Scripts/Shaders/Cinch.gdshader" id="1_gdk1k"]
+[ext_resource type="Texture2D" uid="uid://dlohbowuglgvr" path="res://Assets/Enemy/Cinch/Cinch_Limb.png" id="2_dewbg"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_gdk1k")
+shader_parameter/texture_albedo = ExtResource("2_dewbg")
+shader_parameter/texture_emission = ExtResource("2_dewbg")

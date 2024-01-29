@@ -4,6 +4,7 @@ extends Item
 var prefixes : Dictionary
 var requiredProf : Classes.Proficiency = Classes.Proficiency.None
 var critChance : float
+var modified : bool = false
 
 func SetEquipment(m : Move, prof : Classes.Proficiency, pf : Dictionary = {}, crit : float = 0):
 	move = m
@@ -13,21 +14,22 @@ func SetEquipment(m : Move, prof : Classes.Proficiency, pf : Dictionary = {}, cr
 	critChance = crit
 	equipment = true
 
-func GetDescription() -> String:
+func GetDescription(_u : int = -1) -> String:
 	var rs = "[indent][color=#" + Items.RarityColor(rarity).to_html() + "][b]"
 	@warning_ignore("integer_division")
 	rs += "[font_size=" + str((1100 / name.length())) + "]" + name + ":[/font_size]" if name.length() >= 20 else name + ":"
 	rs += "[/b]"
-	if prefixes.keys().size() > 0:
-		var num = 0
-		rs += "[font_size=28]\n" + Items.Rarity.keys()[rarity] + " "
-		for mod in prefixes.keys():
-			rs += mod
-			if num < prefixes.keys().size() - 1:
-				rs += ", "
-			num += 1
-		rs += " focus[/font_size]" if move.magic else " weapon[/font_size]"
-		rs += "\n[font_size=32]CRIT: " + str(critChance * 100) + "%[/font_size][/color]\n"
+	var num = 0
+	rs += "[font_size=28]\n" + Items.Rarity.keys()[rarity]
+	if prefixes.size() > 0:
+		rs += " "
+	for mod in prefixes.keys():
+		rs += mod
+		if num < prefixes.size() - 1:
+			rs += ", "
+		num += 1
+	rs += " focus[/font_size]" if move.magic else " weapon[/font_size]"
+	rs += "\n[font_size=32]CRIT: " + str(critChance * 100) + "%[/font_size][/color]\n"
 	rs += "\n" + description
 	if flavor != "":
 		rs += "\n\n[i][font_size=24]" + flavor + "[/font_size][/i]"
@@ -44,7 +46,7 @@ func Use(e : Entity, t : Entity, bonusCrit : float = 0):
 	else:
 		await move.Use(e, t)
 
-static func WeaponCrit(e : Entity, t : Entity, equipped : Equipment, movename = ""):
+static func WeaponCrit(e : Entity, t : Entity, equipped : Equipment, movename = "", startingMod : float = 1):
 	var mods : Dictionary = equipped.prefixes
 	var targets : Array[Entity] = []
 	if movename == "":
@@ -72,7 +74,7 @@ static func WeaponCrit(e : Entity, t : Entity, equipped : Equipment, movename = 
 		return
 		
 	e.text.AddLine(e.GetLogName() + " CRIT!\n")
-	var additiveMod : float = 1
+	var additiveMod : float = startingMod
 	if "Blitz" in mods:
 		if e.lastAction == Move.ActionType.move:
 			additiveMod += .4
@@ -110,9 +112,9 @@ static func WeaponCrit(e : Entity, t : Entity, equipped : Equipment, movename = 
 	else:
 		e.OnMoveUse.emit(e, null, movename)
 
-static func FocusCrit(e : Entity, t : Entity, equipped : Equipment, movename = ""):
+static func FocusCrit(e : Entity, t : Entity, equipped : Equipment, movename = "", startingMod : float = 1):
 	var mods : Dictionary = equipped.prefixes
-	var additiveMod = 1
+	var additiveMod : float = startingMod
 	var waittime = 0
 	if movename == "":
 		movename = equipped.move.name
