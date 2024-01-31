@@ -8,6 +8,7 @@ extends Node
 @onready var skillUI : SkillUI = get_node("/root/Root/SkillUI")
 
 @onready var EnemyScene = preload("res://Scripts/Entities/AI/Enemy.tscn")
+@onready var StructureScene = preload("res://Scripts/Entities/Structure/Structure.tscn")
 
 var player : Player
 var entityNum = 0
@@ -31,7 +32,7 @@ func init(numEnemies : int = 7, ds : int = 2, initPlayer : bool = false):
 		add_child(player)
 		player.option.OptionSelected.connect(tempClassSet)
 		player.option.list.auto_height = false
-		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Enchanter", "Warden", "Weaponsmith", "War Caster"], {}, 150)
+		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Enchanter", "Warden", "Totemcarver", "Trickster"], {}, 150)
 		
 	skillUI.player = player
 	
@@ -79,9 +80,9 @@ func tempClassSet (e : Entity, id : int):
 	elif id == 8:
 		player.SetClass(Classes.GetClass(Classes.BaseClass.Arms, Classes.BaseClass.Beastmastery))
 	elif id == 9:
-		player.SetClass(Classes.GetClass(Classes.BaseClass.Arms, Classes.BaseClass.Machining))
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Machining))
 	elif id == 10:
-		player.SetClass(Classes.GetClass(Classes.BaseClass.Arcana, Classes.BaseClass.Arms))
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Arcana, Classes.BaseClass.Technique))
 	else:
 		get_tree().quit()
 	var slot = player.inventoryUI.firstOpenSlot
@@ -91,7 +92,6 @@ func tempClassSet (e : Entity, id : int):
 	skillUI.init()
 	player.option.list.auto_height = true
 	
-
 func SpawnAIOffscreen():
 	var spawnPos = gridmap.GetRandomRoomPos()
 	while gridmap.GetMapPos(spawnPos) != -1 || gridmap.to_global(gridmap.map_to_local(Vector3i(spawnPos.x, 0, spawnPos.y))).distance_to(player.position) < turnhandler.MAX_MOVE_RENDER:
@@ -119,6 +119,15 @@ func SpawnAIAt(pos : Vector2i, spawnAI : AI = null, distribute : int = -1):
 	else:
 		e.ChangeStats(baseStats.Distribute(distribute))
 
+func SpawnStructure(pos : Vector2i, o : Entity, n : String, mesh : Node3D, ai : Callable, stat : Stats, color : Array[Color] = [], duration : int = -1):
+	var s : Structure = StructureScene.instantiate()
+	s.targetEntity = player
+	s.init(pos, entityNum, o, n, mesh, ai, stat, color, duration)
+	s.Type = "Structure"
+	s.nameColor = Color.SLATE_GRAY
+	add_child(s)
+	entityNum += 1
+	
 func Reset():
 	for e in get_children():
 		if e.Type == "Player" || e.Type == "Ally":

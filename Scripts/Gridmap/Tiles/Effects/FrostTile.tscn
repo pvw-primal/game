@@ -19,14 +19,14 @@ emission_box_extents = Vector3(0.5, 0.01, 0.5)
 gravity = Vector3(0, 0, 0)
 scale_min = 0.5
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrqae"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g51sf"]
 transparency = 1
 albedo_color = Color(0.823529, 1, 1, 0.764706)
 metallic = 0.4
 roughness = 0.6
 
 [sub_resource type="QuadMesh" id="QuadMesh_lobb1"]
-material = SubResource("StandardMaterial3D_hrqae")
+material = SubResource("StandardMaterial3D_g51sf")
 size = Vector2(0.05, 0.05)
 
 [node name="Node3D" type="Node3D"]

@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://c2hb17e1eki7e"]
+
+[ext_resource type="FontFile" uid="uid://ku0jnv7864rm" path="res://Assets/Fonts/pixel_dingbats-7.ttf" id="1_wnw81"]
+
+[resource]
+line_spacing = 0.0
+font = ExtResource("1_wnw81")
+font_size = 9
+shadow_color = Color(0, 0, 0, 0.956863)

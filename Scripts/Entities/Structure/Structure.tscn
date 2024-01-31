@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4gipjlvtub2"]
+
+[ext_resource type="Script" path="res://Scripts/Entities/Structure/Structure.gd" id="1_5l67v"]
+[ext_resource type="Script" path="res://Scripts/UI/StatusUI.gd" id="1_qosbj"]
+
+[node name="Structure" type="Node3D"]
+script = ExtResource("1_5l67v")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="StatusUI" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.715, 0)
+pixel_size = 0.015
+billboard = 1
+double_sided = false
+texture_filter = 2
+script = ExtResource("1_qosbj")

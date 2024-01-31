@@ -14,7 +14,7 @@ var animator : Animator
 
 
 func _ready():
-	var s = load("res://Assets/Enemy/Cinch/Cinch.tscn")
+	var s = load("res://Assets/Enemy/MortalPester/MortalPester.tscn")
 	mesh = s.instantiate()
 	add_child(mesh)
 	animator = get_node("Mesh/AnimationTree")

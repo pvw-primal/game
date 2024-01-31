@@ -76,6 +76,15 @@
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Blooming Brew"]
 	},
+	"Totemcarver":
+	{
+		"name": "Totemcarver",
+		"description": "",
+		"moves": ["Unleash Elements", "Tinker", "Whittle Carve"],
+		"class": ["Shamanism", "Machining"],
+		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
+		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin", "Totem"]
+	},
 	"War Caster":
 	{
 		"name": "War Caster",
@@ -83,7 +92,15 @@
 		"moves": ["Aspected Blast", "Skilled Strike", "Expert's Stance"],
 		"passives" : ["All-Rounder"],
 		"class": ["Arcana", "Arms"],
-		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic", "FocusAdvanced"],
+		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic", "FocusAdvanced"]
+	},
+	"Trickster":
+	{
+		"name": "Trickster",
+		"description": "",
+		"moves": ["Aspected Blast", "Stealth", "Invoke Duplicity"],
+		"class": ["Arcana", "Technique"],
+		"prof": ["WeaponBasic", "FocusBasic", "FocusAdvanced"]
 	},
 	"Enchanter":
 	{

@@ -37,14 +37,16 @@ var tileEffects : Dictionary = {}
 @onready var minimap : Minimap = get_node("/root/Root/MinimapContainer/Minimap")
 @onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
 @onready var controller : Controller = get_node("/root/Root/Controller")
-@onready var anglelight : DirectionalLight3D = get_node("/root/Root/Anglelight")
-@onready var shadowlight : DirectionalLight3D = get_node("/root/Root/Shadowlight")
 @onready var item = preload("res://Scripts/Gameplay/Inventory/item3D.tscn")
 @onready var tileEffect = preload("res://Scripts/Gridmap/Tiles/TileEffect.tscn")
 @onready var projectile = preload("res://Scripts/Gameplay/Projectile.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func init():
+	mesh_library.get_item_mesh(0).surface_get_material(0).albedo_color = controller.level.color
+	for i in range(1, mesh_library.get_item_list().size()):
+		mesh_library.get_item_mesh(i).surface_get_material(0).albedo_color = controller.level.color.darkened(randf_range(.05, .15))
+		
 	GenerateRooms(GenerateMapLayout(ROOM_ORIGIN, NUM_ROOMS))
 	lastRoom = rooms.size() - 1
 	GenerateMapPaths()
@@ -89,9 +91,6 @@ func init():
 		while spot in exits:
 			spot = GetRandomRoomPos()
 		PlaceItem(spot, controller.level.RandomItem(), -2)
-		
-	anglelight.light_color = controller.level.color
-	shadowlight.light_color = controller.level.color
 				
 func GenerateMapLayout(pos: Vector2i, numRooms: int):
 	var bound = Rect2i(pos.x, pos.y, randi_range(ROOM_MIN, ROOM_MAX), randi_range(ROOM_MIN, ROOM_MAX))
@@ -351,4 +350,4 @@ func SpawnProjectile(attacker : Entity, pos : Vector2i, speed : float, t : Packe
 	var placePos = map_to_local(Vector3i(pos.x, 0, pos.y))
 	proj.init(attacker, Vector3(placePos.x, proj.position.y, placePos.z), speed, t)
 	add_child(proj)
-	
+

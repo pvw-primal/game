@@ -24,6 +24,8 @@ func Reveal(pos : Vector2i):
 		elif id > 0:
 			if gridmap.turnhandler.Entities[id].Type == "Ally":
 				set_cell(0, pos, 0, Vector2i(4, 0))
+			elif gridmap.turnhandler.Entities[id].Type == "Structure":
+				set_cell(0, pos, 0, Vector2i(5, 0))
 			else:
 				set_cell(0, pos, 0, Vector2i(2, 0))
 		elif pos in gridmap.items.keys():

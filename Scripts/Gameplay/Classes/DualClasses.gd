@@ -19,6 +19,15 @@ func _ready():
 	herbalistMove.icon = preload("res://Assets/Icons/Move/Herbalist.png")
 	Move.moves["Forager's Bounty"] = herbalistMove
 	
+	var totemcarverMove = Move.new("Whittle Carve", Totemcarver1)
+	totemcarverMove.cooldown = 4
+	totemcarverMove.icon = preload("res://Assets/Icons/Move/Totemcarver.png")
+	Move.moves["Whittle Carve"] = totemcarverMove
+	var totemcarverItemMove = Move.new("Totemic Surge", TotemcarverItemMove)
+	totemcarverItemMove.playAnimation = false
+	totemcarverItemMove.noTargets = true
+	Move.moves["Totemic Surge"] = totemcarverItemMove
+	
 	var warcasterMove = Move.new("Expert's Stance", WarCaster1)
 	warcasterMove.playAnimation = false
 	warcasterMove.noTargets = true
@@ -29,6 +38,14 @@ func _ready():
 	warcasterMove.icon = preload("res://Assets/Icons/Move/WarCaster.png")
 	Move.moves["Expert's Stance"] = warcasterMove
 	Passive.passives["All-Rounder"] = Passive.new("All-Rounder", WarCasterPassiveApply, WarCasterPassiveRemove)
+	
+	var tricksterMove = Move.new("Invoke Duplicity", Trickster1)
+	tricksterMove.playAnimation = false
+	tricksterMove.noTargets = true
+	tricksterMove.reveals = true
+	tricksterMove.cooldown = 8
+	tricksterMove.icon = preload("res://Assets/Icons/Move/Trickster.png")
+	Move.moves["Invoke Duplicity"] = tricksterMove
 	
 	var enchanterMove = Move.new("Disenchanting Surge", Enchanter1)
 	enchanterMove.playAnimation = false
@@ -221,6 +238,43 @@ func HerbalistAttack(e : Entity, item : Item):
 		e.skillUI.UpdateAll()
 	e.endTurn.emit()
 
+#TOTEMCARVER
+func Totemcarver1(e : Entity, t : Entity):
+	if t == null:
+		return
+	elif t.Type == "Structure":
+		if t.structureName == "Totem" && t.gridPos in t.gridmap.tileEffects:
+			var effect : TileEffect.Effect = t.gridmap.tileEffects[t.gridPos].effect
+			for pos in t.AdjacentTiles():
+				if pos == e.gridPos && (effect == TileEffect.Effect.Fire || effect == TileEffect.Effect.Frost):
+					continue
+				t.gridmap.PlaceTileEffect(pos, effect, e)
+			e.text.AddLine(e.GetLogName() + " whittled a totem, spreading " + TileEffect.Effect.keys()[effect] +  "!\n")
+	elif t.Type == "AI":
+		var damage : int = Stats.GetDamage(e.stats, t.stats, false)
+		t.animator.Damage()
+		if randf_range(0, 1) < .05:
+			var potentialItems = Loader.GetEnemyData(t.Name)["drops"]
+			e.text.AddLine(e.GetLogName() + " carved an item from " + t.GetLogName() + " for " + LogText.GetDamageNum(damage, false) + " damage!\n")
+			t.gridmap.PlaceItem(t.gridPos, Items.items[potentialItems[randi_range(0, potentialItems.size() - 1)]], -2)
+		else:
+			e.text.AddLine(e.GetLogName() + " carved " + t.GetLogName() + " for " + LogText.GetDamageNum(damage, false) + " damage!\n")
+		t.TakeDamage(damage, e)
+	
+func TotemcarverStructureBehavior(e : Structure):
+	if e.gridPos not in e.gridmap.tileEffects:
+		return
+	var adj = e.AdjacentTiles()
+	e.gridmap.PlaceTileEffect(adj[randi_range(0, adj.size() - 1)], e.gridmap.tileEffects[e.gridPos].effect, e.own)
+
+func TotemcarverItemMove(e : Entity, _t = null):
+	if e.gridmap.GetMapPos(e.facingPos) != -1:
+		e.text.AddLine("The totem can't be placed there!\n")
+		return
+	e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Totem", e.mesh, TotemcarverStructureBehavior, Stats.new(10, 0, 0, 0, 0, false, true))
+	e.text.AddLine(e.GetLogName() + " created a totem!\n")
+	e.OnMoveUse.emit(e, null, "Totem")
+	
 #WAR CASTER
 func WarCaster1(g : Entity, _t = null):
 	if g.Type != "Player":
@@ -285,6 +339,27 @@ func WarCasterPassiveApply(e : Entity):
 
 func WarCasterPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(WarCasterOnMoveUse)
+
+#TRICKSTER
+func Trickster1(e : Entity, _t = null):
+	if e.gridmap.GetMapPos(e.facingPos) != -1:
+		e.text.AddLine("A duplicate can't be summoned there!\n")
+		return
+	e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Duplicate", e.mesh, TricksterStructureBehavior, Stats.new(5, 0, 0, 0, 0, false, true), [Color.BLACK, Color.DARK_GRAY, Color.DARK_GRAY], 6)
+	e.text.AddLine(e.GetLogName() + " summoned a duplicate of themselves!\n")
+
+func TricksterStructureBehavior(e : Structure):
+	e.RandomRotate(e.gridPos)
+	if randf_range(0, 1) < .6:
+		for pos in e.AdjacentTiles():
+			var entity : Entity = e.GetEntity(pos)
+			if entity != null && entity.Type == "AI":
+				entity.targetEntity = e
+				entity.targetGridPos = e.gridPos
+				entity.targetGridPosChanged = true
+		e.animator.Attack()
+	else:
+		e.animator.Damage()
 
 #TRANSMUTER
 func Transmuter1(_e : Entity, _t = null):

@@ -333,6 +333,21 @@
 			"requires":["Alchemy", "Technique"]
 		},
 		
+	"Totem":
+		{
+			"name": "Totem",
+			"description": "Summons a structure that spreads field effects that are placed on it.",
+			"flavor": "The intricate lines carved across the surface of this totem allow for natural forces to be drawn in and reflected.",
+			"rarity": 1,
+			"mesh": null,
+			"consumable": 1,
+			"move":{
+				"useTooltip": "Summon",
+				"custom": "Totemic Surge"
+			},
+			"recipe":["Reagent", "Fiber"],
+			"requires":["Machining", "Shamanism"]
+		},	
 	"Enchanted Attuner":
 		{
 			"name": "Enchanted Attuner",

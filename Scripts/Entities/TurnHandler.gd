@@ -55,7 +55,7 @@ func HandleNextTurn(skipDisconnect : bool = false):
 		return
 		
 	var entity = Entities[TurnOrder[currentTurn]]
-	if TurnOrder[currentTurn] != player:
+	if TurnOrder[currentTurn] != player && entity.Type != "Structure":
 		if !is_instance_valid(entity.targetEntity):
 			entity.targetEntity = Entities[player]
 		var dist = entity.position.distance_to(entity.targetEntity.position)
@@ -81,13 +81,21 @@ func SortPlayerDistance(aI : int, bI : int):
 		return true
 	elif b.Type == "Ally":
 		return false
+	elif a.Type == "Structure":
+		return false
+	elif b.Type == "Structure":
+		return true
 	elif (!a.renderMove || !a.shouldMove):
 		return false
 	elif (!b.renderMove || !b.shouldMove):
 		return true
 	var pathfinding = Entities[player].gridmap.rawPathfinding
 	return pathfinding.get_id_path(Entities[player].gridPos, a.gridPos).size() < pathfinding.get_id_path(Entities[player].gridPos, b.gridPos).size()
-		
+
+func RecalculatePath():
+	for entity in Entities.values():
+		entity.targetGrisPosChanged = true
+
 func Reset():
 	RemovalQueue.clear()
 	TurnOrder.clear()
