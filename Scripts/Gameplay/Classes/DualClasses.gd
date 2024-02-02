@@ -2,6 +2,24 @@ class_name DualClasses
 extends Node
 
 func _ready():
+	var sorcererMove = Move.new("Sorcery", Sorcerer1)
+	sorcererMove.playAnimation = false
+	sorcererMove.manualEndTurn = true
+	sorcererMove.noTargets = true
+	sorcererMove.cooldown = 4
+	sorcererMove.manualCooldown = true
+	sorcererMove.manualOnMoveUse = true
+	sorcererMove.icon = preload("res://Assets/Icons/Move/Sorcerer.png")
+	Move.moves["Sorcery"] = sorcererMove
+	Passive.passives["Specialized Evocation"] = Passive.new("Specialized Evocation", SorcererPassiveApply, SorcererPassiveRemove)
+	
+	var wildenMove = Move.new("Smokescreen", Wilden1)
+	wildenMove.noTargets = true
+	wildenMove.cooldown = 4
+	wildenMove.icon = preload("res://Assets/Icons/Move/Wilden.png")
+	Move.moves["Smokescreen"] = wildenMove
+	Passive.passives["Wild Cloak"] = Passive.new("Wild Cloak", WildenPassiveApply, WildenPassiveRemove)
+	
 	var druidMove = Move.new("Shapeshare", Druid1)
 	druidMove.playAnimation = false
 	druidMove.noTargets = true
@@ -133,6 +151,90 @@ func _ready():
 	Passive.passives["Combat Ingenuity"] = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
 	
 	Classes.LoadAllClasses()
+
+#SORCERER
+var SorcererOptions : Array[String] = ["Force", "Lightning", "Radiant", "Shadow"]
+func Sorcerer1(e : Entity, _t = null):
+	if e.Type == "Player":
+		e.option.OptionSelected.connect(SorcererAttack)
+		e.option.Open(SorcererOptions)
+	else:
+		SorcererAttack(e, 0)
+		
+func SorcererAttack(e : Entity, id : int):
+	if e.Type == "Player":
+		e.option.OptionSelected.disconnect(SorcererAttack)
+		if id == -1:
+			e.Start.call_deferred()
+			return
+	if id == 0:
+		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Force, e)
+		e.text.AddLine(e.GetLogName() + " intensified gravity!\n")
+	elif id == 1:
+		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Lightning, e)
+		e.text.AddLine(e.GetLogName() + " charged the area!\n")
+	elif id == 2:
+		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Radiant, e)
+		e.text.AddLine(e.GetLogName() + " sanctified the ground!\n")
+	elif id == 3:
+		e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Shadow, e)
+		e.text.AddLine(e.GetLogName() + " summoned darkness!\n")
+	e.animator.Attack()
+	e.StartCooldownName("Sorcery")
+	if e.Type == "Player":
+		e.skillUI.UpdateAll()
+	e.OnMoveUse.emit(e, null, "Sorcery")
+	e.endTurn.emit()
+
+func SorcererOnMoveUse(e : Entity, _t : Entity, movename : String):
+	if e.Type == "Player" && (movename == "Sorcery" || movename == "Unleash Elements") && e.equipped != -1 && e.facingPos in e.gridmap.tileEffects:
+		var equipped : Equipment = e.GetItem(e.equipped)
+		var effect : TileEffect.Effect = e.gridmap.tileEffects[e.facingPos].effect
+		if TileEffect.Effect.keys()[effect] in equipped.prefixes:
+			e.StartCooldownName(movename, Move.moves[movename].cooldown - 1)
+
+func SorcererPassiveApply(e : Entity):
+	e.OnMoveUse.connect(SorcererOnMoveUse)
+
+func SorcererPassiveRemove(e : Entity):
+	e.OnMoveUse.disconnect(SorcererOnMoveUse)
+
+#WILDEN
+func Wilden1(e : Entity, _t = null):
+	e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Smoke, e)
+
+func WildenOnEnterTileEffect(e : Entity, effect : TileEffect.Effect):
+	if e.classE.classVariables["WildenCooldown"] <= 0:
+		var status : Status
+		var duration : int
+		match effect:
+			TileEffect.Effect.Air:
+				status = Status.Air()
+				duration = 4
+			TileEffect.Effect.Earth:
+				status = Status.Earth()
+				duration = 4
+			_:
+				status = Status.Stealth()
+				duration = 2
+		e.AddStatus(status, duration)
+		e.text.AddLine(e.GetLogName() + " cloaked themselves with " + TileEffect.Effect.keys()[effect] + " to gain " + status.name + "!\n")
+		e.classE.classVariables["WildenCooldown"] = 6
+		e.gridmap.RemoveTileEffect(e.gridPos)
+	
+func WildenOnTurnStart(e : Entity):
+	if e.classE.classVariables["WildenCooldown"] > 0:
+		e.classE.classVariables["WildenCooldown"] -= 1
+
+func WildenPassiveApply(e : Entity):
+	e.classE.classVariables["WildenCooldown"] = 0
+	e.OnEnterTileEffect.connect(WildenOnEnterTileEffect)
+	e.OnTurnStart.connect(WildenOnTurnStart)
+
+func WildenPassiveRemove(e : Entity):
+	e.classE.classVariables.erase("WildenCooldown")
+	e.OnEnterTileEffect.disconnect(WildenOnEnterTileEffect)
+	e.OnTurnStart.disconnect(WildenOnTurnStart)
 
 #DRUID
 #druid stat swapping is untested, test in detail when stat screen is implemented!
@@ -271,7 +373,7 @@ func TotemcarverItemMove(e : Entity, _t = null):
 	if e.gridmap.GetMapPos(e.facingPos) != -1:
 		e.text.AddLine("The totem can't be placed there!\n")
 		return
-	e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Totem", e.mesh, TotemcarverStructureBehavior, Stats.new(10, 0, 0, 0, 0, false, true))
+	e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Totem", load("res://Assets/Items/Machining/TotemStructure.tscn").instantiate(), TotemcarverStructureBehavior, Stats.new(10, 0, 0, 0, 0, false, true))
 	e.text.AddLine(e.GetLogName() + " created a totem!\n")
 	e.OnMoveUse.emit(e, null, "Totem")
 	

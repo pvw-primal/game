@@ -18,6 +18,7 @@ func init(pos : Vector2i, num : int, o : Entity, n : String, m : Node3D, ai : Ca
 	
 	behavior = ai
 	stats = stat
+	originalStats = stat
 	cooldown = []
 	Name =  o.Name + "'s " + n if o != null else n
 	structureName = n

@@ -333,6 +333,7 @@ func PlaceTileEffect(pos : Vector2i, effect : TileEffect.Effect, placer : Entity
 		turnhandler.EndTurnOrder.connect(TE.OnTurn)
 	else:
 		placer.endTurn.connect(TE.OnTurn)
+		placer.OnTileEffectPlace.emit(placer, pos, effect)
 	tileEffects[pos] = TE
 	
 func RemoveTileEffect(pos : Vector2i):

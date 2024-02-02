@@ -45,7 +45,10 @@ var cooldown : Array[int]
 var classE : Class
 signal HPChange(currentHP : int, maxHP : int)
 
+signal OnTurnStart(e : Entity)
 signal OnMoveUse(e : Entity, t : Entity, name : String)
+signal OnTileEffectPlace(e : Entity, pos : Vector2i, effect : TileEffect.Effect)
+signal OnEnterTileEffect(e : Entity, effect : TileEffect.Effect)
 
 var mesh : Node3D
 var animator : Animator
@@ -168,6 +171,7 @@ func SetMeshCopy(node : Node3D):
 	animator = get_node("Mesh/AnimationTree")
 
 func StartTurn():
+	OnTurnStart.emit(self)
 	Heal(1)
 	for SN in statuses.keys():
 		if !statuses[SN].OnTurnStart.is_null():
@@ -199,6 +203,8 @@ func EndTurn():
 		
 	if gridPos in gridmap.tileEffects.keys():
 		gridmap.tileEffects[gridPos].applyEffect.call(self)
+		if lastAction == Move.ActionType.move:
+			OnEnterTileEffect.emit(self, gridmap.tileEffects[gridPos].effect)
 	
 	if statsChanged:
 		UpdateStats()

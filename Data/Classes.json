@@ -58,6 +58,24 @@
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftTinker": ["Salvaging Tools", "Fibrous Net", "Javelin"]
 	},
+	"Sorcerer":
+	{
+		"name": "Sorcerer",
+		"description": "",
+		"moves": ["Unleash Elements", "Aspected Blast", "Sorcery"],
+		"passives": ["Specialized Evocation"],
+		"class": ["Shamanism", "Arcana"],
+		"prof": ["FocusBasic", "FocusAdvanced"]
+	},
+	"Wilden":
+	{
+		"name": "Wilden",
+		"description": "",
+		"moves": ["Unleash Elements", "Stealth", "Smokescreen"],
+		"passives": ["Wild Cloak"],
+		"class": ["Shamanism", "Technique"],
+		"prof": ["WeaponBasic", "FocusBasic"]
+	},
 	"Druid":
 	{
 		"name": "Druid",

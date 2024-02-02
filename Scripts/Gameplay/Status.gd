@@ -160,7 +160,7 @@ static func Earth():
 			return sum
 		status["Earthen Resistence"] = Status.new("Earthen Resistence", null, null, earth, preload("res://Assets/Icons/Status/Resistence.png"))
 	return status["Earthen Resistence"]
-	
+
 static func Stealth():
 	if "Stealth" not in status:
 		var stealth = func(stat : Stats):

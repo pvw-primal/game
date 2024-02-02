@@ -339,7 +339,7 @@
 			"description": "Summons a structure that spreads field effects that are placed on it.",
 			"flavor": "The intricate lines carved across the surface of this totem allow for natural forces to be drawn in and reflected.",
 			"rarity": 1,
-			"mesh": null,
+			"mesh": "res://Assets/Items/Machining/TotemItem.tscn",
 			"consumable": 1,
 			"move":{
 				"useTooltip": "Summon",

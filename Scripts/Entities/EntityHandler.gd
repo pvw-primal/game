@@ -32,7 +32,7 @@ func init(numEnemies : int = 7, ds : int = 2, initPlayer : bool = false):
 		add_child(player)
 		player.option.OptionSelected.connect(tempClassSet)
 		player.option.list.auto_height = false
-		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Enchanter", "Warden", "Totemcarver", "Trickster"], {}, 150)
+		player.option.Open(["Shaman", "Arcanist", "Fighter", "Rogue", "Tamer", "Alchemist", "Mechanist", "Wilden", "Sorcerer", "Totemcarver", "Trickster"], {}, 150)
 		
 	skillUI.player = player
 	
@@ -76,9 +76,9 @@ func tempClassSet (e : Entity, id : int):
 	elif id == 6:
 		player.SetClass(Classes.GetClass(Classes.BaseClass.Machining))
 	elif id == 7:
-		player.SetClass(Classes.GetClass(Classes.BaseClass.Arcana, Classes.BaseClass.Machining))
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Technique))
 	elif id == 8:
-		player.SetClass(Classes.GetClass(Classes.BaseClass.Arms, Classes.BaseClass.Beastmastery))
+		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Arcana))
 	elif id == 9:
 		player.SetClass(Classes.GetClass(Classes.BaseClass.Shamanism, Classes.BaseClass.Machining))
 	elif id == 10:

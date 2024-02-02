@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3ma1yvdswbp6"]
+[gd_scene load_steps=4 format=3 uid="uid://pcme2f514qrs"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6rjy2"]
 emission_shape = 3
@@ -6,30 +6,30 @@ emission_box_extents = Vector3(0.5, 0.01, 0.5)
 gravity = Vector3(0, 0, 0)
 scale_min = 0.5
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hlex2"]
-albedo_color = Color(0, 0, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ht3k"]
+albedo_color = Color(1, 0.72549, 0, 0.545098)
 
-[sub_resource type="QuadMesh" id="QuadMesh_5cla4"]
-material = SubResource("StandardMaterial3D_hlex2")
+[sub_resource type="QuadMesh" id="QuadMesh_p5i6q"]
+material = SubResource("StandardMaterial3D_0ht3k")
 size = Vector2(0.05, 0.05)
 
 [node name="Node3D" type="Node3D"]
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.034, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 amount = 10
+lifetime = 0.15
 speed_scale = 0.1
-explosiveness = 0.5
 transform_align = 1
 process_material = SubResource("ParticleProcessMaterial_6rjy2")
-draw_pass_1 = SubResource("QuadMesh_5cla4")
+draw_pass_1 = SubResource("QuadMesh_p5i6q")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.034, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0339207, 0)
+light_color = Color(1, 0.686275, 0, 1)
 light_energy = 0.1
 light_indirect_energy = 0.1
 light_volumetric_fog_energy = 0.1
 light_size = 1.0
-light_negative = true
 light_specular = 0.25
 omni_range = 0.4
