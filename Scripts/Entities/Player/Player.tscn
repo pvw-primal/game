@@ -33,5 +33,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.715, 0)
 pixel_size = 0.015
 billboard = 1
 double_sided = false
-texture_filter = 0
+texture_filter = 2
 script = ExtResource("3_3wcti")

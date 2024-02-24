@@ -1,28 +1,83 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://c6lcjyg56bap4"]
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://c6lcjyg56bap4"]
 
+[ext_resource type="Texture2D" uid="uid://clni8ji0ujn4w" path="res://Assets/NinePatchRect.png" id="1_chuhn"]
 [ext_resource type="FontFile" uid="uid://dwipc15a2nmj3" path="res://Assets/Fonts/Comicoro.ttf" id="1_edcfw"]
 [ext_resource type="FontFile" uid="uid://bqto4t50l7ac8" path="res://Assets/Fonts/atlantis.text-bold.ttf" id="1_m3qb5"]
 [ext_resource type="FontFile" uid="uid://ku0jnv7864rm" path="res://Assets/Fonts/pixel_dingbats-7.ttf" id="2_adkmm"]
 [ext_resource type="FontFile" uid="uid://ch0806fnhlnf5" path="res://Assets/Fonts/zelda-dx-tt-brk.regular.ttf" id="3_hkuio"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7wist"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ss51m"]
+texture = ExtResource("1_chuhn")
+texture_margin_left = 30.0
+texture_margin_top = 30.0
+texture_margin_right = 30.0
+texture_margin_bottom = 30.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc8pl"]
-bg_color = Color(0.364706, 0.364706, 0.364706, 0.615686)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gqd2a"]
+content_margin_left = 26.0
+content_margin_right = 0.0
+texture = ExtResource("1_chuhn")
+texture_margin_left = 30.0
+texture_margin_top = 30.0
+texture_margin_right = 30.0
+texture_margin_bottom = 30.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1mwmp"]
+texture = ExtResource("1_chuhn")
+texture_margin_left = 30.0
+texture_margin_top = 30.0
+texture_margin_right = 30.0
+texture_margin_bottom = 30.0
+expand_margin_left = 20.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nxnnw"]
+texture = ExtResource("1_chuhn")
+texture_margin_left = 30.0
+texture_margin_top = 30.0
+texture_margin_right = 30.0
+texture_margin_bottom = 30.0
+expand_margin_left = 20.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oetqq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7msx8"]
 bg_color = Color(0, 0, 0, 0.8)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0i7o6"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+texture = ExtResource("1_chuhn")
+texture_margin_left = 30.0
+texture_margin_top = 18.0
+texture_margin_right = 30.0
+texture_margin_bottom = 18.0
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bfrpk"]
+content_margin_left = 15.0
+content_margin_right = 10.0
+
 [resource]
 default_font = ExtResource("1_edcfw")
 default_font_size = 46
-ItemList/styles/focus = SubResource("StyleBoxEmpty_7wist")
-ItemList/styles/panel = SubResource("StyleBoxFlat_yc8pl")
+ItemList/styles/focus = SubResource("StyleBoxTexture_ss51m")
+ItemList/styles/panel = SubResource("StyleBoxTexture_gqd2a")
+ItemList/styles/selected = SubResource("StyleBoxTexture_1mwmp")
+ItemList/styles/selected_focus = SubResource("StyleBoxTexture_nxnnw")
 ProgressBar/styles/background = SubResource("StyleBoxEmpty_oetqq")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_7msx8")
 RichTextLabel/fonts/bold_font = ExtResource("1_m3qb5")
 RichTextLabel/fonts/bold_italics_font = ExtResource("2_adkmm")
 RichTextLabel/fonts/italics_font = ExtResource("3_hkuio")
 RichTextLabel/styles/normal = null
+TabContainer/styles/tab_selected = SubResource("StyleBoxTexture_0i7o6")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxEmpty_bfrpk")

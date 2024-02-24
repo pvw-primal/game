@@ -12,6 +12,7 @@ func _ready():
 	shamanMove.manualCooldown = true
 	shamanMove.manualOnMoveUse = true
 	shamanMove.icon = preload("res://Assets/Icons/Move/Shaman.png")
+	shamanMove.description = "Place a Fire, Frost, Earth or Air field effect."
 	Move.moves["Unleash Elements"] = shamanMove
 	
 	var arcanistMove = Move.new("Aspected Blast", Arcana1)
@@ -19,6 +20,7 @@ func _ready():
 	arcanistMove.noTargets = true
 	arcanistMove.cooldown = 5
 	arcanistMove.icon = preload("res://Assets/Icons/Move/Arcanist.png")
+	arcanistMove.description = "Cast an arcane sphere, dealing damage from a distance. Guaranteed to CRIT."
 	Move.moves["Aspected Blast"] = arcanistMove
 	
 	var fighterMove = Move.new("Skilled Strike", Arms1)
@@ -27,6 +29,7 @@ func _ready():
 	fighterMove.noTargets = true
 	fighterMove.cooldown = 2
 	fighterMove.icon = preload("res://Assets/Icons/Move/Fighter.png")
+	fighterMove.description = "Strike with precision, guaranteeing a CRIT."
 	Move.moves["Skilled Strike"] = fighterMove
 	
 	var rogueMove = Move.new("Stealth", Technique1)
@@ -35,6 +38,7 @@ func _ready():
 	rogueMove.reveals = false
 	rogueMove.cooldown = 4
 	rogueMove.icon = preload("res://Assets/Icons/Move/Rogue.png")
+	rogueMove.description = "Gain Stealth, preventing enemies from targeting you for the next 2 turns."
 	Move.moves["Stealth"] = rogueMove
 	
 	var tamerMove = Move.new("Tame", Beastmastery1)
@@ -42,6 +46,7 @@ func _ready():
 	tamerMove.noTargets = true
 	tamerMove.cooldown = 1
 	tamerMove.icon = preload("res://Assets/Icons/Move/Tamer.png")
+	tamerMove.description = "Attempt to tame an enemy. The chance increases as they lose health."
 	Move.moves["Tame"] = tamerMove
 	var tamerPassive = Passive.new("Forgotten Bond", TamerOnPassiveApply, TamerOnPassiveRemove, true)
 	Passive.passives["Forgotten Bond"] = tamerPassive
@@ -55,6 +60,7 @@ func _ready():
 	alchemyMove.manualCooldown = true
 	alchemyMove.manualOnMoveUse = true
 	alchemyMove.icon = preload("res://Assets/Icons/Move/Alchemy.png")
+	alchemyMove.description = "Select a potion to brew, then select the materials to use."
 	Move.moves["Brew"] = alchemyMove
 	
 	var machiningMove = Move.new("Tinker", Machining1)
@@ -66,6 +72,7 @@ func _ready():
 	machiningMove.manualCooldown = true
 	machiningMove.manualOnMoveUse = true
 	machiningMove.icon = preload("res://Assets/Icons/Move/Machining.png")
+	machiningMove.description = "Select an item to craft, then select the materials to use."
 	Move.moves["Tinker"] = machiningMove
 	
 #SHAMANISM
@@ -161,12 +168,9 @@ func Beastmastery1(e : Entity, t : Entity):
 	if e.Type != "Player":
 		return
 		
-	if e.allies.size() > 0:
+	if e.allies.size() >= e.maxAllies || t == null:
 		for ally in e.allies:
-			ally.targetEntity = e
-		return
-		
-	if t == null:
+			ally.Target(e)
 		return
 	
 	if t.Type == "AI":
@@ -178,6 +182,8 @@ func Beastmastery1(e : Entity, t : Entity):
 			e.allies.append(t)
 			t.gridmap.minimap.Reveal(t.gridPos)
 			t.tamer = e
+			e.StartCooldownName("Tame", 9)
+			e.skillUI.UpdateAll()
 			e.OnTame.emit(e, t)
 		else:
 			e.text.AddLine("Tame failed!\n")
@@ -189,17 +195,21 @@ func TameChance(t : Entity):
 	return (chance + chanceIncrease) > .5
 
 func TamerOnPassiveApply(e : Entity):
-	if e.Type == "Player":
-		e.OnAllyDeath.connect(TamerOnAllyDeath)
+	e.OnAllyDeath.connect(TamerOnAllyDeath)
+	e.OnDamage.connect(TamerOnDamage)
 
 func TamerOnPassiveRemove(e : Entity):
-	if e.Type == "Player":
-		e.OnAllyDeath.disconnect(TamerOnAllyDeath)
+	e.OnAllyDeath.disconnect(TamerOnAllyDeath)
+	e.OnDamage.disconnect(TamerOnDamage)
 
 func TamerOnAllyDeath(p : Player, _e : Entity):
 	p.StartCooldownName("Tame", 9)
 	p.skillUI.UpdateAll()
 
+func TamerOnDamage(e : Entity, source : Entity):
+	if source != null && e.allies.size() > 0 && e.allies[0].targetEntity == e.allies[0].tamer:
+		e.allies[0].Target(source)
+		
 #ALCHEMY
 func Alchemy1(g : Entity, _t = null):
 	if g.Type != "Player":

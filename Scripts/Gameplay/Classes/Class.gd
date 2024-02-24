@@ -2,6 +2,7 @@ class_name Class
 extends Resource
 
 var name : String
+var description : String
 var classBit : int
 var moves : Array[Move]
 var passives : Array[Passive]
@@ -11,8 +12,9 @@ var craftTinker : Array[String]
 
 var classVariables : Dictionary = {}
 
-func _init(Name : String, Attacks : Array[Move], classNum : int, profNum : int, Passives : Array[Passive] = [], CB : Array[String] = [], CT : Array[String] = []):
+func _init(Name : String, desc : String, Attacks : Array[Move], classNum : int, profNum : int, Passives : Array[Passive] = [], CB : Array[String] = [], CT : Array[String] = []):
 	name = Name
+	description = desc
 	classBit = classNum
 	moves = Attacks
 	profBit = profNum

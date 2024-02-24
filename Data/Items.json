@@ -69,6 +69,7 @@
 			"flavor": "Make sure to throw it pointy-end first.",
 			"mesh": "res://Assets/Items/Machining/Javelin.tscn",
 			"topdown": true,
+			"invHeight": 0.215,
 			"consumable": 3,
 			"move":{
 				"useTooltip": "Throw",
@@ -107,14 +108,14 @@
 			"recipe": ["Adhesive", "Fiber"],
 			"requires": ["Machining"]
 		},
-	"Salvaging Tools":
+	"Salvager":
 		{
-			"name": "Salvaging Tools",
+			"name": "Salvager",
 			"description": "Salvage materials from the environment or from a creature.",
-			"flavor": "",
-			"rarity": 1,
+			"flavor": "Blurring the line between \"salvage\" and \"mutilation\".",
 			"mesh": "res://Assets/Items/Machining/SalvagingKit.tscn",
 			"topdown": true,
+			"invHeight": 0.215,
 			"consumable": 1,
 			"move":{
 				"useTooltip": "Salvage",
@@ -132,6 +133,7 @@
 			"rarity": 2,
 			"mesh": "res://Assets/Items/Drops/TunnelingTools.tscn",
 			"topdown": true,
+			"invHeight": 0.235,
 			"consumable": 1,
 			"move":{
 				"useTooltip": "Use",
@@ -146,6 +148,7 @@
 			"flavor": "",
 			"mesh": "res://Assets/Items/Drops/RussTalon.tscn",
 			"topdown": true,
+			"invHeight": 0.27,
 			"tags": ["Reagent", "Sharp"]
 		},
 	"Eidolon Mass":
@@ -153,7 +156,7 @@
 			"name": "Eidolon Mass",
 			"description": "The indigestable remains left after an Eidolon's elemental meal. Has a number of unique uses.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/EidolonMass.tscn",
 			"tags": ["Reagent", "Fire", "Adhesive", "Sharp"]
 		},
 	"Charshroom":
@@ -193,7 +196,7 @@
 			"name": "Fulminating Gravel",
 			"description": "Built-up arcane and static energies within this sediment make for a number of potential applications.",
 			"flavor": "",
-			"mesh": null,
+			"mesh": "res://Assets/Items/Material/FulminatingGravel.tscn",
 			"tags": ["Paralysis", "Adhesive", "Stone"]
 		},
 	"Bonder's Bulb":
@@ -211,6 +214,7 @@
 			"flavor": "",
 			"mesh": "res://Assets/Items/Drops/Pestail.tscn",
 			"topdown": true,
+			"invHeight": 0.195,
 			"tags": ["Healing", "Stone"]
 		},
 	
@@ -248,35 +252,35 @@
 		},
 	"Shiny Scrap":
 		{
-			"name": "Air Mote",
-			"description": "Salvage; an emboldened, valuable material.",
+			"name": "Shiny Scrap",
+			"description": "Salvage; a bright, emboldened material.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Salvage/Shiny Scrap.tscn",
-			"tags": ["Reagent"]
+			"tags": ["Reagent", "Fire"]
 		},
 	"Sharp Scrap":
 		{
-			"name": "Sharp Mote",
+			"name": "Sharp Scrap",
 			"description": "Salvage; an acute material.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Salvage/Sharp Scrap.tscn",
-			"tags": ["Sharp"]
+			"tags": ["Sharp", "Stone"]
 		},
 	"Heavy Scrap":
 		{
-			"name": "Heavy Mote",
+			"name": "Heavy Scrap",
 			"description": "Salvage; a weighty material.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Salvage/Heavy Scrap.tscn",
-			"tags": ["Heavy"]
+			"tags": ["Heavy", "Stone"]
 		},
 	"Light Scrap":
 		{
-			"name": "Light Mote",
+			"name": "Light Scrap",
 			"description": "Salvage; a nearly weightless material.",
 			"flavor": "",
 			"mesh": "res://Assets/Items/Salvage/Light Scrap.tscn",
-			"tags": ["Fiber"]
+			"tags": ["Fiber", "Air"]
 		},
 	
 	"Blooming Brew":
@@ -324,7 +328,7 @@
 			"flavor": "The simplest solution is often the best; filling a flask with caustic spikes is efficient and effective.",
 			"rarity": 1,
 			"mesh": "res://Assets/Items/Alchemy/BlightersBrew.tscn",
-			"consumable": 1,
+			"consumable": 3,
 			"move":{
 				"useTooltip": "Throw",
 				"custom": "Blighter's Brew"
@@ -332,12 +336,43 @@
 			"recipe":["Reagent", "Sharp"],
 			"requires":["Alchemy", "Technique"]
 		},
-		
+	"Imbued Wilds":
+		{
+			"name": "Imbued Wilds",
+			"description": "Restores 25% HP and applies a random buff to POW, MAG, DEF or RES.",
+			"flavor": "With some culinary skill, the dormant healing properties of many common wild catalysts can be released.",
+			"rarity": 1,
+			"mesh": "res://Assets/Items/Alchemy/ImbuedWilds.tscn",
+			"consumable": 2,
+			"move":{
+				"useTooltip": "Imbue",
+				"custom": "Imbued Wilds"
+			},
+			"recipe":["Reagent"],
+			"requires":["Alchemy", "Beastmastery"]
+		},
+	"Transmuter's Stone":
+		{
+			"name": "Transmuter's Stone",
+			"description": "Transmutes a weapon or focus into random salvage, depending on the modifier or aspect.",
+			"flavor": "Converting something functional into raw material tends to be easier than the other way around.",
+			"rarity": 1,
+			"mesh": "res://Assets/Items/Alchemy/TransmutersStone.tscn",
+			"consumable": 3,
+			"move":{
+				"useTooltip": "Transmute",
+				"custom": "Transmuter's Stone"
+			},
+			"recipe":["Reagent", "Stone"],
+			"requires":["Alchemy", "Arcana"]
+		},
+	
+	
 	"Totem":
 		{
 			"name": "Totem",
 			"description": "Summons a structure that spreads field effects that are placed on it.",
-			"flavor": "The intricate lines carved across the surface of this totem allow for natural forces to be drawn in and reflected.",
+			"flavor": "The intricate lines carved across the surface of this totem allow for natural forces to be drawn in and dispersed.",
 			"rarity": 1,
 			"mesh": "res://Assets/Items/Machining/TotemItem.tscn",
 			"consumable": 1,
@@ -354,13 +389,15 @@
 			"description": "Uses material to add an aspect to a focus. The type of aspect depends on the material used.",
 			"flavor": "Brute force application of restorative magic allows for slightly more arcane capacity than normal.",
 			"rarity": 1,
-			"mesh": null,
+			"mesh": "res://Assets/Items/Machining/EnchantedAttuner.tscn",
+			"topdown": true,
+			"invHeight": 0.185,
 			"consumable": 2,
 			"move":{
 				"useTooltip": "Enchant",
 				"custom": "Change Aspect"
 			},
-			"recipe":["Reagent", "Adhesive", "Healing"],
+			"recipe":["Reagent", "Healing", "Fiber"],
 			"requires":["Machining", "Arcana"]
 		},
 	"Smithing Gear":
@@ -369,13 +406,13 @@
 			"description": "Uses material to add a modifier to a weapon. The modifier added depends on the material used.",
 			"flavor": "A combination of martial skill and mechanical know-how reveals a weapon's hidden potential.",
 			"rarity": 1,
-			"mesh": null,
+			"mesh": "res://Assets/Items/Machining/SmithingGear.tscn",
 			"consumable": 2,
 			"move":{
 				"useTooltip": "Modify",
 				"custom": "Change Modifier"
 			},
-			"recipe":["Reagent", "Adhesive", "Fiber"],
+			"recipe":["Reagent", "Adhesive", "Stone"],
 			"requires":["Machining", "Arms"]
 		}
 }

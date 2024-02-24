@@ -92,7 +92,7 @@ static func WeaponCrit(e : Entity, t : Entity, equipped : Equipment, movename = 
 	for i in range(targets.size()):
 		if "Bleed" in mods:
 			targets[i].AddStatus(Status.Bleed(), 2)
-		if "Crush" in mods && randf_range(0, 1) < .2:
+		if "Crush" in mods:
 			targets[i].AddStatus(Status.Stun(), 1)
 		var damage = Stats.GetDamage(e.stats, targets[i].stats, false, 2) if "Bludgeon" in mods else Stats.GetDamage(e.stats, targets[i].stats)
 		damage *= additiveMod
@@ -144,7 +144,7 @@ static func FocusCrit(e : Entity, t : Entity, equipped : Equipment, movename = "
 		t.AddStatus(Status.Bleed(), 3)
 	if "Force" in mods:
 		additiveMod += .2
-	if "Lightning" in mods && randf_range(0, 1) < .2:
+	if "Lightning" in mods:
 		t.AddStatus(Status.Paralysis(), 1)
 	var damage = Stats.GetDamage(e.stats, t.stats, true, 2) if "Shadow" in mods else Stats.GetDamage(e.stats, t.stats, true)
 	damage *= additiveMod
@@ -156,8 +156,9 @@ static func FocusCrit(e : Entity, t : Entity, equipped : Equipment, movename = "
 	if waittime > 0:
 		await e.Wait(waittime)
 	if "Radiant" in mods:
-		e.Heal(damage * .25)
-		e.text.AddLine("The radiant light healed " + e.GetLogName() + " for " + LogText.GetHealNum(int(damage * .25)) + " HP!" + "\n")
+		var heal : int = e.Heal(ceili(.25 * damage))
+		if heal > 0:
+			e.text.AddLine("The radiant light healed " + e.GetLogName() + " for " + LogText.GetHealNum(heal) + " HP!" + "\n")
 	if is_instance_valid(t):
 		e.OnMoveUse.emit(e, t, movename)
 	else:

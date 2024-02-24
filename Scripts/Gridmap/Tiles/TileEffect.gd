@@ -9,7 +9,7 @@ static var frost = preload("res://Scripts/Gridmap/Tiles/Effects/FrostTile.tscn")
 static var earth = preload("res://Scripts/Gridmap/Tiles/Effects/EarthTile.tscn")
 static var air = preload("res://Scripts/Gridmap/Tiles/Effects/AirTile.tscn")
 static var force = preload("res://Scripts/Gridmap/Tiles/Effects/ForceTile.tscn")
-#static var lightning = preload("res://Scripts/Gridmap/Tiles/Effects/LightningTile.tscn")
+static var lightning = preload("res://Scripts/Gridmap/Tiles/Effects/LightningTile.tscn")
 static var radiant = preload("res://Scripts/Gridmap/Tiles/Effects/RadiantTile.tscn")
 static var shadow = preload("res://Scripts/Gridmap/Tiles/Effects/ShadowTile.tscn")
 static var smoke = preload("res://Scripts/Gridmap/Tiles/Effects/SmokeTile.tscn")
@@ -43,15 +43,16 @@ func init(pos : Vector3, eff : Effect, grid : Vector2i):
 			applyEffect = AirEffect
 		Effect.Force:
 			e = TileEffect.force.instantiate()
-			applyEffect = AirEffect
+			applyEffect = ForceEffect
 		Effect.Lightning:
-			pass
+			e = TileEffect.lightning.instantiate()
+			applyEffect = LightningEffect
 		Effect.Radiant:
 			e = TileEffect.radiant.instantiate()
-			applyEffect = AirEffect
+			applyEffect = RadiantEffect
 		Effect.Shadow:
 			e = TileEffect.shadow.instantiate()
-			applyEffect = AirEffect
+			applyEffect = ShadowEffect
 		Effect.Smoke:
 			e = TileEffect.smoke.instantiate()
 			applyEffect = SmokeEffect
@@ -73,7 +74,23 @@ func EarthEffect(e : Entity):
 
 func AirEffect(e : Entity):
 	e.AddStatus(Status.Air(), 1)
-	
+
+func ForceEffect(e : Entity):
+	e.AddStatus(Status.Gravity(), 1)
+
+func LightningEffect(e : Entity):
+	if randf() > float(e.stats.HP) / e.stats.maxHP:
+		e.AddStatus(Status.Paralysis(), 2)
+		e.text.AddLine(e.GetLogName() + " was paralyzed!\n")
+		
+func RadiantEffect(e : Entity):
+	if randf() > float(e.stats.HP) / e.stats.maxHP:
+		e.AddStatus(Status.Disarm(), 1)
+		e.text.AddLine(e.GetLogName() + " was disarmed by the radiant light!\n")
+
+func ShadowEffect(e : Entity):
+	e.AddStatus(Status.Shadow(), 1)
+
 func SmokeEffect(_e : Entity):
 	return
 

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgyxf2jyu1je0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kof7d"]
+transparency = 1
+albedo_color = Color(0, 1, 1, 0.439216)
+metallic = 0.4
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lyv41"]
+material = SubResource("StandardMaterial3D_kof7d")
+top_radius = 0.1
+height = 0.01
+radial_segments = 11
+rings = 1
+cap_bottom = false
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Dent" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("CylinderMesh_lyv41")

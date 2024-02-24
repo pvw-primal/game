@@ -209,12 +209,13 @@ func _ready():
 		var possibleItems
 		var salvageTarget = t != null && t.Type != "Ally" && e.Type == "Player"
 		if !salvageTarget:
-			possibleItems = e.gridmap.level.materials
+			possibleItems = e.gridmap.controller.level.materials
 			numitems = randi_range(2, 3) if randf_range(0, 1) > .2 else 4
 		else:
 			possibleItems = Loader.GetEnemyData(t.Name)["drops"]
 			numitems = randi_range(1, 3)
 		
+		possibleItems += ["Shiny Scrap", "Heavy Scrap", "Light Scrap", "Sharp Scrap"]
 		for i in range(numitems):
 			var foundItem = randi_range(0, possibleItems.size() - 1)
 			e.text.AddLine("Salvaged " + possibleItems[foundItem] + "!\n")
@@ -293,6 +294,8 @@ func LoadItems():
 			item.maxUses = itemData["consumable"]
 		if "topdown" in itemData:
 			item.topdown = itemData["topdown"]
+		if "invHeight" in itemData:
+			item.invHeight = itemData["invHeight"]
 		if "recipe" in itemData:
 			for r in itemData["recipe"]:
 				item.crafting.recipe.append(r)

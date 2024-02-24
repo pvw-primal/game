@@ -38,13 +38,17 @@ static func InitStatus():
 	Stealth()
 	Bleed()
 	CritBuff()
+	AttackBuff()
+	MagicBuff()
+	DefenseBuff()
+	ResistenceBuff()
 
 static func AttackBuff():
 	if "AttackBuff" not in status:
 		var atk = func(sum : Array[float]):
 			sum[0] += .3
 			return sum
-		status["AttackBuff"] = Status.new("AttackBuff", null, null, atk, genericBuff)
+		status["AttackBuff"] = Status.new("AttackBuff", null, null, atk, preload("res://Assets/Icons/Status/POWBuff.png"))
 	return status["AttackBuff"]
 	
 static func MagicBuff():
@@ -52,7 +56,7 @@ static func MagicBuff():
 		var atk = func(sum : Array[float]):
 			sum[2] += .3
 			return sum
-		status["MagicBuff"] = Status.new("MagicBuff", null, null, atk, genericBuff)
+		status["MagicBuff"] = Status.new("MagicBuff", null, null, atk, preload("res://Assets/Icons/Status/MAGBuff.png"))
 	return status["MagicBuff"]
 	
 static func DefenseBuff():
@@ -60,7 +64,7 @@ static func DefenseBuff():
 		var atk = func(sum : Array[float]):
 			sum[1] += .3
 			return sum
-		status["DefenseBuff"] = Status.new("DefenseBuff", null, null, atk, genericBuff)
+		status["DefenseBuff"] = Status.new("DefenseBuff", null, null, atk, preload("res://Assets/Icons/Status/DEFBuff.png"))
 	return status["DefenseBuff"]
 
 static func ResistenceBuff():
@@ -68,7 +72,7 @@ static func ResistenceBuff():
 		var atk = func(sum : Array[float]):
 			sum[3] += .3
 			return sum
-		status["ResistenceBuff"] = Status.new("ResistenceBuff", null, null, atk, genericBuff)
+		status["ResistenceBuff"] = Status.new("ResistenceBuff", null, null, atk, preload("res://Assets/Icons/Status/RESBuff.png"))
 	return status["ResistenceBuff"]
 
 static func DefResDebuff():
@@ -85,7 +89,7 @@ static func CritBuff():
 		var atk = func(sum : Array[float]):
 			sum[4] += .5
 			return sum
-		status["CritBuff"] = Status.new("CritBuff", null, null, atk, genericBuff)
+		status["CritBuff"] = Status.new("CritBuff", null, null, atk, preload("res://Assets/Icons/Status/CRITBuff.png"))
 	return status["CritBuff"]
 
 static func SureCrit():
@@ -93,7 +97,7 @@ static func SureCrit():
 		var atk = func(sum : Array[float]):
 			sum[4] += 1
 			return sum
-		status["SureCrit"] = Status.new("SureCrit", null, null, atk, genericBuff)
+		status["SureCrit"] = Status.new("SureCrit", null, null, atk, preload("res://Assets/Icons/Status/CRITBuff.png"))
 	return status["SureCrit"]
 
 static func Stun():
@@ -179,3 +183,23 @@ static func Bleed():
 			e.TakeDamage(damage)
 		status["Bleed"] = Status.new("Bleed", bleed, null, null, preload("res://Assets/Icons/Status/Bleed.png"))
 	return status["Bleed"]
+
+static func Gravity():
+	if "Gravity" not in status:
+		var force = func(sum : Array[float]):
+			sum[1] -= .3
+			sum[3] -= .3
+			return sum
+		status["Gravity"] = Status.new("Gravity", null, null, force, preload("res://Assets/Icons/Status/Gravity.png"))
+	return status["Gravity"]
+	
+static func Shadow():
+	if "Shadow" not in status:
+		var shadow = func(sum : Array[float]):
+			sum[0] += .2
+			sum[1] -= .4
+			sum[2] += .2
+			sum[3] -= .4
+			return sum
+		status["Shadow"] = Status.new("Shadow", null, null, shadow, preload("res://Assets/Icons/Status/Shadow.png"))
+	return status["Shadow"]

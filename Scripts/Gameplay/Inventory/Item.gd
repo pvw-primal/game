@@ -7,8 +7,10 @@ var moveTooltip : String
 var name : String
 var description : String
 var flavor : String
+
 var mesh : PackedScene
 var topdown : bool
+var invHeight : float
 
 var crafting : Crafting
 var rarity : Items.Rarity
@@ -30,6 +32,7 @@ func _init(Name : String, Description : String, Flavor : String = "", t : Packed
 	rarity = Items.Rarity.Common
 	topdown = false
 	equipment = false
+	invHeight = .1
 	
 func CanUse():
 	return move != null && !equipment

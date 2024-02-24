@@ -11,17 +11,25 @@ var moving : bool = false
 var mesh : Node3D
 var animator : Animator
 
-
+@onready var map : TreeGridMap = get_node("/root/root/GridMap")
 
 func _ready():
-	var s = load("res://Assets/Enemy/MortalPester/MortalPester.tscn")
+	var s = preload("res://Assets/Enemy/Cinch/Cinch.tscn")
 	mesh = s.instantiate()
 	add_child(mesh)
 	animator = get_node("Mesh/AnimationTree")
+	mesh.rotation_degrees.y = 90
+	SetColor(Color.MEDIUM_PURPLE, Color.REBECCA_PURPLE, Color.REBECCA_PURPLE)
 
 func _process(delta):
-	position = position.lerp(targetPos, speed * delta / 2)
-	position = position.move_toward(targetPos, speed * delta / 1.5)
+	if targetPos.x > map.limitsX.y || targetPos.x < map.limitsX.x || targetPos.z > map.limitsY.y || targetPos.z < map.limitsY.x:
+		targetPos = position
+		animator.Walk(false)
+		moving = false
+		speed = 0
+	else:
+		position = position.lerp(targetPos, speed * delta / 2)
+		position = position.move_toward(targetPos, speed * delta / 1.5)
 	
 	if moving:
 		if speed < MAX_SPEED:
@@ -57,3 +65,14 @@ func _process(delta):
 func Rotate(pos : Vector3):
 	mesh.rotation.y = (Vector2(pos.x, position.z) - Vector2(position.x, pos.z)).angle()
 
+func SetColor(cR : Color, cG : Color, cB: Color):
+	for child in mesh.get_node("Armature/Skeleton3D").get_children():
+		var m = child.mesh.surface_get_material(0)
+		if !m.is_class("ShaderMaterial"):
+			continue
+		child.set_instance_shader_parameter("replaceR", cR)
+		child.set_instance_shader_parameter("replaceG", cG)
+		child.set_instance_shader_parameter("replaceB", cB)
+		
+func SetSize(s : float = randf_range(.8, 1.2)):
+	mesh.scale = Vector3(s, s, s)

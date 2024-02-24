@@ -12,8 +12,6 @@ static var accesses : int = 0
 
 static func LoadFile(path : String):
 	var file = FileAccess.open(path, FileAccess.READ)
-	accesses += 1
-	print(accesses)
 	return file.get_as_text()
 
 static func GetEnemyData(name : String):

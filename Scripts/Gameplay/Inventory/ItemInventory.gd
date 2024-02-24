@@ -14,6 +14,9 @@ func init(pos : Vector3):
 	position = pos
 		
 func ChangeItem(i : Item, animate : bool = true, u : int = -1):
+	if i == null:
+		Remove()
+		return
 	if item != null:
 		mesh.queue_free()
 	item = i
@@ -25,10 +28,10 @@ func ChangeItem(i : Item, animate : bool = true, u : int = -1):
 	mesh = im.instantiate()
 	if item.topdown:
 		mesh.rotation_degrees = Vector3(-35, randf_range(-1, 7), -92)
-		mesh.position.y = .235
+		mesh.position.y = i.invHeight
 	else:
 		mesh.rotation_degrees = Vector3(0, randf_range(-1, 7), randf_range(-1, 7))
-		mesh.position.y = 0
+		mesh.position.y = i.invHeight
 	add_child(mesh)
 	if animate:
 		var anim : ItemAnimator = mesh.get_node("AnimationTree")
@@ -36,6 +39,7 @@ func ChangeItem(i : Item, animate : bool = true, u : int = -1):
 		
 func Remove():
 	item = null
-	mesh.queue_free()
-	mesh = null
+	if mesh != null:
+		mesh.queue_free()
+		mesh = null
 	uses = -1

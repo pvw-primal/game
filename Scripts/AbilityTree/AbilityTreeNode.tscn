@@ -18,3 +18,10 @@ monitoring = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_01alm")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 0.501814, 4.44444e-09)
+cast_shadow = 0
+pixel_size = 0.0325
+double_sided = false
+texture_filter = 2

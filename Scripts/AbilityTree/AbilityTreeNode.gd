@@ -1,17 +1,18 @@
 class_name AbilityTreeNode
 extends Node3D
 
+@onready var sprite : Sprite3D = get_node("Sprite3D")
+
 var from : Array[AbilityTreeNode]
 var to : Array[AbilityTreeNode]
 
-var Name : String
-var desc : String
+var data : AbilityTreeData
 
-func _init():
+func _ready():
+	if data != null:
+		sprite.texture = data.icon
+
+func _init(d : AbilityTreeData = AbilityTreeData.new()):
 	from = []
 	to = []
-	
-func _ready():
-	Name = "Test Node"
-	desc = "This node is at (" + str(position.x) + ", " + str(position.z) + ")."
-	
+	data = d

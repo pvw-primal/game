@@ -1,12 +1,14 @@
 class_name AbilityTreeDisplay
 extends Node3D
 
-const OFFSET : float = 2.5
+const OFFSET_X : float = 2.5
+const OFFSET_Y : float = 1.5
 
 @onready var treeRoot : Node3D = get_node("tree")
 @onready var treePlayer : AbilityTreePlayer = get_node("Player")
 @onready var collider : Area3D = get_node("Player/Area3D")
-@onready var text : RichTextLabel = get_node("/root/root/Description")
+@onready var textTop : RichTextLabel = get_node("/root/root/DescriptionTop")
+@onready var textBottom : RichTextLabel = get_node("DescriptionBottom")
 
 @onready var PlayerScene = preload("res://Scripts/Entities/Player/Player.tscn")
 
@@ -14,50 +16,51 @@ var tree : AbilityTree
 var currentNode : AbilityTreeNode
 
 func _ready():
-	tree = AbilityTree.new(5)
-	DisplayTree(tree.tree, Vector3.ZERO)
+	tree = AbilityTree.StarterTree() if Global.player == null else AbilityTree.GetNextTree(Global.stage)
+	DisplayTree(tree.tree, Vector3(0, 0, 1.5))
 	collider.area_entered.connect(OnCollision)
 	collider.area_exited.connect(OnExit)
-	text.visible = false
+	textTop.visible = false
+	textBottom.visible = false
+	textTop.resized.connect(ChangeNodeText)
 
 func _process(_delta):
-	if Input.is_action_just_pressed("Test"):
-		for node in treeRoot.get_children():
-			node.queue_free()
-		tree._init(5)
-		DisplayTree(tree.tree, Vector3.ZERO)
-	elif Input.is_action_just_pressed("UISelect"):
-		if currentNode != null:
+	if Input.is_action_just_pressed("UISelect"):
+		if currentNode != null && currentNode.data != null:
 			PrepareLevel()
 			get_tree().change_scene_to_file("res://Scenes/root.tscn")
 		
 func PrepareLevel():
-	var player : Player = PlayerScene.instantiate()
-	player.SetMeshCopy(treePlayer.mesh)
-	Global.player = player
+	if Global.player == null:
+		var player : Player = PlayerScene.instantiate()
+		player.SetMeshCopy(treePlayer.mesh)
+		Global.player = player
+	if !currentNode.data.OnLevelStart.is_null():
+		currentNode.data.OnLevelStart.call(Global.player, treePlayer)
+	Global.player.animator.Walk(false)
 	Global.level = Level.new("Forest")
+	Global.stage += 1
 
 func DisplayTree(t : Array, startingPos : Vector3):
 	for row in range(t.size()):
 		var pos : Vector3
 		if t[row].size() % 2 == 0:
 			var x = floorf(t[row].size() / 2) - 1
-			pos = Vector3(x * -OFFSET, 0, row * OFFSET) + startingPos
-			pos.x -= OFFSET / 2
+			pos = Vector3(x * -OFFSET_X, 0, row * OFFSET_Y) + startingPos
+			pos.x -= OFFSET_X / 2
 		else:
 			var x = floorf(t[row].size() / 2)
-			pos = Vector3(x * -OFFSET, 0, row * OFFSET) + startingPos
+			pos = Vector3(x * -OFFSET_X, 0, row * OFFSET_Y) + startingPos
 		for column in range(t[row].size()):
 			t[row][column].position = pos
 			DisplayNode(t[row][column])
-			pos.x += OFFSET
+			pos.x += OFFSET_X
 	
 func DisplayNode(node : AbilityTreeNode):
 	for connection in node.from:
 		treeRoot.add_child(line(node.position, connection.position))
 	treeRoot.add_child(node)
 	
-
 func line(pos1: Vector3, pos2: Vector3, color = Color.WHITE_SMOKE):
 	var mesh_instance := MeshInstance3D.new()
 	var immediate_mesh := ImmediateMesh.new()
@@ -82,14 +85,19 @@ func OnExit(_a : Area3D):
 
 func OnCollision(a : Area3D):
 	currentNode = a.get_parent()
-	DisplayNodeText(currentNode)
+	if currentNode.data != null:
+		DisplayNodeText(currentNode)
 
 func DisplayNodeText(node : AbilityTreeNode):
-	text.visible = true
-	text.text = "[indent][b]" + node.Name + "[/b]\n" + node.desc + "[/indent]"
-	
+	textTop.visible = true
+	textTop.text = "[b]" + node.data.name + "[/b]\n" + node.data.desc + ""
+
+func ChangeNodeText():
+	textBottom.position.y = textTop.size.y + 5
+
 func RemoveNodeText():
-	text.visible = false
+	textTop.visible = false
+	textBottom.visible = false
 	
 
 

@@ -1,11 +1,12 @@
 class_name Level
 extends Resource
 
-#number of colors cannot exceed 16 (minus number of allies)
+#number of colors cannot exceed 16 (minus max number of allies)
 const NUM_COLOR_VARIATIONS = 4
 
 var name : String
 var floorPrefix : String
+var goalName : String
 var enemies : Dictionary
 
 var commonItems : Array
@@ -14,14 +15,17 @@ var materials : Array
 
 var color : Color
 
-func _init(type : String):
+func _init(type : String, variant : String = ""):
 	var levelDetails : Dictionary = Loader.GetLevelData(type)
-	if "name" in levelDetails:
-		var p = levelDetails["name"]["prefix"]
-		var s = levelDetails["name"]["suffix"]
-		name = p[randi_range(0, p.size() - 1)] + " " + s[randi_range(0, p.size() - 1)]
+	var variants = levelDetails["variant"]
+	var v : String = variants.keys()[randi_range(0, variants.size() - 1)] if variant == "" else variant
+	var p = levelDetails["variant"][v]["prefix"]
+	var s = levelDetails["suffix"]
+	name = p[randi_range(0, p.size() - 1)] + " " + s[randi_range(0, s.size() - 1)]
 	if "floorPrefix" in levelDetails:
 		floorPrefix = levelDetails["floorPrefix"]
+	if "goalName" in levelDetails:
+		goalName = levelDetails["goalName"]
 	var enemyDrops : Array[String] = []
 	if "spawns" in levelDetails:
 		var cacheList : Array[String] = []
@@ -43,11 +47,11 @@ func _init(type : String):
 		for drop in enemyDrops:
 			if drop not in materials:
 				materials.append(drop)
-	if "color" in levelDetails:
-		var colorR = levelDetails["color"]["R"]
-		var colorG = levelDetails["color"]["G"]
-		var colorB = levelDetails["color"]["B"]
-		color = Color(randf_range(colorR[0], colorR[1]), randf_range(colorG[0], colorG[1]), randf_range(colorB[0], colorB[1]))
+		
+	var colorR = levelDetails["variant"][v]["color"]["R"]
+	var colorG = levelDetails["variant"][v]["color"]["G"]
+	var colorB = levelDetails["variant"][v]["color"]["B"]
+	color = Color(randf_range(colorR[0], colorR[1]), randf_range(colorG[0], colorG[1]), randf_range(colorB[0], colorB[1]))
 				
 func GetRandomEnemyColor(enemyName : String):
 	return enemies[enemyName][randi_range(0, NUM_COLOR_VARIATIONS - 1)]

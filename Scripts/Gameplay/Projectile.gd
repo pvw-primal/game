@@ -14,7 +14,7 @@ func init(attacker : Entity, destination : Vector3, Speed : float, mesh : Packed
 	add_child(model)
 	position = Vector3(attacker.position.x, position.y, attacker.position.z)
 	rotation.y = attacker.mesh.rotation.y + (PI / 2)
-	targetPos = destination
+	targetPos = destination if defender == null else defender.targetPos
 	speed = Speed
 	moving = true
 	if m != null:

@@ -39,7 +39,7 @@ func Display(id : int):
 	if description.visible:
 		description.text = descriptions[id]
 		
-func Open(options : Array[String], disabled : Dictionary = {}, OWidth : float = 75, desc : Array[String] = [], DWidth : float = 60):
+func Open(options : Array[String], disabled : Dictionary = {}, OWidth : float = 150, desc : Array[String] = [], DWidth : float = 60):
 	visible = true
 	selected = 0
 	player.ignoreInput = true

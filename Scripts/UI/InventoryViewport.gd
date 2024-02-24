@@ -1,17 +1,20 @@
 class_name InventoryViewport
-extends AspectRatioContainer
+extends Node2D
 
 const INVENTORY_HEIGHT : int = 5
 const INVENTORY_WIDTH : int = 3
 const INVENTORY_OFFSET : float = .5
 
-@onready var layout : Node3D = get_node("InventoryWindow/InventoryViewportContainer/InventoryViewport/InventoryLayout")
-@onready var list : ItemList = get_node("InventoryWindow/ItemList")
-@onready var viewport : SubViewport = get_node("InventoryWindow/InventoryViewportContainer/InventoryViewport")
-@onready var description : RichTextLabel = get_node("InventoryWindow/Description")
-@onready var popup : ItemList = get_node("InventoryWindow/PopUp")
+@onready var layout : Node3D = get_node("InventoryViewportContainer/InventoryViewport/InventoryLayout")
+@onready var list : ItemList = get_node("ItemList")
+@onready var viewport : SubViewport = get_node("InventoryViewportContainer/InventoryViewport")
+@onready var description : RichTextLabel = get_node("Description")
+@onready var border : NinePatchRect = get_node("Description/NinePatchRect")
+@onready var popup : ItemList = get_node("PopUp")
+@onready var bottomBar : RichTextLabel = get_node("BottomBar")
+@onready var bottomBarBorder : NinePatchRect = get_node("BottomBar/NinePatchRect")
 
-@onready var bottomBar : RichTextLabel = get_node("InventoryWindow/BottomBar")
+@onready var menuUI : MenuUI = get_node("/root/Root/MenuUI")
 
 @onready var item : PackedScene = preload("res://Scripts/Gameplay/Inventory/iteminventory3D.tscn")
 @onready var testicon : Texture2D = preload("res://Assets/InventoryIcon.png")
@@ -25,6 +28,7 @@ var firstOpenSlot : int
 var player : Player
 var selected : int
 var popupSelect : int
+signal OnWindowClose
 
 var recipe : Array[String] = []
 var currentRecipeSlot : int = 0
@@ -60,14 +64,10 @@ func _ready():
 	
 	visible = false
 	popup.visible = false
+	description.resized.connect(BorderSizeChange)
+	bottomBar.resized.connect(BBorderSizeChange)
 
 func _process(_delta):
-	if Input.is_action_just_pressed("Inventory") && player.turn && !player.action:
-		if visible:
-			Close(false)
-			return
-		else:
-			Open()
 	if visible:
 		if showPopup:
 			if Input.is_action_just_pressed("MoveDown"):
@@ -106,14 +106,22 @@ func _process(_delta):
 				Back()
 
 func init(items : Array[Item], slots : int):
-	for i in range(slots):
-		list.set_item_disabled(i, false)
+	for i in range(inventory.size()):
+		if i < slots:
+			list.set_item_disabled(i, false)
 		if i < items.size():
 			inventory[i].ChangeItem(items[i])
-		elif firstOpenSlot == -1:
+		if firstOpenSlot == -1 && (i >= items.size() || items[i] == null):
 			firstOpenSlot = i
 	lastSlot = slots - 1
-	
+
+func InventoryList(gaps : bool = true) -> Array[Item]:
+	var l : Array[Item] = []
+	for inventoryItem in inventory:
+		if gaps || inventoryItem.item != null:
+			l.append(inventoryItem.item)
+	return l
+
 func Open():
 	visible = true
 	description.visible = true
@@ -223,6 +231,7 @@ func DismissMenu(id : int):
 			RemoveItem(preselected)
 		
 func CraftingOpen(items : Array[String]):
+	menuUI.OtherInventoryOpen()
 	visible = true
 	bottomBar.visible = true
 	popupSelect = 0
@@ -256,8 +265,8 @@ func CraftingSelectCraft(id : int):
 	popupSelect = id
 	description.visible = true
 	if id == popup.item_count - 1:
-		description.text = "Cancel crafting."
-		bottomBar.text = ""
+		description.text = "\n \n"
+		bottomBar.text = "\n\tCancel crafting.\n"
 	else:
 		var i : Item = Items.items[popup.get_item_text(popupSelect)]
 		description.text = i.GetDescription(i.maxUses)
@@ -320,7 +329,7 @@ func CraftingActivateItem(id : int):
 	bottomBar.text = DisplayRecipe(recipe)
 
 func DisplayRecipe(r : Array[String]) -> String:
-	var s = "[indent]" + Items.items[popup.get_item_text(popupSelect)].name + " requires: "
+	var s = "[indent]\n" + Items.items[popup.get_item_text(popupSelect)].name + " requires: "
 	for i in range(r.size()):
 		s += r[i] if i == r.size() - 1 else r[i] + ", "
 	if !showPopup:
@@ -354,6 +363,7 @@ func CraftingBack():
 	bottomBar.text = DisplayRecipe(recipe)
 
 func PickerOpen(viableItems : Dictionary):
+	menuUI.OtherInventoryOpen()
 	visible = true
 	bottomBar.visible = false
 	selected = 0
@@ -381,7 +391,7 @@ func PickerSelected(id : int):
 		description.visible = true
 		description.text = inventory[id].item.GetDescription(inventory[id].uses)
 		bottomBar.visible = true
-		bottomBar.text = "[indent]" + searchItems[inventory[id].item.name] + "[/indent]"
+		bottomBar.text = "[indent]\n" + searchItems[inventory[id].item.name] + "[/indent]"
 	else:
 		description.visible = false
 		bottomBar.visible = false
@@ -405,6 +415,7 @@ func PickerSetSlots(reset : bool = false):
 #func Example(i : Item, lastSelected : Item):
 #return "Description of effect" if good else null
 func ModPickerOpen(Criteria : Array[Callable], Desc : Array[String]):
+	menuUI.OtherInventoryOpen()
 	visible = true
 	bottomBar.visible = false
 	selected = 0
@@ -438,13 +449,13 @@ func ModPickerSelected(id : int):
 		var lastSelected : Item = null if picked.size() < 1 else inventory[picked[currentRecipeSlot - 1]].item
 		var crit = criteria[currentRecipeSlot].call(inventory[id].item, lastSelected)
 		if crit != null:
-			bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "\n\n" + crit + "[/indent]"
+			bottomBar.text = "[indent]\n" + criteriaDesc[currentRecipeSlot] + "\n\n" + crit + "[/indent]"
 		else:
-			bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "[/indent]"
+			bottomBar.text = "[indent]\n" + criteriaDesc[currentRecipeSlot] + "[/indent]"
 	else:
 		description.visible = false
 		bottomBar.visible = true
-		bottomBar.text = "[indent]" + criteriaDesc[currentRecipeSlot] + "[/indent]"
+		bottomBar.text = "[indent]\n" + criteriaDesc[currentRecipeSlot] + "[/indent]"
 
 func ModPickerActivated(id : int):
 	if list.get_item_icon(id) != disabledicon:
@@ -482,6 +493,7 @@ func ModPickerSetSlots(reset : bool = false):
 			list.set_item_icon(i, testicon)
 
 func Close(craftcomplete : bool = true):
+	OnWindowClose.emit()
 	visible = false
 	popup.visible = false
 	bottomBar.visible = false
@@ -536,12 +548,14 @@ func Back():
 			Close(false)
 
 func AddItem(i : Item, uses : int = -1):
+	var oldFOS : int = firstOpenSlot
 	inventory[firstOpenSlot].ChangeItem(i, true, uses)
 	for x in range(lastSlot + 1):
 		if inventory[x] != null && inventory[x].item == null:
 			firstOpenSlot = x
-			return
+			return oldFOS
 	firstOpenSlot = -1
+	return oldFOS
 
 func RemoveItem(slot : int):
 	inventory[slot].Remove()
@@ -578,3 +592,11 @@ func Unequip():
 			firstOpenSlot = x
 			return
 	firstOpenSlot = -1
+
+func BorderSizeChange():
+	border.size = description.size
+	bottomBar.position = Vector2(description.position.x, description.position.y + description.size.y)
+	
+func BBorderSizeChange():
+	bottomBar.size.x = description.size.x
+	bottomBarBorder.size = bottomBar.size

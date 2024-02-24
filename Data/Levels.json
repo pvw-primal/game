@@ -2,16 +2,51 @@
 	"Forest":
 		{
 			"type": "Forest",
-			"name": {
-				"prefix": ["Green", "Verdant", "Ruined", "Wild", "Overgrown", "Reclaimed", "Murmuring"],
-				"suffix": ["Woods", "Forest", "Grove", "Thicket", "Backwood", "Weald", "Glade", "Garden", "Grounds"]
+			"variant":{
+				"Green":{
+					"prefix": ["Green", "Verdant", "Ruined", "Wild", "Overgrown", "Reclaimed", "Ancient"],
+					"color": {
+						"R":[0.2, 0.4],
+						"G":[0.55, 0.7],
+						"B":[0.2, 0.4]
+					}
+				},
+				"Autumnal":{
+					"prefix": ["Autumnal", "Evening", "Sunset", "Fall", "Ambrosial", "Aged", "Amber"],
+					"color": {
+						"R":[0.7, 0.8],
+						"G":[0.25, 0.45],
+						"B":[0.1, 0.3]
+					}
+				},
+				"Misty":{
+					"prefix": ["Misty", "Fogbound", "Hazy", "Overcast", "Drenched", "Flooded", "Tropical", "Jade"],
+					"color": {
+						"R":[0.1, 0.3],
+						"G":[0.5, 0.65],
+						"B":[0.5, 0.65]
+					}
+				},
+				"Warped":{
+					"prefix": ["Warped", "Murmuring", "Whispered", "Tainted", "Twisted", "Changed", "Gnarled", "Blighted"],
+					"color": {
+						"R":[0.45, 0.55],
+						"G":[0.1, 0.2],
+						"B":[0.45, 0.55]
+					}
+				},
+				"Twilight":{
+					"prefix": ["Twilight", "Moonlight", "Shadowed", "Nocturnal", "Dark", "Nightfall", "Eventide"],
+					"color": {
+						"R":[0.15, 0.17],
+						"G":[0.15, 0.2],
+						"B":[0.15, 0.17]
+					}
+				}
 			},
+			"suffix": ["Woods", "Forest", "Grove", "Thicket", "Backwood", "Weald", "Glade", "Garden", "Grounds", "Growth", "Woodland", "Chaparral", "Orchard", "Tangle"],
 			"floorPrefix": "F",
-			"color": {
-				"R":[0, 0.3],
-				"G":[0.5, 0.8],
-				"B":[0, 0.3]
-			},
+			"goalName": "Clearing",
 			"spawns": {
 				"Russ": {
 					"color": {
@@ -30,16 +65,16 @@
 				},
 				"Mortal Pester": {
 					"color": {
-						"RLower": [0, 0, 0],
-						"RUpper": [0.35, 0.35, 0.2],
-						"GLower": [0.3, 0.3, 0.3],
+						"RLower": [0.3, 0.3, 0.3],
+						"RUpper": [0.6, 0.6, 0.4],
+						"GLower": [0.8, 0.8, 0.8],
 						"GUpper": [1, 1, 1],
 						"BLower": [0, 0, 0],
 						"BUpper": [0.1, 0.1, 0.1],
 						"dependants": {
-							"channels": ["G", "B"],
-							"same": null,
-							"chance": 0.95
+							"channels": ["R", "G"],
+							"lighten": [0.25, 0.4],
+							"chance": 0.75
 						}
 					}
 				},
@@ -59,10 +94,9 @@
 					}
 				}
 			},
-
 			"items":{
 				"common": ["Healing Potion", "Paralysis Draught", "Flamefroth Tincture", "Javelin", "Fibrous Net"],
-				"rare": ["Tunneling Tools", "Salvaging Tools", "Flamefroth Tincture", "Whetstone Oil"],
+				"rare": ["Tunneling Tools", "Salvager", "Flamefroth Tincture", "Whetstone Oil", "Imbued Wilds"],
 				"materials": ["Eidolon Mass", "Charshroom", "Tarrime Bloom", "Pebblepod", "Windeelion", "Fulminating Gravel", "Bonder's Bulb"]
 			}
 		}

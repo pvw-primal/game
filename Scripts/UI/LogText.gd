@@ -38,3 +38,6 @@ static func GetDamageNum(damage : int, magic = false) -> String:
 	
 static func GetHealNum(healing : int) -> String:
 	return "[b][i][font_size=25]" + str(healing) + "[/font_size][/i][/b]"
+
+static func WrapColor(t : String, color : Color) -> String:
+	return "[color=#" + color.to_html() + "]" + t + "[/color]"

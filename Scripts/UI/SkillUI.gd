@@ -7,16 +7,6 @@ extends Sprite2D
 
 var player : Player
 
-func _ready():
-	for i in range(skills.size()):
-		if i >= player.moves.size():
-			skills[i].UpdateCooldown(0, 1)
-			continue
-		if player.moves[i].icon != null:
-			skills[i].icon.texture = player.moves[i].icon
-	player.HPChange.connect(UpdateHP)
-	UpdateHP(player.stats.HP, player.stats.maxHP)
-
 func init():
 	for i in range(skills.size()):
 		if i >= player.moves.size():
@@ -39,5 +29,5 @@ func UpdateSkill(id : int, cooldown : int):
 func UpdateHP(currentHP : int, maxHP : int):
 	HPBar.max_value = maxHP
 	HPBar.value = currentHP
-	HPText.text = str(currentHP) + "Û" + str(maxHP)
+	HPText.text = str(currentHP) + "/" + str(maxHP)
 	

@@ -6,6 +6,7 @@ static var moves : Dictionary
 enum ActionType { move, attack, other }
 
 var name : String
+var description : String
 var attackEffects : Callable
 var check : Callable
 var magic : bool = false
@@ -23,10 +24,11 @@ var noTargets : bool = false
 var reveals = true
 var waittime : float = .65
 
-func _init(Name : String, AttackEffects : Callable = Effects):
+func _init(Name : String = "Undefined", AttackEffects : Callable = Effects):
 	name = Name
 	attackEffects = AttackEffects
 	check = MeleeCheck
+	description = ""
 	
 func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] = []):
 	if !manualCooldown:
@@ -50,11 +52,12 @@ func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] 
 		attackEffects.call(attacker, defender)
 	else:
 		await attacker.Wait(waittime)
-		
-	if !manualOnMoveUse && is_instance_valid(defender):
-		attacker.OnMoveUse.emit(attacker, defender, name)
-	else:
-		attacker.OnMoveUse.emit(attacker, null, name)
+	
+	if !manualOnMoveUse:
+		if is_instance_valid(defender):
+			attacker.OnMoveUse.emit(attacker, defender, name)
+		else:
+			attacker.OnMoveUse.emit(attacker, null, name)
 		
 	if reveals:
 		attacker.RemoveStatus("Stealth")
@@ -62,7 +65,7 @@ func Use(attacker : Entity, defender : Entity = null, defenders : Array[Entity] 
 	
 	if !manualEndTurn:
 		attacker.endTurn.emit()
-		
+
 func Effects(attacker : Entity, defender : Entity = null):
 	var damage : int = Stats.GetDamage(attacker.stats, defender.stats, magic)
 	attacker.text.AddLine(attacker.GetLogName() + " attacked " + defender.GetLogName() + " with " + name +  " for " + LogText.GetDamageNum(damage, magic) + " damage!" + "\n")
@@ -80,6 +83,19 @@ func NoCheck(_attacker : Entity, _defender : Entity):
 func MeleeCheck(attacker : Entity, defender : Entity):
 	return !(defender == null || (!cutsCorners && !attacker.gridmap.NoCorners(attacker.gridPos, defender.gridPos)))
 	
+func Duplicate() -> Move:
+	var newMove = Move.new(name, attackEffects)
+	newMove.magic = magic
+	newMove.cutsCorners = cutsCorners
+	newMove.atkRange = atkRange
+	newMove.playAnimation = playAnimation
+	newMove.manualEndTurn = manualEndTurn
+	newMove.manualOnMoveUse = manualOnMoveUse
+	newMove.noTargets = noTargets
+	newMove.reveals = reveals
+	newMove.waittime = waittime
+	return newMove
+
 static func DefaultPhysical():
 	var move = Move.new("Attack")
 	return move

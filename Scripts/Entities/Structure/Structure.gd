@@ -6,14 +6,14 @@ var behavior : Callable
 var duration : int
 var structureName : String
 
+#called when structure first is initialized, use for structure-structure connections
 func _ready():
 	Initialize()
-	RandomRotate(gridPos)
-	gridmap.minimap.Reveal(gridPos)
 	startTurn.connect(FindAction)
-	
+
+#called when structure is added to the main game scene, use for structure-main game connections
 func init(pos : Vector2i, num : int, o : Entity, n : String, m : Node3D, ai : Callable, stat : Stats, color : Array[Color] = [], d : int = -1):
-	partialInit(pos, num)
+	OnInit()
 	onDeath.connect(Die)
 	
 	behavior = ai
@@ -26,10 +26,16 @@ func init(pos : Vector2i, num : int, o : Entity, n : String, m : Node3D, ai : Ca
 	if color.size() > 2:
 		SetColor(color[0], color[1], color[2])
 	duration = d
-		
+	
+	UpdateStatusUI()
+	partialInit(pos, num)
+	RandomRotate(gridPos)
+	
+#called when a new floor is reached, use for updating on a new floor
 func partialInit(pos : Vector2i, num : int):
 	startingPos = pos
 	entityNum = num
+	Spawn(startingPos)
 
 func FindAction():
 	if timer.time_left > 0:
@@ -40,10 +46,12 @@ func FindAction():
 	if duration > 0:
 		duration -= 1
 		if duration < 1:
+			await Wait(.6)
 			onDeath.emit()
 			return
 	
-	endTurn.emit()
+	if turn:
+		endTurn.emit()
 	
 	
 func Die():

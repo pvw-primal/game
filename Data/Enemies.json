@@ -3,7 +3,11 @@
 		{
 			"name": "Russ",
 			"path": "res://Assets/Enemy/Russ/RussShaded.tscn",
-			"move_name": "Peck",
+			"moves" : {
+				"Peck" : "POW",
+				"Call Kasu" : "Unique"
+			},
+			"stats": [8, 4, 1, 2, 1],
 			"drops": ["Russ Talon"],
 			"class":["Beastmastery"]
 		},
@@ -11,7 +15,11 @@
 		{
 			"name": "Mortal Pester",
 			"path": "res://Assets/Enemy/MortalPester/MortalPester.tscn",
-			"move_name": "Scratch",
+			"moves" : {
+				"Poison Claw" : "MAG",
+				"Quick Brew" : "Unique"
+			},
+			"stats": [8, 1, 0, 4, 1],
 			"drops": ["Pestail", "Bonder's Bulb"],
 			"class":["Alchemy"]
 		},
@@ -19,7 +27,11 @@
 		{
 			"name": "Cinch",
 			"path": "res://Assets/Enemy/Cinch/Cinch.tscn",
-			"move_name": "Slash",
+			"moves" : {
+				"Slash" : "POW",
+				"Siphon" : "Unique"
+			},
+			"stats": [8, 5, 1, 3, 0],
 			"drops": ["Eidolon Mass"],
 			"class":["Technique"]
 		}

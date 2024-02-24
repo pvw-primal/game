@@ -10,30 +10,56 @@ var useMeta : Dictionary
 
 var tamer : Player
 
+#called when AI first is initialized, use for AI-AI connections
 func _ready():
 	Initialize()
+	classE = Classes.GetClass(Classes.BaseClass.Beastmastery)
+	onDeath.connect(Die)
 	startTurn.connect(FindAction)
 	move.connect(UpdateMap)
-	
-func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = []):
-	partialInit(pos, num)
-	onDeath.connect(Die)
-	classE = Classes.GetClass(Classes.BaseClass.Beastmastery)
-	
-	var enemyData = Loader.GetEnemyData(loadName)
-	moves = [Move.new(enemyData["move_name"])]
-	cooldown.resize(moves.size())
-	cooldown.fill(0)
-	Name = enemyData["name"]
-	SetMesh(enemyData["path"])
 	tamer = null
 	useMeta = {}
+
+#called when AI is added to the main game scene, use for AI-main game connections
+func init(pos : Vector2i, num : int, loadName : String, color : Array[Color] = [], loaddata : bool = true):
+	OnInit()
+	if loaddata:
+		var enemyData = Loader.GetEnemyData(loadName)
+		moves = []
+		var s = enemyData["stats"]
+		originalStats = Stats.new(s[0], s[1], s[2], s[3], s[4])
+		var m : Move
+		for movename in enemyData["moves"]:
+			if "Item" == enemyData["moves"][movename]:
+				m = Items.items[movename].move
+				moves.append(m)
+				continue
+			elif "POW" == enemyData["moves"][movename]:
+				m = Move.DefaultPhysical()
+			elif "MAG" == enemyData["moves"][movename]:
+				m = Move.DefaultMagical()
+			elif "Unique" == enemyData["moves"][movename]:
+				m = Move.moves[movename]
+				moves.append(m)
+				continue
+			
+			m.name = movename
+			moves.append(m)
+		
+		cooldown.resize(moves.size())
+		cooldown.fill(0)
+		Name = enemyData["name"]
+		SetMesh(enemyData["path"])
 	if color.size() > 2:
 		SetColor(color[0], color[1], color[2])
+	partialInit(pos, num)
 	
+#called when a new floor is reached, use for updating on a new floor
 func partialInit(pos : Vector2i, num : int):
 	startingPos = pos
 	entityNum = num
+	Spawn(startingPos)
+	UpdateStatusUI()
 	
 func _process(delta):
 	Update(delta)
@@ -70,14 +96,22 @@ func FindAction():
 		elif mappos > -1 && GetEntity(nextMove).Type != "AI":
 			targetEntity = GetEntity(nextMove)
 			targetGridPos = GetEntity(nextMove).gridPos
-	if shouldMove && !(Type == "Ally" && targetEntity.Type == "Player") && targetEntity.stats.CanBeTargeted: # attacking check
+	if shouldMove && !(Type == "Ally" && targetEntity.Type != "AI") && targetEntity.stats.CanBeTargeted: # attacking check
 		if !stats.CanAttack:
 			text.AddLine(GetLogName() + " can't attack!\n")
 		elif moves[0].InRange(self, targetEntity):
 			Rotate(targetGridPos)
 			await Wait(.5)
 			if is_instance_valid(targetEntity):
-				await moves[0].Use(self, targetEntity)
+				var i : int = moves.size() - 1
+				while i >= 0:
+					if i == 0:
+						await moves[i].Use(self, targetEntity)
+						break
+					elif randf_range(0, 1) < .35 && !OnCooldown(i):
+						await moves[i].Use(self, targetEntity)
+						break
+					i -= 1
 			else:
 				endTurn.emit()
 			return
@@ -105,7 +139,7 @@ func Die():
 		gridmap.minimap.Reveal(gridPos)
 	endTurn.emit()
 	usedTurn = true
-	if Type == "Ally":
+	if Type == "Ally" && tamer != null:
 		turnhandler.Entities[turnhandler.player].OnAllyDeath.emit(turnhandler.Entities[turnhandler.player], self)
 		turnhandler.Entities[turnhandler.player].UpdateAllies()
 	queue_free.call_deferred()

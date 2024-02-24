@@ -32,4 +32,5 @@ light_volumetric_fog_energy = 0.1
 light_size = 1.0
 light_negative = true
 light_specular = 0.25
+light_bake_mode = 0
 omni_range = 0.4

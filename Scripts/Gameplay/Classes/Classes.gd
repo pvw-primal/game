@@ -81,7 +81,9 @@ static func AddClassFromData(classData):
 		classes.append(GetBaseClass(base))
 	for i in range(3 - classes.size()):
 		classes.append(BaseClass.None)
-		
+	
+	var desc  = classData["description"]
+	
 	var profs = []
 	for prof in classData["prof"]:
 		profs.append(GetProficiency(prof))
@@ -103,7 +105,7 @@ static func AddClassFromData(classData):
 		for item in classData["craftTinker"]:
 			craftTinker.append(item)
 		
-	AddClass(Class.new(classData["name"], moves, GetClassNum(classes[0], classes[1], classes[2]), GetProfNum(profs[0], profs[1], profs[2], profs[3], profs[4]), passives, craftBrew, craftTinker))
+	AddClass(Class.new(classData["name"], desc, moves, GetClassNum(classes[0], classes[1], classes[2]), GetProfNum(profs[0], profs[1], profs[2], profs[3], profs[4]), passives, craftBrew, craftTinker))
 	
 static func LoadAllClasses():
 	var data = Loader.GetClassData()

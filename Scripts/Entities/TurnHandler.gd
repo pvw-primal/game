@@ -10,7 +10,7 @@ var player = -1
 var RemovalQueue : Array[int] = []
 var spawnChance : float
 
-const MAX_MOVE_RENDER : float = 9
+const MAX_MOVE_RENDER : float = 11
 const MAX_MOVE_DISTANCE : float = 17
 
 signal EndTurnOrder
@@ -30,7 +30,6 @@ func RemoveEntity(entityNum : int):
 	for i in range(TurnOrder.size()):
 		if !is_instance_valid(Entities[TurnOrder[i]]) || TurnOrder[i] == entityNum:
 			continue
-		Entities[TurnOrder[i]].targetGridPos = Entities[player].gridPos
 		Entities[TurnOrder[i]].targetGridPosChanged = true
 	RemovalQueue.append(entityNum)
 	

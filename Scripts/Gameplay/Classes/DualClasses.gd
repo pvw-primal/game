@@ -10,21 +10,39 @@ func _ready():
 	sorcererMove.manualCooldown = true
 	sorcererMove.manualOnMoveUse = true
 	sorcererMove.icon = preload("res://Assets/Icons/Move/Sorcerer.png")
+	sorcererMove.description = "Place a Force, Lightning, Radiant, or Shadow field effect."
 	Move.moves["Sorcery"] = sorcererMove
-	Passive.passives["Specialized Evocation"] = Passive.new("Specialized Evocation", SorcererPassiveApply, SorcererPassiveRemove)
+	var sorcererPassive = Passive.new("Specialized Evocation", SorcererPassiveApply, SorcererPassiveRemove)
+	sorcererPassive.description = "Placing a field effect that shares an aspect with your equipped focus using Unleash Elements or Sorcery lowers that skill's cooldown by 1."
+	Passive.passives["Specialized Evocation"] = sorcererPassive
+	
+	var outcastMove = Move.new("Honed Ferocity", Outcast1)
+	outcastMove.playAnimation = false
+	outcastMove.noTargets = true
+	outcastMove.cooldown = 4
+	outcastMove.icon = preload("res://Assets/Icons/Move/Outcast.png")
+	outcastMove.description = "Gain 50% CRIT. If you are in a field effect, spread a debuff to all nearby enemies."
+	Move.moves["Honed Ferocity"] = outcastMove
+	var outcastPassive = Passive.new("Natural Armor", OutcastPassiveApply, OutcastPassiveRemove)
+	outcastPassive.description = "Gain immunity to Burning and Frostbite."
+	Passive.passives["Natural Armor"] = outcastPassive
 	
 	var wildenMove = Move.new("Smokescreen", Wilden1)
 	wildenMove.noTargets = true
 	wildenMove.cooldown = 4
 	wildenMove.icon = preload("res://Assets/Icons/Move/Wilden.png")
+	wildenMove.description = "Place a Smoke field effect. (Smoke has no effects on its own.)"
 	Move.moves["Smokescreen"] = wildenMove
-	Passive.passives["Wild Cloak"] = Passive.new("Wild Cloak", WildenPassiveApply, WildenPassiveRemove)
+	var wildenPassive = Passive.new("Wild Cloak", WildenPassiveApply, WildenPassiveRemove)
+	wildenPassive.description = "Entering a field effect consumes it and grants a buff depending on the type consumed."
+	Passive.passives["Wild Cloak"] = wildenPassive
 	
 	var druidMove = Move.new("Shapeshare", Druid1)
 	druidMove.playAnimation = false
 	druidMove.noTargets = true
 	druidMove.cooldown = 5
 	druidMove.icon = preload("res://Assets/Icons/Move/Druid.png")
+	druidMove.description = "Shapeshift into a copy of your tame. If any of their stats are higher than yours, gain them. Activate again to change back."
 	Move.moves["Shapeshare"] = druidMove
 	Passive.passives["True to Form"] = Passive.new("True to Form", DruidPassiveApply, DruidPassiveRemove, true)
 	
@@ -32,19 +50,27 @@ func _ready():
 	herbalistMove.playAnimation = false
 	herbalistMove.manualEndTurn = true
 	herbalistMove.noTargets = true
-	herbalistMove.cooldown = 4
+	herbalistMove.cooldown = 2
 	herbalistMove.manualCooldown = true
 	herbalistMove.icon = preload("res://Assets/Icons/Move/Herbalist.png")
+	herbalistMove.description = "Eat a gathered plant, gaining a significant buff to a stat depending on the plant eaten."
 	Move.moves["Forager's Bounty"] = herbalistMove
+	var herbalistPassive = Passive.new("Herbology")
+	herbalistPassive.description = "Brew gains the ability to craft Blooming Brews, which grow plants in areas with field effects."
+	Passive.passives["Herbology"] = herbalistPassive
 	
 	var totemcarverMove = Move.new("Whittle Carve", Totemcarver1)
 	totemcarverMove.cooldown = 4
 	totemcarverMove.icon = preload("res://Assets/Icons/Move/Totemcarver.png")
+	totemcarverMove.description = "Attack with a carving tool; enemies struck have a chance to drop material, totems struck spread field effects."
 	Move.moves["Whittle Carve"] = totemcarverMove
 	var totemcarverItemMove = Move.new("Totemic Surge", TotemcarverItemMove)
 	totemcarverItemMove.playAnimation = false
 	totemcarverItemMove.noTargets = true
 	Move.moves["Totemic Surge"] = totemcarverItemMove
+	var totemcarverPassive = Passive.new("Totemcraft")
+	totemcarverPassive.description = "Tinker gains the ability to craft Totems, immobile structures that spread field effects."
+	Passive.passives["Totemcraft"] = totemcarverPassive
 	
 	var warcasterMove = Move.new("Expert's Stance", WarCaster1)
 	warcasterMove.playAnimation = false
@@ -54,8 +80,11 @@ func _ready():
 	warcasterMove.manualOnMoveUse = true
 	warcasterMove.manualCooldown = true
 	warcasterMove.icon = preload("res://Assets/Icons/Move/WarCaster.png")
+	warcasterMove.description = "Quickly swap from a weapon to a focus or vice versa. (Does not use action.)"
 	Move.moves["Expert's Stance"] = warcasterMove
-	Passive.passives["All-Rounder"] = Passive.new("All-Rounder", WarCasterPassiveApply, WarCasterPassiveRemove)
+	var warcasterPassive = Passive.new("All-Rounder", WarCasterPassiveApply, WarCasterPassiveRemove)
+	warcasterPassive.description = "While using a focus, Skilled Strike grants a MAG buff. While using a weapon, Aspected Blast grants a POW buff."
+	Passive.passives["All-Rounder"] = warcasterPassive
 	
 	var tricksterMove = Move.new("Invoke Duplicity", Trickster1)
 	tricksterMove.playAnimation = false
@@ -63,7 +92,41 @@ func _ready():
 	tricksterMove.reveals = true
 	tricksterMove.cooldown = 8
 	tricksterMove.icon = preload("res://Assets/Icons/Move/Trickster.png")
+	tricksterMove.description = "Summon an illusion that distracts foes."
 	Move.moves["Invoke Duplicity"] = tricksterMove
+	var tricksterPassive = Passive.new("Impersonal Mischief", TricksterPassiveApply, TricksterPassiveRemove)
+	tricksterPassive.description = "Using Stealth while facing an enemy teleports behind them. (Nothing personnel.)"
+	Passive.passives["Impersonal Mischief"] = tricksterPassive
+	
+	var summonerMove = Move.new("Summon", Summoner1)
+	summonerMove.playAnimation = false
+	summonerMove.noTargets = true
+	summonerMove.cooldown = 4
+	summonerMove.icon = preload("res://Assets/Icons/Move/Summoner.png")
+	summonerMove.description = "Recall your active tame for another, which attacks immediately if able."
+	Move.moves["Summon"] = summonerMove
+	var summonerPassive = Passive.new("Pocket Conjuring", SummonerPassiveApply, SummonerPassiveRemove)
+	summonerPassive.description = "You can have up to 2 tames. (Only 1 can be active at a time.)"
+	Passive.passives["Pocket Conjuring"] = summonerPassive
+	
+	var transmuterMove = Move.new("Conversion Alchemy", Transmuter1)
+	transmuterMove.playAnimation = false
+	transmuterMove.manualEndTurn = true
+	transmuterMove.noTargets = true
+	transmuterMove.cooldown = 3
+	transmuterMove.manualCooldown = true
+	transmuterMove.icon = preload("res://Assets/Icons/Move/Transmuter.png")
+	transmuterMove.description = "Transmute a material into earthen spikes or soothing shadow."
+	Move.moves["Conversion Alchemy"] = transmuterMove
+	var transmuterItemMove = Move.new("Transmuter's Stone", TransmuterItemMove)
+	transmuterItemMove.playAnimation = false
+	transmuterItemMove.noTargets = true
+	transmuterItemMove.manualEndTurn = true
+	transmuterItemMove.manualCooldown = true
+	Move.moves["Transmuter's Stone"] = transmuterItemMove
+	var transmuterPassive = Passive.new("Equivalent Exchange")
+	transmuterPassive.description = "Brew gains the ability to craft Transmuter's Stones, which convert weapons or foci into materials."
+	Passive.passives["Equivalent Exchange"] = transmuterPassive
 	
 	var enchanterMove = Move.new("Disenchanting Surge", Enchanter1)
 	enchanterMove.playAnimation = false
@@ -71,6 +134,7 @@ func _ready():
 	enchanterMove.noTargets = true
 	enchanterMove.cooldown = 1
 	enchanterMove.icon = preload("res://Assets/Icons/Move/Enchanter.png")
+	enchanterMove.description = "Strip your equipped foci of all aspects, dealing increased damage for each."
 	Move.moves["Disenchanting Surge"] = enchanterMove
 	var enchanterItemMove = Move.new("Change Aspect", ChangeAspect1)
 	enchanterItemMove.playAnimation = false
@@ -78,6 +142,9 @@ func _ready():
 	enchanterItemMove.manualEndTurn = true
 	enchanterItemMove.manualCooldown = true
 	Move.moves["Change Aspect"] = enchanterItemMove
+	var enchanterPassive = Passive.new("Aspect Enchantment")
+	enchanterPassive.description = "Foci can have 2 aspects rather than one. Tinker gains the ability to craft Enchanted Attuners, which can add basic foci aspects."
+	Passive.passives["Aspect Enchantment"] = enchanterPassive
 	
 	var cutthroatMove = Move.new("Ambush", Cutthroat1)
 	cutthroatMove.playAnimation = false
@@ -141,6 +208,16 @@ func _ready():
 	Move.moves["Pilfer"] = thiefMove
 	Passive.passives["Pickpocketing"] = Passive.new("Pickpocketing", ThiefPassiveApply, ThiefPassiveRemove)
 	
+	var imbuerMove = Move.new("Renewed Vigor", Imbuer1)
+	imbuerMove.cooldown = 2
+	imbuerMove.icon = preload("res://Assets/Icons/Move/Imbuer.png")
+	Move.moves["Renewed Vigor"] = imbuerMove
+	Passive.passives["Alchemical Bond"] = Passive.new("Alchemical Bond", ImbuerPassiveApply, ImbuerPassiveRemove)
+	var imbuerItemMove = Move.new("Imbued Wilds", ImbuerItemMove)
+	imbuerItemMove.noTargets = true
+	imbuerItemMove.playAnimation = false
+	Move.moves["Imbued Wilds"] = imbuerItemMove
+	
 	var scavengerMove = Move.new("Scour", Scavenger1)
 	scavengerMove.noTargets = true
 	scavengerMove.cooldown = 6
@@ -148,6 +225,14 @@ func _ready():
 	Move.moves["Scour"] = scavengerMove
 	Passive.passives["Resourcefulness"] = Passive.new("Resourcefulness", ScavengerPassiveApply, ScavengerPassiveRemove)
 	
+	var artificerMove = Move.new("Mechanical User", Artificer1)
+	artificerMove.playAnimation = false
+	artificerMove.manualEndTurn = true
+	artificerMove.noTargets = true
+	artificerMove.cooldown = 9
+	artificerMove.manualCooldown = true
+	artificerMove.icon = preload("res://Assets/Icons/Move/Artificert.png")
+	Move.moves["Mechanical User"] = artificerMove
 	Passive.passives["Combat Ingenuity"] = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
 	
 	Classes.LoadAllClasses()
@@ -199,6 +284,50 @@ func SorcererPassiveApply(e : Entity):
 func SorcererPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(SorcererOnMoveUse)
 
+#OUTCAST
+func Outcast1(e : Entity, _t = null):
+	e.AddStatus(Status.CritBuff(), 3)
+	e.text.AddLine(e.GetLogName() + " focused their ferocity!\n")
+	if e.gridPos not in e.gridmap.tileEffects:
+		return
+	var effect : TileEffect.Effect = e.gridmap.tileEffects[e.gridPos].effect
+	var status : Status
+	var message : String
+	match effect:
+		TileEffect.Effect.Fire:
+			status = Status.Burning()
+			message = " were scorched!\n"
+		TileEffect.Effect.Frost:
+			status = Status.Frost()
+			message = " were frozen over!\n"
+		TileEffect.Effect.Earth:
+			status = Status.Bleed()
+			message = " were bombarded by earth!\n"
+		TileEffect.Effect.Air:
+			status = Status.DefResDebuff()
+			message = " were buffeted by the wind!\n"
+		_:
+			status = Status.Paralysis()
+			message = " were petrified with arcane power!\n"
+	var show : bool = false
+	for pos in e.AdjacentTiles():
+		var entity : Entity = e.GetEntity(pos)
+		if entity != null && entity.Type == "AI":
+			show = true
+			entity.AddStatus(status, 3)
+	if show:
+		e.text.AddLine(e.GetLogName() + "'s surroundings" + message)
+	e.gridmap.RemoveTileEffect(e.gridPos)
+	
+func OutcastPassiveApply(e : Entity):
+	e.immune["Burning"] = null
+	e.immune["Frostbite"] = null
+
+func OutcastPassiveRemove(e : Entity):
+	#reevaluate if/when new immunities are added
+	e.immune.erase("Burning")
+	e.immune.erase("Frostbite")
+	
 #WILDEN
 func Wilden1(e : Entity, _t = null):
 	e.gridmap.PlaceTileEffect(e.facingPos, TileEffect.Effect.Smoke, e)
@@ -237,13 +366,13 @@ func WildenPassiveRemove(e : Entity):
 	e.OnTurnStart.disconnect(WildenOnTurnStart)
 
 #DRUID
-#druid stat swapping is untested, test in detail when stat screen is implemented!
 func Druid1(e : Entity, _t = null):
 	if e.Type != "Player" || e.allies.size() < 1:
 		e.text.AddLine(e.GetLogName() + " has no ally to shapeshare with!\n")
 		return
 		
 	var transformMesh : Node3D = e.classE.classVariables["transformMesh"]
+	var hp : int = e.stats.HP
 	if e.classE.classVariables["notOriginal"]:
 		#assumes transformMesh has been initialized already
 		e.mesh.get_node("Armature").visible = true
@@ -261,9 +390,11 @@ func Druid1(e : Entity, _t = null):
 		e.mesh.get_node("Armature").visible = false
 		transformMesh.visible = true
 		e.animator = transformMesh.get_node("AnimationTree")
-		e.originalStats = e.allies[0].originalStats
+		e.originalStats = Stats.Highest(e.originalStats, e.allies[0].originalStats)
 		e.classE.classVariables["notOriginal"] = true
 		e.text.AddLine(e.GetLogName() + " assumed " + e.allies[0].Name + "'s form!\n")
+	e.stats.HP = hp
+	e.UpdateStats()
 
 func DruidPassiveApply(e : Entity):
 	e.classE.classVariables["originalMesh"] = e.mesh
@@ -291,7 +422,7 @@ func DruidOnAllyDeath(e : Player, t : Entity):
 		e.mesh.get_node("Armature").visible = true
 		e.animator = e.mesh.get_node("AnimationTree")
 		e.classE.classVariables["notOriginal"] = false
-		e.text.AddLine(e.GetLogName() + " was forced into their true form after " + t.Name + "'s death!\n")
+		e.text.AddLine(e.GetLogName() + " was forced into their true form after " + t.GetLogName() + "'s death!\n")
 	if e.classE.classVariables["transformMesh"] != null:
 		e.classE.classVariables["transformMesh"].queue_free()
 		e.classE.classVariables["transformMesh"] = null
@@ -324,7 +455,7 @@ func HerbalistAttack(e : Entity, item : Item):
 		message = e.GetLogName() + " ate a charshroom and felt stronger!\n"
 	elif item.name == "Windeelion":
 		effect = Status.MagicBuff()
-		message = e.GetLogName() + " ate a windeelion and felt more powerful!\n"
+		message = e.GetLogName() + " ate a windeelion and felt sharper!\n"
 	elif item.name == "Pebblepod":
 		effect = Status.DefenseBuff()
 		message = e.GetLogName() + " ate a pebblepod and felt tougher!\n"
@@ -333,7 +464,7 @@ func HerbalistAttack(e : Entity, item : Item):
 		message = e.GetLogName() + " ate a tarrime bloom and felt more resistant!\n"
 	
 	e.StartCooldownName("Forager's Bounty")
-	e.AddStatus(effect, 3)
+	e.AddStatus(effect, 7)
 	e.text.AddLine(message)
 	e.OnMoveUse.emit(e, null, "Forager's Bounty")
 	if e.Type == "Player":
@@ -362,7 +493,7 @@ func Totemcarver1(e : Entity, t : Entity):
 		else:
 			e.text.AddLine(e.GetLogName() + " carved " + t.GetLogName() + " for " + LogText.GetDamageNum(damage, false) + " damage!\n")
 		t.TakeDamage(damage, e)
-	
+
 func TotemcarverStructureBehavior(e : Structure):
 	if e.gridPos not in e.gridmap.tileEffects:
 		return
@@ -373,10 +504,12 @@ func TotemcarverItemMove(e : Entity, _t = null):
 	if e.gridmap.GetMapPos(e.facingPos) != -1:
 		e.text.AddLine("The totem can't be placed there!\n")
 		return
-	e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Totem", load("res://Assets/Items/Machining/TotemStructure.tscn").instantiate(), TotemcarverStructureBehavior, Stats.new(10, 0, 0, 0, 0, false, true))
+	var s : Structure = e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Totem", load("res://Assets/Items/Machining/TotemStructure.tscn").instantiate(), TotemcarverStructureBehavior, Stats.new(10, 0, 0, 0, 0, false, true))
+	s.immune["Frostbite"] = null
+	s.immune["Burning"] = null
 	e.text.AddLine(e.GetLogName() + " created a totem!\n")
 	e.OnMoveUse.emit(e, null, "Totem")
-	
+
 #WAR CASTER
 func WarCaster1(g : Entity, _t = null):
 	if g.Type != "Player":
@@ -401,19 +534,19 @@ func WarCaster1(g : Entity, _t = null):
 
 func WarCasterFocusCriteria(i : Item, _last : Item):
 	if i != null && i.equipment && i.move.magic:
-		return "Valid focus."
+		return "Valid focus.\n  "
 	else:
 		return null
 		
 func WarCasterWeaponCriteria(i : Item, _last : Item):
 	if i != null && i.equipment && !i.move.magic:
-		return "Valid weapon."
+		return "Valid weapon.\n  "
 	else:
 		return null
 		
 func WarCasterEquipCriteria(i : Item, _last : Item):
 	if i != null && i.equipment:
-		return "Valid equippable."
+		return "Valid equippable.\n  "
 	else:
 		return null
 
@@ -463,29 +596,189 @@ func TricksterStructureBehavior(e : Structure):
 	else:
 		e.animator.Damage()
 
-#TRANSMUTER
-func Transmuter1(_e : Entity, _t = null):
-	pass
+func TricksterOnMoveUse(e : Entity, t : Entity, movename : String):
+	if movename == "Stealth" && t != null:
+		var pos = (2 * (e.facingPos - e.gridPos)) + e.gridPos
+		if e.gridmap.GetMapPos(pos) == -1:
+			e.SnapPosition(pos)
+			e.text.AddLine(e.GetLogName() + " teleported behind " + t.GetLogName() + "!\n")
+			
+func TricksterPassiveApply(e : Entity):
+	e.OnMoveUse.connect(TricksterOnMoveUse)
 
-func EquipmentToSalvage(equipment : Equipment) -> Array[Item]:
+func TricksterPassiveRemove(e : Entity):
+	e.OnMoveUse.disconnect(TricksterOnMoveUse)
+	
+#SUMMONER
+func Summoner1(e : Entity, t : Entity):
+	if e.allies.size() < 2:
+		e.text.AddLine(e.GetLogName() + " didn't have enough tames to swap!\n")
+		return
+	var tame1 : Entity = e.allies[0]
+	var tame2 : Entity = e.allies[1]
+	
+	tame1.visible = false
+	
+	e.turnhandler.Entities[tame1.entityNum] = tame2
+	if is_instance_valid(tame1.targetEntity):
+		tame2.Target(tame1.targetEntity)
+	tame2.SnapPosition(tame1.gridPos)
+	tame2.visible = true
+	
+	e.allies[0] = tame2
+	e.allies[1] = tame1
+	
+	var target : Entity = t if t != null && t.Type == "AI" else null
+	if t == null:
+		for pos in tame2.AdjacentTiles():
+			var entity : Entity = e.GetEntity(pos)
+			if entity != null && entity.Type == "AI":
+				target = entity
+				break
+	e.text.AddLine(tame2.GetLogName() + " was summoned to replace " + tame1.GetLogName() + "!\n")
+	if target != null:
+		tame2.Rotate(target.gridPos)
+		if target != e:
+			await tame2.moves[0].Use(tame2, target)
+
+func SummonerOnTame(e : Player, t : Entity):
+	if e.allies.size() > 1:
+		e.text.AddLine(t.GetLogName() + " vanished into reserves, ready to be summoned!\n")
+		t.visible = false
+		e.gridmap.SetMapPos(t.gridPos, -1)
+		e.gridmap.Pathfinding.set_point_weight_scale(t.gridPos, 1)
+		e.turnhandler.RemoveEntity(t.entityNum)
+		t.entityNum = e.allies[0].entityNum
+		for ally in e.allies:
+			if ally.targetEntity == t:
+				ally.Target(e)
+		
+func SummonerOnTameDeath(e : Player, t : Entity):
+	if e.allies.size() > 1:
+		e.UpdateAllies()
+		e.turnhandler.Entities[t.entityNum] = e.allies[0]
+		e.allies[0].SnapPosition(t.gridPos)
+		e.allies[0].visible = true
+		e.text.AddLine(e.allies[0].GetLogName() + " was summoned from reserves!\n")
+		e.usedTurn = true
+		e.turnhandler.RemovalQueue.erase(t.entityNum)
+
+func SummonerPassiveApply(e : Entity):
+	e.maxAllies = 2
+	e.OnTame.connect(SummonerOnTame)
+	e.OnAllyDeath.connect(SummonerOnTameDeath)
+	
+func SummonerPassiveRemove(e : Entity):
+	e.maxAllies = 1
+	e.OnTame.disconnect(SummonerOnTame)
+	e.OnAllyDeath.disconnect(SummonerOnTameDeath)
+
+#TRANSMUTER
+func Transmuter1(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var criteria : Array[Callable] = [TransmuterCriteria]
+	var critDesc : Array[String] = ["Select a Stone, Heavy, Reagent, Sharp or Healing material."]
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(TransmuterPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func TransmuterCriteria(i : Item, _last : Item):
+	if i != null && i.crafting.tags.size() > 0:
+		if "Stone" in i.crafting.tags || "Heavy" in i.crafting.tags:
+			return "Place an Earth tile effect and apply Bleed to nearby enemies.\n  "
+		elif "Reagent" in i.crafting.tags || "Sharp" in i.crafting.tags || "Healing" in i.crafting.tags:
+			return "Place a Shadow tile effect and heal.\n  "
+			
+	return null
+
+func TransmuterPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(TransmuterPickComplete)
+	if ids.size() < 1:
+		return
+	var item : Item = e.GetItem(ids[0])
+	if "Stone" in item.crafting.tags || "Heavy" in item.crafting.tags:
+		e.text.AddLine(item.GetLogName() + " was transmuted into earthen spikes!\n")
+		e.gridmap.PlaceTileEffect(e.gridPos, TileEffect.Effect.Earth, e)
+		for pos in e.AdjacentTiles():
+			var entity : Entity = e.GetEntity(pos)
+			if entity != null && entity.Type == "AI":
+				entity.animator.Damage()
+				entity.AddStatus(Status.Bleed(), 3)
+	elif "Reagent" in item.crafting.tags || "Sharp" in item.crafting.tags || "Healing" in item.crafting.tags:
+		e.text.AddLine(item.GetLogName() + " was transmuted into renewing shadows!\n")
+		e.gridmap.PlaceTileEffect(e.gridPos, TileEffect.Effect.Shadow, e)
+		var healAmount : int = e.Heal(int(.25 * e.stats.maxHP))
+		if healAmount > 0:
+			e.text.AddLine(e.GetLogName() + " was healed by shadows for " + LogText.GetHealNum(healAmount) + "HP!\n")
+		
+	e.inventoryUI.RemoveItem(ids[0])
+	e.StartCooldownName("Conversion Alchemy")
+	e.skillUI.UpdateAll()
+	e.OnMoveUse.emit(e, null, "Conversion Alchemy")
+	e.endTurn.emit()
+	
+func EquipmentToSalvage(equipment : Equipment) -> Array:
 	if equipment.prefixes.size() < 1:
 		return []
-	var key = equipment.prefixes.keys()[randi_range(0, equipment.prefixes.keys().size() - 1)]
-	var prefix : String = equipment.prefixes[key]
-	if equipment.requiredProf == Classes.Proficiency.FocusBasic:
-		var basicFocus : Dictionary = { "Fire":[Items.items["Fire Mote"]], "Frost":[Items.items["Frost Mote"]], "Earth":[Items.items["Earth Mote"]], "Air":[Items.items["Air Mote"]] }
-		return basicFocus[prefix]
-	elif equipment.requiredProf == Classes.Proficiency.FocusAdvanced:
-		var advancedFocus : Dictionary = {"Force":[Items.items["Earth Mote"], Items.items["Heavy Scrap"]], "Lightning":[Items.items["Air Mote"], Items.items["Sharp Scrap"]], "Radiant":[Items.items["Fire Mote"], Items.items["Shiny Scrap"]], "Shadow":[Items.items["Light Scrap"], Items.items["Frost Mote"]] }
-		return advancedFocus[prefix]
-	elif equipment.requiredProf == Classes.Proficiency.WeaponBasic:
-		var basicWeapon : Dictionary = { "Bold":[Items.items["Shiny Scrap"]], "Blitz":[Items.items["Light Scrap"]], "Bludgeon":[Items.items["Heavy Scrap"]], "Bleed":[Items.items["Sharp Scrap"]] }
-		return basicWeapon[prefix]
-	elif equipment.requiredProf == Classes.Proficiency.WeaponMartial:
-		var martialWeapon : Dictionary = { "Cleave":[Items.items["Fire Mote"], Items.items["Sharp Scrap"]], "Reach": [Items.items["Air Mote"], ["Light Scrap"]], "Runed":[Items.items["Frost Mote"], Items.items["Shiny Scrap"]], "Crush":[Items.items["Heavy Scrap"], Items.items["Earth Mote"]]}
-		return martialWeapon[prefix]
+	var prefixes = equipment.prefixes.keys()
+	var prefix : String = prefixes[randi_range(0, prefixes.size() - 1)]
+	match equipment.requiredProf:
+		Classes.Proficiency.FocusBasic:
+			var basicFocus : Dictionary = { "Fire":[Items.items["Fire Mote"]], "Frost":[Items.items["Frost Mote"]], "Earth":[Items.items["Earth Mote"]], "Air":[Items.items["Air Mote"]] }
+			return basicFocus[prefix]
+		Classes.Proficiency.FocusAdvanced:
+			var advancedFocus : Dictionary = {"Force":[Items.items["Earth Mote"], Items.items["Heavy Scrap"]], "Lightning":[Items.items["Air Mote"], Items.items["Sharp Scrap"]], "Radiant":[Items.items["Fire Mote"], Items.items["Shiny Scrap"]], "Shadow":[Items.items["Light Scrap"], Items.items["Frost Mote"]] }
+			return advancedFocus[prefix]
+		Classes.Proficiency.WeaponBasic:
+			var basicWeapon : Dictionary = { "Bold":[Items.items["Shiny Scrap"]], "Blitz":[Items.items["Light Scrap"]], "Bludgeon":[Items.items["Heavy Scrap"]], "Bleed":[Items.items["Sharp Scrap"]] }
+			return basicWeapon[prefix]
+		Classes.Proficiency.WeaponMartial:
+			var martialWeapon : Dictionary = { "Cleave":[Items.items["Fire Mote"], Items.items["Light Scrap"]], "Reach": [Items.items["Air Mote"], Items.items["Sharp Scrap"]], "Runed":[Items.items["Frost Mote"], Items.items["Shiny Scrap"]], "Crush":[Items.items["Heavy Scrap"], Items.items["Earth Mote"]]}
+			return martialWeapon[prefix]
+		_:
+			return []
+
+func TransmuterItemMove(g : Entity, _t = null):
+	if g.Type != "Player":
+		return
+	var criteria : Array[Callable] = [TransmuterItemCriteria]
+	var critDesc : Array[String] = ["Select a focus or weapon."]
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(TransmuterItemPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func TransmuterItemCriteria(i : Item, _last : Item):
+	if i != null && i.equipment:
+		return "Valid piece of equipment.\n  "
 	else:
-		return []
+		return null
+
+func TransmuterItemPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(TransmuterItemPickComplete)
+	if ids.size() < 1:
+		return
+	var item : Equipment = e.GetItem(ids[0])
+	var quantity : int = item.rarity
+	var salvage : Array = EquipmentToSalvage(item)
+	e.text.AddLine(item.GetLogName() + " was transmuted into salvage!\n")
+	e.inventoryUI.RemoveItem(ids[0])
+	
+	if e.inventoryUI.inventory[e.inventoryUI.using].uses > 1:
+		e.inventoryUI.inventory[e.inventoryUI.using].uses -= 1
+	else:
+		e.inventoryUI.RemoveItem(e.inventoryUI.using)
+		
+	for i in range(randi_range(1, 2) + quantity):
+		if e.IsInventoryFull():
+			e.gridmap.PlaceItem(e.gridPos, salvage[randi_range(0, salvage.size() - 1)], -2)
+		else:
+			e.PickupItem(salvage[randi_range(0, salvage.size() - 1)], -2)
+			
+	e.OnMoveUse.emit(e, null, "Transmuter's Stone")
+	e.endTurn.emit()
 
 #ENCHANTER
 func Enchanter1(g : Entity, t : Entity):
@@ -516,7 +809,7 @@ func ChangeAspect1(g : Entity, _t = null):
 
 func EnchanterFocusCriteria(i : Item, _last : Item):
 	if i != null && i.equipment && i.move.magic && i.prefixes.size() < 2:
-		return "Enchantable focus."
+		return "Enchantable focus.\n  "
 	else:
 		return null
 
@@ -526,7 +819,7 @@ func EnchanterMaterialCriteria(i : Item, last : Item):
 		for tag in i.crafting.tags:
 			if tag not in materials || tag in last.prefixes || tag == "Stone" && "Earth" in last.prefixes:
 				continue
-			return "Usable material."
+			return "Usable material.\n  "
 
 	return null
 
@@ -590,9 +883,9 @@ func CutthroatPassiveRemove(e : Entity):
 
 #WARDEN
 func Warden1(e : Entity, _t : Entity):
-	e.AddStatus(Status.SureCrit(), 10)
+	e.AddStatus(Status.SureCrit(), 6)
 	if e.allies.size() > 0:
-		e.allies[0].AddStatus(Status.SureCrit(), 10)
+		e.allies[0].AddStatus(Status.SureCrit(), 6)
 		e.text.AddLine(e.GetLogName() + " and " + e.allies[0].GetLogName() + " gained composure!\n")
 	else:
 		e.text.AddLine(e.GetLogName() + " gained composure!\n")
@@ -621,6 +914,7 @@ func WardenOnTame(e : Entity, t : Entity):
 	e.classE.classVariables[t.Name + "originalMove"] = t.moves[0]
 	var newMove : Move = Move.new(t.moves[0].name, WardenTameMove)
 	newMove.playAnimation = false
+	newMove.noTargets = true
 	t.moves[0] = newMove
 	
 func WardenOnAllyDeath(e : Entity, t : Entity):
@@ -679,7 +973,7 @@ func ChangeModifier1(g : Entity, _t = null):
 
 func WeaponsmithWeaponCriteria(i : Item, _last : Item):
 	if i != null && i.equipment && !i.move.magic && i.prefixes.size() < 2:
-		return "Modifiable weapon."
+		return "Modifiable weapon.\n  "
 	else:
 		return null
 
@@ -689,7 +983,7 @@ func WeaponsmithMaterialCriteria(i : Item, last : Item):
 		for tag in i.crafting.tags:
 			if tag not in materials || (tag == "Reagent" && "Bold" in last.prefixes) || (tag == "Sharp" && "Bleed" in last.prefixes) || (tag == "Heavy" && "Bludgeon" in last.prefixes) || (tag == "Light" && "Blitz" in last.prefixes):
 				continue
-			return "Usable material."
+			return "Usable material.\n  "
 
 	return null
 
@@ -797,13 +1091,13 @@ func BlighterPassiveRemove(e : Entity):
 
 #THIEF
 func Thief1(e : Entity, t : Entity):
-	var pierce : int = 2 if t.inventory.size() == 0 else 0
+	var pierce : int = 2 if t.Type == "AI" && t.inventory.size() == 0 else 0
 	var damage : int = Stats.GetDamage(e.stats, t.stats, false, pierce)
-	e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " with Pilfer for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
+	e.text.AddLine(e.GetLogName() + " pilfered " + t.GetLogName() + " for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
 	t.TakeDamage(damage, e)
 	
 func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
-	if t != null && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
+	if t != null && t.Type == "AI" && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
 		var removeSpot = t.inventory.size() - 1
 		var item : Item = t.inventory[removeSpot]
 		var uses : int = t.useMeta[removeSpot]
@@ -821,6 +1115,61 @@ func ThiefPassiveApply(e : Entity):
 func ThiefPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(ThiefOnMoveUse)
 
+#IMBUER
+func Imbuer1(e : Entity, t : Entity):
+	var damage : int = Stats.GetDamage(e.stats, t.stats, false)
+	e.text.AddLine(e.GetLogName() + " attacked " + t.GetLogName() + " for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
+	if t.Type == "AI":
+		var renew : bool = false
+		for status in e.statuses:
+			if status == "AttackBuff" || status == "DefenseBuff" || status == "MagicBuff" || status == "ResistenceBuff":
+				e.statusDuration[status] = 6
+				renew = true
+		if e.allies.size() > 0:
+			for status in e.allies[0].statuses:
+				if status == "AttackBuff" || status == "DefenseBuff" || status == "MagicBuff" || status == "ResistenceBuff":
+					e.allies[0].statusDuration[status] = 6
+					renew = true
+		if renew:
+			e.text.AddLine(e.GetLogName() + "'s vigor was renewed!\n")
+	t.TakeDamage(damage, e)
+
+func ImbuerItemMove(e : Entity, _t : Entity):
+	var healAmount : int = e.Heal(int(.25 * e.stats.maxHP))
+	if healAmount > 0:
+		e.text.AddLine(e.GetLogName() + " healed for " + str(healAmount) + " HP!\n")
+	var applyBuffs : Array[String] = []
+	for status in ["AttackBuff", "DefenseBuff", "MagicBuff", "ResistenceBuff"]:
+		if status not in e.statuses:
+			applyBuffs.append(status)
+			
+	if applyBuffs.size() == 0:
+		e.text.AddLine(e.GetLogName() + " was already fully imbued!\n")
+		return
+		
+	var status : Status = Status.status[applyBuffs[randi_range(0, applyBuffs.size() - 1)]]
+	match status.name:
+		"AttackBuff":
+			e.text.AddLine(e.GetLogName() + " was imbued with strength!\n")
+		"MagicBuff":
+			e.text.AddLine(e.GetLogName() + " was imbued with wit!\n")
+		"DefenseBuff":
+			e.text.AddLine(e.GetLogName() + " was imbued with durability!\n")
+		"ResistenceBuff":
+			e.text.AddLine(e.GetLogName() + " was imbued with resilience!\n")
+	e.AddStatus(status, 4)
+
+var potions : Dictionary = { "Healing Potion":null, "Imbued Wilds":null }
+func ImbuerOnMoveUse(e : Entity, _t : Entity, movename : String):
+	if movename in potions && e.allies.size() > 0:
+		Move.moves[movename].Use(e.allies[0])
+
+func ImbuerPassiveApply(e : Entity):
+	e.OnMoveUse.connect(ImbuerOnMoveUse)
+	
+func ImbuerPassiveRemove(e : Entity):
+	e.OnMoveUse.disconnect(ImbuerOnMoveUse)
+	
 #SCAVENGER
 func Scavenger1(g : Entity, t : Entity):
 	if g.Type != "Player":
@@ -843,7 +1192,7 @@ func Scavenger1(g : Entity, t : Entity):
 		t.animator.Damage()
 		t.TakeDamage(damage, e)
 	else:
-		potentialItems = e.gridmap.level.materials
+		potentialItems = e.gridmap.controller.level.materials + ["Shiny Scrap", "Heavy Scrap", "Light Scrap", "Sharp Scrap"]
 		if tame != null:
 			tame.animator.Attack()
 			tame.Rotate(e.facingPos)
@@ -872,26 +1221,69 @@ func ScavengerPassiveRemove(e : Entity):
 		e.classE.classVariables.erase("notConsumeMaterialPassives")
 		
 #ARTIFICER
-func Artificer1():
-	pass
+var userBlacklist : Dictionary = { "Totem":null, "Transmuter's Stone":null, "Whetstone Oil":null, "Enchanted Attuner":null, "Smithing Gear":null, "Tunneling Tools":null}
+func Artificer1(g : Entity, _t : Entity = null):
+	if g.gridmap.GetMapPos(g.facingPos) != -1:
+		g.text.AddLine("A mechanical user can't be summoned there!\n")
+		g.endTurn.emit()
+		return
+	
+	if g.Type != "Player":
+		return
+	var criteria : Array[Callable] = [ArtificerCriteria]
+	var critDesc : Array[String] = ["Select a consumable item."]
+	var e : Player = g
+	e.action = false
+	e.inventoryUI.pickingComplete.connect(ArtificerPickComplete)
+	e.inventoryUI.ModPickerOpen(criteria, critDesc)
+
+func ArtificerCriteria(i : Item, _last : Item):
+	if i != null && i.consumable && i.name not in userBlacklist:
+		return "Valid consumable.\n  "
+	return null
+
+func ArtificerPickComplete(e : Player, ids : Array[int]):
+	e.inventoryUI.pickingComplete.disconnect(ArtificerPickComplete)
+	if ids.size() < 1:
+		return
+	var item : Item = e.GetItem(ids[0])
+	
+	var structure : Structure = e.gridmap.turnhandler.entityhandler.SpawnStructure(e.facingPos, e, "Mechanical User", e.mesh, ArtificerStructureBehavior, Stats.new(5, e.originalStats.POW, 1, e.originalStats.MAG, 1, false, true), [Color.BLACK, Color.DARK_GRAY, Color.DARK_GRAY], 7)
+	structure.moves.append(item.move.Duplicate())
+	structure.moves[0].noTargets = true
+	structure.moves[0].manualCooldown = true
+	if item.name == "Salvager":
+		structure.duration = 3
+	e.text.AddLine(e.GetLogName() + " summoned a mechanical user!\n")
+	
+	e.inventoryUI.RemoveItem(ids[0])
+	e.StartCooldownName("Mechanical User")
+	e.skillUI.UpdateAll()
+	e.OnMoveUse.emit(e, null, "Mechanical User")
+	e.endTurn.emit()
+	
+func ArtificerStructureBehavior(e : Structure):
+	for pos in e.AdjacentTiles():
+		var entity : Entity = e.GetEntity(pos)
+		if entity != null && entity.Type == "AI":
+			entity.targetEntity = e
+			entity.targetGridPos = e.gridPos
+			entity.targetGridPosChanged = true
+			e.Rotate(pos)
+			await e.moves[0].Use(e, entity)
+			return
 
 func ArtificerOnMoveUse(e : Entity, _t : Entity, movename : String):
 	if movename == "Tinker":
-		e.AddStatus(Status.AttackBuff(), 3)
 		e.AddStatus(Status.DefenseBuff(), 3)
-		return
-	elif movename == "Brew":
-		e.AddStatus(Status.MagicBuff(), 3)
 		e.AddStatus(Status.ResistenceBuff(), 3)
+	elif movename == "Brew":
+		e.AddStatus(Status.AttackBuff(), 3)
+		e.AddStatus(Status.MagicBuff(), 3)
 		
 func ArtificerPassiveApply(e : Entity):
 	e.OnMoveUse.connect(ArtificerOnMoveUse)
 	
 func ArtificerPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(ArtificerOnMoveUse)
-	
-	
-	
-	
-	
 	

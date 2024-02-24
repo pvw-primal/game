@@ -38,7 +38,9 @@ var originalStats : Stats
 var stats : Stats
 var statuses : Dictionary
 var statusDuration : Dictionary
+var immune : Dictionary
 var statsChanged : bool = false
+var combatTurns : int = 0
 
 var moves : Array[Move] = []
 var cooldown : Array[int]
@@ -49,23 +51,27 @@ signal OnTurnStart(e : Entity)
 signal OnMoveUse(e : Entity, t : Entity, name : String)
 signal OnTileEffectPlace(e : Entity, pos : Vector2i, effect : TileEffect.Effect)
 signal OnEnterTileEffect(e : Entity, effect : TileEffect.Effect)
+signal OnDamage(e : Entity, source : Entity)
 
 var mesh : Node3D
 var animator : Animator
 
 @onready var timer : Timer = get_node("Timer")
-@onready var gridmap : MapGenerator = get_node("/root/Root/GridMap")
-@onready var turnhandler : TurnHandler = get_node("/root/Root/TurnHandler")
-@onready var text : LogText = get_node("/root/Root/Log/LogText")
 @onready var statusUI : StatusUI = get_node("StatusUI")
 
+var gridmap : MapGenerator
+var turnhandler : TurnHandler
+var text : LogText
+
 func Initialize():
-	turnhandler.AddEntity(self)
 	startTurn.connect(StartTurn)
 	endTurn.connect(EndTurn)
-	Spawn(startingPos)
-	UpdateStatusUI()
-
+	
+func OnInit():
+	gridmap = get_node("/root/Root/GridMap")
+	turnhandler = get_node("/root/Root/TurnHandler")
+	text = get_node("/root/Root/Log/LogText")
+	
 func Update(delta):
 	if Type != "Player":
 		position = position.lerp(targetPos, speed * delta / 2)
@@ -94,16 +100,16 @@ func Spawn(pos: Vector2i):
 	RandomRotate(pos)
 	
 func SnapPosition(pos: Vector2i):
-	facingPos = (2 * (pos - gridPos)) + gridPos
 	gridmap.Pathfinding.set_point_weight_scale(gridPos, 1)
 	gridmap.SetMapPos(gridPos, -1)
-	Rotate(pos)
+	var newFacingPos = (pos - gridPos).sign() + pos
 	gridPos = pos
 	gridmap.Pathfinding.set_point_weight_scale(gridPos, OCCUPIED_WEIGHT)
 	gridmap.SetMapPos(gridPos, entityNum)
 	targetPos = gridmap.to_global(gridmap.map_to_local(Vector3i(gridPos.x, 0, gridPos.y)))
 	targetPos = Vector3(targetPos.x, position.y, targetPos.z)
 	position = targetPos
+	Rotate(newFacingPos)
 	gridmap.TakeItems(gridPos, self)
 	move.emit(pos, facingPos - gridPos)
 
@@ -172,7 +178,10 @@ func SetMeshCopy(node : Node3D):
 
 func StartTurn():
 	OnTurnStart.emit(self)
-	Heal(1)
+	if combatTurns > 0:
+		combatTurns -= 1
+	else:
+		Heal(1)
 	for SN in statuses.keys():
 		if !statuses[SN].OnTurnStart.is_null():
 			await statuses[SN].OnTurnStart.call(self)
@@ -187,6 +196,8 @@ func StartTurn():
 	
 func EndTurn():
 	turn = false
+	if dead:
+		return
 	var statusChanged = false
 	for SN in statuses.keys():
 		statusDuration[SN] -= 1
@@ -214,6 +225,12 @@ func Wait(time : float):
 	timer.one_shot = true
 	timer.start(time)
 	await timer.timeout
+
+func Target(e : Entity):
+	targetEntity = e
+	if targetGridPos != e.gridPos:
+		targetGridPosChanged = true
+	targetGridPos = e.gridPos
 
 func GetEntity(pos : Vector2i):
 	return turnhandler.Entities[gridmap.GetMapPos(pos)] if gridmap.GetMapPos(pos) >= 0 else null
@@ -247,6 +264,8 @@ func SetColor(cR : Color, cG : Color, cB: Color):
 		child.set_instance_shader_parameter("replaceG", cG)
 		child.set_instance_shader_parameter("replaceB", cB)
 			
+func SetSize(s : float = randf_range(.8, 1.2)):
+	mesh.scale = Vector3(s, s, s)
 
 func UpdateStats():
 	var statcopy = originalStats.Copy()
@@ -264,6 +283,8 @@ func ChangeStats(s : Stats):
 	UpdateStats()
 
 func AddStatus(status : Status, turns : int):
+	if status.name in immune:
+		return
 	if status.name not in statuses:
 		statuses[status.name] = status
 		if status.icon != null:
@@ -295,7 +316,9 @@ func TakeDamage(damage : int, source : Entity = null):
 	if source != null:
 		targetEntity = source
 		targetGridPos = source.gridPos
+	OnDamage.emit(self, source)
 	HPChange.emit(stats.HP, stats.maxHP)
+	combatTurns = 6
 	if stats.HP < 1:
 		onDeath.emit()
 
@@ -306,6 +329,9 @@ func Heal(healing : int):
 		stats.HP = stats.maxHP
 	HPChange.emit(stats.HP, stats.maxHP)
 	return stats.HP - originalHP
+
+func InCombat():
+	return combatTurns > 0
 
 func StartCooldown(id : int, cd : int = -1):
 	cooldown[id] = moves[id].cooldown if cd == -1 else cd

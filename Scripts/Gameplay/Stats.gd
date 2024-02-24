@@ -41,14 +41,17 @@ func CopyAll(stats : Stats):
 	CanMove = stats.CanMove
 	CanAttack = stats.CanAttack
 	CanBeTargeted = stats.CanBeTargeted
-	
+
+static func Highest(s1 : Stats, s2 : Stats):
+	return Stats.new(max(s1.maxHP, s2.maxHP), max(s1.POW, s2.POW), max(s1.DEF, s2.DEF), max(s1.MAG, s2.MAG), max(s1.RES, s2.RES), true, true, true, max(s1.CRIT, s2.CRIT))
+
 func Distribute(numStats : int):
 	var statDistributed = Copy()
 	for i in range(numStats):
 		var chance =  randi_range(0, 4)
 		if chance == 0:
-			statDistributed.maxHP += 1
-			statDistributed.HP += 1
+			statDistributed.maxHP += 3
+			statDistributed.HP += 3
 		elif chance == 1:
 			statDistributed.POW += 1
 		elif chance == 2:
