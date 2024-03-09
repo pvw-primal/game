@@ -42,6 +42,7 @@ static func InitStatus():
 	MagicBuff()
 	DefenseBuff()
 	ResistenceBuff()
+	Regen()
 
 static func AttackBuff():
 	if "AttackBuff" not in status:
@@ -203,3 +204,14 @@ static func Shadow():
 			return sum
 		status["Shadow"] = Status.new("Shadow", null, null, shadow, preload("res://Assets/Icons/Status/Shadow.png"))
 	return status["Shadow"]
+
+static func Regen():
+	if "Regen" not in status:
+		var regen = func(e : Entity):
+			var heal : int = e.Heal(2)
+			if heal > 0:
+				e.text.AddLine(e.GetLogName() + " healed " + LogText.GetHealNum(heal) + " HP!\n")
+		status["Regen"] = Status.new("Regen", regen, null, null, preload("res://Assets/Icons/Status/Regen.png"))
+	return status["Regen"]
+	
+	

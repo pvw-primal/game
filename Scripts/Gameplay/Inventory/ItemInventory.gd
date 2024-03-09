@@ -29,6 +29,7 @@ func ChangeItem(i : Item, animate : bool = true, u : int = -1):
 	if item.topdown:
 		mesh.rotation_degrees = Vector3(-35, randf_range(-1, 7), -92)
 		mesh.position.y = i.invHeight
+		mesh.rotation_degrees.z += item.invRotation
 	else:
 		mesh.rotation_degrees = Vector3(0, randf_range(-1, 7), randf_range(-1, 7))
 		mesh.position.y = i.invHeight

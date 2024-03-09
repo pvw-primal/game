@@ -3,13 +3,28 @@ extends Resource
 
 var name : String
 var desc : String
-var icon : Texture2D
 
+var showDifficulty : bool
+var difficulty : int
+var difficultyName : String
+
+var icon : Texture2D
+var color : Color = Color.BLACK
+var item : PackedScene
+	
 var OnLevelStart : Callable
 
 func _init(n : String = "Test Node", d : String = ""):
 	name = n
 	desc = d
+	showDifficulty = false
+	difficulty = 0
+	difficultyName = Level.GetDifficultyName(difficulty)
+
+func SetDifficulty(difficult : int):
+	showDifficulty = true
+	difficulty = difficult
+	difficultyName = Level.GetDifficultyName(difficulty)
 	
 func AddClassNode(c : Class, currentMoves : Array[Move] = [], currentPassives : Array[Passive] = []):
 	name = c.name

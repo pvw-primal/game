@@ -1,6 +1,10 @@
 extends Node
 
 const DEBUG : bool = false
+
+var playerName : String = "Player"
+var playerMesh : Node3D
+
 var player : Player
 var inventory : Array[Item]
 var lastSlot : int

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3ma1yvdswbp6"]
+[gd_scene load_steps=6 format=3 uid="uid://b3ma1yvdswbp6"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6rjy2"]
 emission_shape = 3
@@ -13,6 +13,19 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("StandardMaterial3D_hlex2")
 size = Vector2(0.05, 0.05)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kof7d"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.85098)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_62edl"]
+material = SubResource("StandardMaterial3D_kof7d")
+top_radius = 0.1
+bottom_radius = 0.4
+height = 0.01
+radial_segments = 9
+rings = 1
+cap_bottom = false
+
 [node name="Node3D" type="Node3D"]
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
@@ -24,13 +37,6 @@ transform_align = 1
 process_material = SubResource("ParticleProcessMaterial_6rjy2")
 draw_pass_1 = SubResource("QuadMesh_5cla4")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.034, 0)
-light_energy = 0.1
-light_indirect_energy = 0.1
-light_volumetric_fog_energy = 0.1
-light_size = 1.0
-light_negative = true
-light_specular = 0.25
-light_bake_mode = 0
-omni_range = 0.4
+[node name="Dent" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("CylinderMesh_62edl")

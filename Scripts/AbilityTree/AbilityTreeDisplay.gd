@@ -16,6 +16,7 @@ var tree : AbilityTree
 var currentNode : AbilityTreeNode
 
 func _ready():
+	treePlayer.init()
 	tree = AbilityTree.StarterTree() if Global.player == null else AbilityTree.GetNextTree(Global.stage)
 	DisplayTree(tree.tree, Vector3(0, 0, 1.5))
 	collider.area_entered.connect(OnCollision)
@@ -33,12 +34,14 @@ func _process(_delta):
 func PrepareLevel():
 	if Global.player == null:
 		var player : Player = PlayerScene.instantiate()
-		player.SetMeshCopy(treePlayer.mesh)
 		Global.player = player
+		Global.player.Name = Global.playerName
+	treePlayer.remove_child(treePlayer.mesh)
+	Global.player.SetMeshCopy(treePlayer.mesh)
 	if !currentNode.data.OnLevelStart.is_null():
 		currentNode.data.OnLevelStart.call(Global.player, treePlayer)
 	Global.player.animator.Walk(false)
-	Global.level = Level.new("Forest")
+	Global.level = Level.new("Forest", currentNode.data.difficulty)
 	Global.stage += 1
 
 func DisplayTree(t : Array, startingPos : Vector3):
@@ -57,8 +60,8 @@ func DisplayTree(t : Array, startingPos : Vector3):
 			pos.x += OFFSET_X
 	
 func DisplayNode(node : AbilityTreeNode):
-	for connection in node.from:
-		treeRoot.add_child(line(node.position, connection.position))
+	#for connection in node.from:
+		#treeRoot.add_child(line(node.position, connection.position))
 	treeRoot.add_child(node)
 	
 func line(pos1: Vector3, pos2: Vector3, color = Color.WHITE_SMOKE):
@@ -91,9 +94,12 @@ func OnCollision(a : Area3D):
 func DisplayNodeText(node : AbilityTreeNode):
 	textTop.visible = true
 	textTop.text = "[b]" + node.data.name + "[/b]\n" + node.data.desc + ""
+	if node.data.showDifficulty:
+		textBottom.visible = true
+		textBottom.text = "\nDifficulty: " + node.data.difficultyName + " (" + str(node.data.difficulty) + ")"
 
 func ChangeNodeText():
-	textBottom.position.y = textTop.size.y + 5
+	textBottom.position.y = textTop.size.y + 31
 
 func RemoveNodeText():
 	textTop.visible = false

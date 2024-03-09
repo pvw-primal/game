@@ -111,7 +111,7 @@ func SpawnAIAt(pos : Vector2i, spawnAI : AI = null, distribute : int = -1) -> AI
 		e.SetSize()
 		e.nameColor = Color.CRIMSON
 		if distribute == -1:
-			e.ChangeStats(e.originalStats.Distribute(distributeStats))
+			e.ChangeStats(e.originalStats.Distribute(randi_range(0, distributeStats)))
 		else:
 			e.ChangeStats(e.originalStats.Distribute(distribute))
 	else:
@@ -139,7 +139,7 @@ func SpawnStructure(pos : Vector2i, o : Entity, n : String, mesh : Node3D, ai : 
 	
 func Reset():
 	for e in get_children():
-		if e.Type == "Player" || e.Type == "Ally":
+		if e.Type == "Player" || (e.Type == "Ally" && e.tamer != null):
 			continue
 		e.queue_free()
 	entityNum = 0

@@ -11,6 +11,7 @@ var flavor : String
 var mesh : PackedScene
 var topdown : bool
 var invHeight : float
+var invRotation : float
 
 var crafting : Crafting
 var rarity : Items.Rarity
@@ -33,6 +34,7 @@ func _init(Name : String, Description : String, Flavor : String = "", t : Packed
 	topdown = false
 	equipment = false
 	invHeight = .1
+	invRotation = 0
 	
 func CanUse():
 	return move != null && !equipment

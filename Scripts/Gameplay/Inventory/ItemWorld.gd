@@ -1,7 +1,7 @@
 class_name ItemWorld
 extends Node3D
 
-@onready var itemMesh = preload("res://Assets/Items/Drops/Chest.tscn")
+static var itemMesh = preload("res://Assets/Items/Drops/Chest.tscn")
 
 var items : Array[Item]
 var useMeta : Dictionary

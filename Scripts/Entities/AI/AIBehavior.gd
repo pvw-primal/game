@@ -25,14 +25,19 @@ func RussMove(e : Entity, _t : Entity):
 	var tiles = e.AdjacentTiles()
 	tiles.shuffle()
 	var babyStats : Stats = Stats.new(1, 2, 0, 2, 0)
+	var babyMove : Move = Move.DefaultPhysical()
+	babyMove.name = "Lil' Peck"
 	for i in range(tiles.size()):
 		if e.gridmap.GetMapPos(tiles[i]) == -1:
 			var baby : AI = e.gridmap.turnhandler.entityhandler.SpawnAIAt(tiles[i], e, 0)
 			var s : float = randf_range(.5, .7)
 			baby.Name = "Kasu"
 			baby.mesh.scale = Vector3(s, s, s)
-			baby.ChangeStats(babyStats)
-			baby.moves = [e.moves[0]]
+			baby.originalStats = babyStats
+			baby.originalStats.Distribute(floor(e.stats.MAG / 2.0))
+			baby.stats = baby.originalStats.Copy()
+			baby.UpdateStats()
+			baby.moves = [babyMove]
 			baby.cooldown.resize(baby.moves.size())
 			baby.cooldown.fill(0)
 			baby.Target(e.targetEntity)

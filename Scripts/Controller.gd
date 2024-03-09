@@ -5,23 +5,17 @@ var level : Level
 
 var floorNum : int
 
-var numEnemies : int
-var statDistribution : int
-var spawnChance : float
-
-var goal = 1
-
 func _ready():
 	level = Global.level
-	numEnemies = 7
-	statDistribution = 2
-	spawnChance = 0
-	floorNum = 0
+	floorNum = 1
 	%EntityHandler.player = Global.player
 	
 	%GridMap.init()
-	%EntityHandler.init(numEnemies, statDistribution, true)
-	%TurnHandler.init(spawnChance)
+	%EntityHandler.init(level.numEnemies, level.statDistribution, true)
+	%TurnHandler.init(level.spawnChance)
+	
+	%EntityHandler.player.OnLevelStart.emit(%EntityHandler.player)
+	%EntityHandler.player.OnFloorStart.emit(%EntityHandler.player)
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("Test"):
@@ -29,11 +23,12 @@ func _process(_delta):
 		
 func NextLevel():
 	floorNum += 1
-	if floorNum > goal:
+	if floorNum >= level.goal:
 		await Start(level.name + " " + level.goalName)
 		var player : Player = %EntityHandler.player
 		if player.turn:
 			player.endTurn.disconnect(%TurnHandler.HandleNextTurn)
+		player.OnLevelEnd.emit(player)
 		%TurnHandler.Reset()
 		%EntityHandler.Reset()
 		for child in %EntityHandler.get_children():
@@ -41,11 +36,13 @@ func NextLevel():
 		%GridMap.Reset()
 		Global.inventory = player.inventoryUI.InventoryList()
 		Global.lastSlot = player.inventoryUI.lastSlot
+		Global.playerMesh = player.mesh
+		Global.player.remove_child(player.mesh)
 		await $TransitionScreen.Wait(.5)
 		get_tree().change_scene_to_file("res://Scenes/tree.tscn")
 		return
 		
-	IncreaseDifficulty()
+	level.IncreaseDifficulty()
 	await Start(level.name + "\n" + level.floorPrefix + str(floorNum))
 	
 	var player : Player = %TurnHandler.Entities[%TurnHandler.player]
@@ -57,21 +54,13 @@ func NextLevel():
 	%GridMap.init()
 	if player.turn:
 		player.endTurn.disconnect(%TurnHandler.HandleNextTurn)
-	%EntityHandler.init(numEnemies, statDistribution, false)
+	%EntityHandler.init(level.numEnemies, level.statDistribution, false)
 	
 	await $TransitionScreen.Wait(.5)
 	await Stop()
 	
-	%TurnHandler.init(spawnChance)
-
-func IncreaseDifficulty():
-	var chance = randf_range(0, 1)
-	if chance > .8:
-		statDistribution += 1
-	elif chance > .6:
-		numEnemies += 1
-	else:
-		spawnChance += .02
+	%TurnHandler.init(level.spawnChance)
+	player.OnFloorStart.emit(player)
 
 func Start(text : String):
 	$TransitionScreen.visible = true

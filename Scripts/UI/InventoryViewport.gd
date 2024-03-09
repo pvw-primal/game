@@ -23,11 +23,15 @@ const INVENTORY_OFFSET : float = .5
 
 var inventory : Array[ItemInventory]
 var lastSlot : int
+var equipSlotPos : Vector2i
+var equipSlot : int
 var firstOpenSlot : int
 
 var player : Player
+var selectedPos : Vector2i
 var selected : int
 var popupSelect : int
+signal OnWindowOpen
 signal OnWindowClose
 
 var recipe : Array[String] = []
@@ -67,7 +71,7 @@ func _ready():
 	description.resized.connect(BorderSizeChange)
 	bottomBar.resized.connect(BBorderSizeChange)
 
-func _process(_delta):
+func Process(_delta):
 	if visible:
 		if showPopup:
 			if Input.is_action_just_pressed("MoveDown"):
@@ -82,38 +86,63 @@ func _process(_delta):
 				popup.item_activated.emit(popupSelect)
 			elif Input.is_action_just_pressed("UIBack"):
 				Back()
-#
+
 		else:
-			if Input.is_action_just_pressed("MoveRight"):
-				selected = selected - (INVENTORY_WIDTH - 1) if (selected + 1) % INVENTORY_WIDTH == 0 else selected + 1
+			if Input.is_action_just_pressed("UISelect"):
+				list.item_activated.emit(selected)
+				return
+			elif Input.is_action_just_pressed("UIBack"):
+				Back()
+				return
+			elif Input.is_action_just_pressed("MoveRight"):
+				if selectedPos.y == equipSlotPos.y:
+					selectedPos.x = selectedPos.x + 1 if selectedPos.x + 1 <= equipSlotPos.x else 0
+				else:
+					selectedPos.x = selectedPos.x + 1 if selectedPos.x + 1 < INVENTORY_WIDTH else 0
+				selected = selectedPos.x + (selectedPos.y * INVENTORY_WIDTH)
 				list.select(selected)
 				list.item_selected.emit(selected)
 			elif Input.is_action_just_pressed("MoveLeft"):
-				selected = selected + (INVENTORY_WIDTH - 1) if (selected + 1) % INVENTORY_WIDTH == 1 else selected - 1
+				if selectedPos.y == equipSlotPos.y:
+					selectedPos.x = selectedPos.x - 1 if selectedPos.x - 1 >= 0 else equipSlotPos.x
+				else:
+					selectedPos.x = selectedPos.x - 1 if selectedPos.x - 1 >= 0 else INVENTORY_WIDTH - 1
+				selected = selectedPos.x + (selectedPos.y * INVENTORY_WIDTH)
 				list.select(selected)
 				list.item_selected.emit(selected)
 			elif Input.is_action_just_pressed("MoveDown"):
-				selected = selected % INVENTORY_WIDTH if selected + INVENTORY_WIDTH > lastSlot else selected + INVENTORY_WIDTH
+				if selectedPos.y + 1 < equipSlotPos.y:
+					selectedPos.y += 1
+				else:
+					selectedPos.y = equipSlotPos.y if selectedPos.x <= equipSlotPos.x && selectedPos.y != equipSlotPos.y else 0
+				selected = selectedPos.x + (selectedPos.y * INVENTORY_WIDTH)
 				list.select(selected)
 				list.item_selected.emit(selected)
 			elif Input.is_action_just_pressed("MoveUp"):
-				selected = (lastSlot - (INVENTORY_WIDTH - 1)) + (selected % INVENTORY_WIDTH) if selected - INVENTORY_WIDTH < 0 else selected - INVENTORY_WIDTH
+				if selectedPos.y - 1 >= 0:
+					selectedPos.y -= 1
+				else:
+					selectedPos.y = equipSlotPos.y if selectedPos.x <= equipSlotPos.x else equipSlotPos.y - 1
+				selected = selectedPos.x + (selectedPos.y * INVENTORY_WIDTH)
 				list.select(selected)
 				list.item_selected.emit(selected)
-			elif Input.is_action_just_pressed("UISelect"):
-				list.item_activated.emit(selected)
-			elif Input.is_action_just_pressed("UIBack"):
-				Back()
 
 func init(items : Array[Item], slots : int):
 	for i in range(inventory.size()):
-		if i < slots:
-			list.set_item_disabled(i, false)
 		if i < items.size():
 			inventory[i].ChangeItem(items[i])
-		if firstOpenSlot == -1 && (i >= items.size() || items[i] == null):
-			firstOpenSlot = i
+		if i < slots:
+			list.set_item_disabled(i, false)
+			if firstOpenSlot == -1 && (i >= items.size() || items[i] == null):
+				firstOpenSlot = i
 	lastSlot = slots - 1
+	equipSlot = slots
+	equipSlotPos = SlotToPos(equipSlot)
+	list.set_item_disabled(slots, false)
+
+func SlotToPos(slot : int) -> Vector2i:
+	@warning_ignore("integer_division")
+	return Vector2i(slot % INVENTORY_WIDTH, slot / INVENTORY_WIDTH)
 
 func InventoryList(gaps : bool = true) -> Array[Item]:
 	var l : Array[Item] = []
@@ -127,6 +156,7 @@ func Open():
 	description.visible = true
 	bottomBar.visible = false
 	selected = 0
+	selectedPos = Vector2i.ZERO
 	player.ignoreInput = true
 	crafting = false
 	picking = false
@@ -140,11 +170,13 @@ func Open():
 	list.grab_focus()
 	list.select(selected)
 	list.item_selected.emit(selected)
+	OnWindowOpen.emit()
 
 func Display(id : int):
 	popup.visible = false
 	showPopup = false
 	selected = id
+	selectedPos = SlotToPos(selected)
 	if inventory[id].item != null:
 		description.visible = true
 		description.text = inventory[id].item.GetDescription(inventory[id].uses)
@@ -179,6 +211,7 @@ func OpenMenu(id : int):
 	popup.add_item("Back")
 	popup.select(popupSelect)
 	popup.item_selected.emit(popupSelect)
+	OnWindowOpen.emit()
 	
 func DismissMenu(id : int):
 	if inventory[selected].item == null && player.equipped != -1:
@@ -186,7 +219,7 @@ func DismissMenu(id : int):
 			Unequip()
 			player.endTurn.emit()
 			player.lastAction = Move.ActionType.other
-			Close.call_deferred()
+			Close()
 		else:
 			list.grab_focus()
 			popup.visible = false
@@ -200,7 +233,7 @@ func DismissMenu(id : int):
 		player.lastAction = Move.ActionType.other
 		player.gridmap.PlaceItem(player.gridPos, inventory[selected].item, inventory[selected].uses)
 		RemoveItem(selected)
-		Close.call_deferred()
+		Close()
 		return
 	if id == popup.item_count - 1:
 		list.grab_focus()
@@ -257,6 +290,7 @@ func CraftingOpen(items : Array[String]):
 	popup.grab_focus()
 	popup.select(popupSelect)
 	popup.item_selected.emit(popupSelect)
+	OnWindowOpen.emit()
 
 func CraftingSelectCraft(id : int):
 	if !showPopup:
@@ -284,6 +318,7 @@ func CraftingActivateCraft(id : int):
 	
 	showPopup = false
 	selected = 0
+	selectedPos = Vector2i.ZERO
 	list.select(selected)
 	list.item_selected.emit(selected)
 	list.grab_focus()
@@ -293,6 +328,7 @@ func CraftingSelectItem(id : int):
 	if showPopup:
 		return
 	selected = id
+	selectedPos = SlotToPos(selected)
 	if inventory[id].item != null:
 		description.text = inventory[id].item.GetDescription(inventory[id].uses)
 	else:
@@ -343,10 +379,10 @@ func DisplayRecipe(r : Array[String]) -> String:
 
 func CraftingShowMaterial(tag : String):
 	if tag == "":
-		for i in range(lastSlot + 1):
+		for i in range(lastSlot + 2):
 			list.set_item_icon(i, testicon)
 		return
-	for i in range(lastSlot + 1):
+	for i in range(lastSlot + 2):
 		if inventory[i].item == null || list.get_item_icon(i) == selectedicon:
 			continue
 		if tag in inventory[i].item.crafting.tags:
@@ -367,6 +403,7 @@ func PickerOpen(viableItems : Dictionary):
 	visible = true
 	bottomBar.visible = false
 	selected = 0
+	selectedPos = Vector2i.ZERO
 	player.ignoreInput = true
 	crafting = false
 	picking = true
@@ -382,10 +419,12 @@ func PickerOpen(viableItems : Dictionary):
 	list.grab_focus()
 	list.select(selected)
 	list.item_selected.emit(selected)
+	OnWindowOpen.emit()
 	
 func PickerSelected(id : int):
 	if inventory[id].item != null && inventory[id].item.name in searchItems.keys():
 		selected = id
+		selectedPos = SlotToPos(selected)
 		popup.visible = false
 		showPopup = false
 		description.visible = true
@@ -403,7 +442,7 @@ func PickerActivated(id : int):
 		Close()
 
 func PickerSetSlots(reset : bool = false):
-	for i in range(lastSlot + 1):
+	for i in range(lastSlot + 2):
 		if inventory[i].item == null:
 			continue
 		if inventory[i].item.name in searchItems || reset:
@@ -419,6 +458,7 @@ func ModPickerOpen(Criteria : Array[Callable], Desc : Array[String]):
 	visible = true
 	bottomBar.visible = false
 	selected = 0
+	selectedPos = Vector2i.ZERO
 	player.ignoreInput = true
 	crafting = false
 	picking = false
@@ -437,10 +477,12 @@ func ModPickerOpen(Criteria : Array[Callable], Desc : Array[String]):
 	list.grab_focus()
 	list.select(selected)
 	list.item_selected.emit(selected)
+	OnWindowOpen.emit()
 	
 func ModPickerSelected(id : int):
 	if list.get_item_icon(id) != disabledicon:
 		selected = id
+		selectedPos = SlotToPos(selected)
 		popup.visible = false
 		showPopup = false
 		description.visible = true
@@ -480,7 +522,7 @@ func ModPickerBack():
 
 func ModPickerSetSlots(reset : bool = false):
 	var lastSelected : Item = null if picked.size() < 1 else inventory[picked[currentRecipeSlot - 1]].item
-	for i in range(lastSlot + 1):
+	for i in range(lastSlot + 2):
 		if reset:
 			list.set_item_icon(i, testicon)
 			continue
@@ -492,12 +534,13 @@ func ModPickerSetSlots(reset : bool = false):
 		else:
 			list.set_item_icon(i, testicon)
 
+#All calls to Close should be deferred.
+#Controller inputs share buttons, so two inputs could be handled in the same frame.
 func Close(craftcomplete : bool = true):
 	OnWindowClose.emit()
 	visible = false
 	popup.visible = false
 	bottomBar.visible = false
-	player.ignoreInput = false
 	if crafting:
 		popup.item_selected.disconnect(CraftingSelectCraft)
 		popup.item_activated.disconnect(CraftingActivateCraft)
@@ -523,6 +566,7 @@ func Close(craftcomplete : bool = true):
 		popup.item_activated.disconnect(DismissMenu)
 	if !craftcomplete:
 		craftCompleted.emit(player, null)
+	player.ignoreInput = false
 
 func Back():
 	if showPopup:
@@ -550,7 +594,7 @@ func Back():
 func AddItem(i : Item, uses : int = -1):
 	var oldFOS : int = firstOpenSlot
 	inventory[firstOpenSlot].ChangeItem(i, true, uses)
-	for x in range(lastSlot + 1):
+	for x in range(lastSlot + 2):
 		if inventory[x] != null && inventory[x].item == null:
 			firstOpenSlot = x
 			return oldFOS
@@ -587,7 +631,7 @@ func Unequip():
 		return
 	SwapItem(firstOpenSlot, lastSlot + 1)
 	player.equipped = -1
-	for x in range(lastSlot + 1):
+	for x in range(lastSlot + 2):
 		if inventory[x] != null && inventory[x].item == null:
 			firstOpenSlot = x
 			return

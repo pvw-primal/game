@@ -58,6 +58,9 @@ func _ready():
 	var herbalistPassive = Passive.new("Herbology")
 	herbalistPassive.description = "Brew gains the ability to craft Blooming Brews, which grow plants in areas with field effects."
 	Passive.passives["Herbology"] = herbalistPassive
+	var bloommove = Move.new("Blooming Brew", HerbalistItem)
+	bloommove.noTargets = true
+	Move.moves["Blooming Brew"] = bloommove
 	
 	var totemcarverMove = Move.new("Whittle Carve", Totemcarver1)
 	totemcarverMove.cooldown = 4
@@ -143,7 +146,7 @@ func _ready():
 	enchanterItemMove.manualCooldown = true
 	Move.moves["Change Aspect"] = enchanterItemMove
 	var enchanterPassive = Passive.new("Aspect Enchantment")
-	enchanterPassive.description = "Foci can have 2 aspects rather than one. Tinker gains the ability to craft Enchanted Attuners, which can add basic foci aspects."
+	enchanterPassive.description = "Foci can have 2 aspects rather than 1. Tinker gains the ability to craft Enchanted Attuners, which can add basic foci aspects."
 	Passive.passives["Aspect Enchantment"] = enchanterPassive
 	
 	var cutthroatMove = Move.new("Ambush", Cutthroat1)
@@ -151,23 +154,33 @@ func _ready():
 	cutthroatMove.cooldown = 2
 	cutthroatMove.noTargets = true
 	cutthroatMove.icon = preload("res://Assets/Icons/Move/Cutthroat.png")
+	cutthroatMove.description = "Strike from the shadows. If attacking from Stealth, this is a guaranteed CRIT."
 	Move.moves["Ambush"] = cutthroatMove
-	Passive.passives["Sneak Attack"] = Passive.new("Sneak Attack", CutthroatPassiveApply, CutthroatPassiveRemove)
+	var cutPassive = Passive.new("Sneak Attack", CutthroatPassiveApply, CutthroatPassiveRemove)
+	cutPassive.description = "Regular attacking from Stealth deals additional magic damage."
+	Passive.passives["Sneak Attack"] = cutPassive
 	
 	var wardenMove = Move.new("Wild Composure", Warden1)
 	wardenMove.playAnimation = false
 	wardenMove.cooldown = 9
 	wardenMove.noTargets = true
 	wardenMove.icon = preload("res://Assets/Icons/Move/Warden.png")
+	wardenMove.description = "You and your tame's next regular attack is a guaranteed CRIT."
 	Move.moves["Wild Composure"] = wardenMove
-	Passive.passives["Combative Adaptation"] = Passive.new("Combative Adaptation", WardenPassiveApply, WardenPassiveRemove)
+	var wardenPassive = Passive.new("Combative Adaptation", WardenPassiveApply, WardenPassiveRemove)
+	wardenPassive.description = "Your tames gain the ability to CRIT. The chance and effect are the same as yours."
+	Passive.passives["Combative Adaptation"] = wardenPassive
 	
 	var tunerMove = Move.new("Tune Up", Tuner1)
 	tunerMove.playAnimation = false
 	tunerMove.cooldown = 3
 	tunerMove.noTargets = true
 	tunerMove.icon = preload("res://Assets/Icons/Move/Tuner.png")
+	tunerMove.description = "Heal a percentage of your health equal to your CRIT chance."
 	Move.moves["Tune Up"] = tunerMove
+	var tunerPassive = Passive.new("Synthetic Honing")
+	tunerPassive.description = "Brew gains the ability to craft Whetstone Oil, which increases CRIT chance by 50% for the next 3 turns."
+	Passive.passives["Synthetic Honing"] = tunerPassive
 	
 	var weaponsmithMove = Move.new("Abrading Assault", Weaponsmith1)
 	weaponsmithMove.playAnimation = false
@@ -175,6 +188,7 @@ func _ready():
 	weaponsmithMove.noTargets = true
 	weaponsmithMove.cooldown = 1
 	weaponsmithMove.icon = preload("res://Assets/Icons/Move/Weaponsmith.png")
+	weaponsmithMove.description = "Erode your weapon of all modifiers, dealing damage for each."
 	Move.moves["Abrading Assault"] = weaponsmithMove
 	var weaponsmithItemMove = Move.new("Change Modifier", ChangeModifier1)
 	weaponsmithItemMove.playAnimation = false
@@ -182,14 +196,20 @@ func _ready():
 	weaponsmithItemMove.manualEndTurn = true
 	weaponsmithItemMove.manualCooldown = true
 	Move.moves["Change Modifier"] = weaponsmithItemMove
+	var wsPassive = Passive.new("Modulation")
+	wsPassive.description = "Weapons can have 2 modifiers rather than 1. Tinker gains the ability to craft Smithing Gear, which can add basic weapon modifiers."
+	Passive.passives["Modulation"] = wsPassive
 	
 	var rangerMove = Move.new("Hunter's Mark", Ranger1)
 	rangerMove.manualEndTurn = true
 	rangerMove.noTargets = true
 	rangerMove.cooldown = 4
 	rangerMove.icon = preload("res://Assets/Icons/Move/Ranger.png")
+	rangerMove.description = "Shoot an arrow, inflicting a debuff to DEF and RES for 3 turns."
 	Move.moves["Hunter's Mark"] = rangerMove
-	Passive.passives["Shadow's Shadow"] = Passive.new("Shadow's Shadow", RangerPassiveApply, RangerPassiveRemove)
+	var rangerPassive = Passive.new("Shadow's Shadow", RangerPassiveApply, RangerPassiveRemove)
+	rangerPassive.description = "Whenever you gain Stealth, your tame also gains Stealth."
+	Passive.passives["Shadow's Shadow"] = rangerPassive
 	
 	var blighterMove = Move.new("Weapon Coating", Blighter1)
 	blighterMove.playAnimation = false
@@ -199,20 +219,30 @@ func _ready():
 	blighterMove.manualCooldown = true
 	blighterMove.reveals = false
 	blighterMove.icon = preload("res://Assets/Icons/Move/Blighter.png")
+	blighterMove.description = "Coat a weapon with a brew, applying its effects to the next 2 weapon attacks. (Only 1 coating can be applied at a time.)"
 	Move.moves["Weapon Coating"] = blighterMove
-	Passive.passives["Poison Proficiency"] = Passive.new("Poison Proficiency", BlighterPassiveApply, BlighterPassiveRemove)
+	var blighterPassive = Passive.new("Poison Proficiency", BlighterPassiveApply, BlighterPassiveRemove)
+	blighterPassive.description = "Brew gains the ability to craft Blighter's Brews, which deal 3 true damage."
+	Passive.passives["Poison Proficiency"] = blighterPassive
+	Move.moves["Blighter's Brew"] = Move.new("Blighter's Brew", BlighterItem)
 	
 	var thiefMove = Move.new("Pilfer", Thief1)
 	thiefMove.cooldown = 2
 	thiefMove.icon = preload("res://Assets/Icons/Move/Thief.png")
+	thiefMove.description = "Strike, dealing additional damage if the enemy's inventory is empty."
 	Move.moves["Pilfer"] = thiefMove
-	Passive.passives["Pickpocketing"] = Passive.new("Pickpocketing", ThiefPassiveApply, ThiefPassiveRemove)
+	var thiefPassive = Passive.new("Pickpocketing", ThiefPassiveApply, ThiefPassiveRemove)
+	thiefPassive.description = "Attacking from Stealth steals an item from the enemy's inventory."
+	Passive.passives["Pickpocketing"] = thiefPassive
 	
 	var imbuerMove = Move.new("Renewed Vigor", Imbuer1)
 	imbuerMove.cooldown = 2
 	imbuerMove.icon = preload("res://Assets/Icons/Move/Imbuer.png")
+	imbuerMove.description = "Lash out, extending the duration of stat buffs on you and your tame when striking enemies."
 	Move.moves["Renewed Vigor"] = imbuerMove
-	Passive.passives["Alchemical Bond"] = Passive.new("Alchemical Bond", ImbuerPassiveApply, ImbuerPassiveRemove)
+	var imbuerPassive = Passive.new("Alchemical Bond", ImbuerPassiveApply, ImbuerPassiveRemove)
+	imbuerPassive.description = "Brew gains the ability to craft Imbued Wilds, which heal and grant random stat buffs."
+	Passive.passives["Alchemical Bond"] = imbuerPassive
 	var imbuerItemMove = Move.new("Imbued Wilds", ImbuerItemMove)
 	imbuerItemMove.noTargets = true
 	imbuerItemMove.playAnimation = false
@@ -222,8 +252,11 @@ func _ready():
 	scavengerMove.noTargets = true
 	scavengerMove.cooldown = 6
 	scavengerMove.icon = preload("res://Assets/Icons/Move/Scavenger.png")
+	scavengerMove.description = "Search for resources with your tame, potentially finding hidden items."
 	Move.moves["Scour"] = scavengerMove
-	Passive.passives["Resourcefulness"] = Passive.new("Resourcefulness", ScavengerPassiveApply, ScavengerPassiveRemove)
+	var scavengerPassive = Passive.new("Resourcefulness", ScavengerPassiveApply, ScavengerPassiveRemove)
+	scavengerPassive.description = "Materials have a chance to not be consumed when crafting."
+	Passive.passives["Resourcefulness"] = scavengerPassive
 	
 	var artificerMove = Move.new("Mechanical User", Artificer1)
 	artificerMove.playAnimation = false
@@ -232,8 +265,11 @@ func _ready():
 	artificerMove.cooldown = 9
 	artificerMove.manualCooldown = true
 	artificerMove.icon = preload("res://Assets/Icons/Move/Artificert.png")
+	artificerMove.description = "Construct a simulacrum of yourself, which can use consumable items."
 	Move.moves["Mechanical User"] = artificerMove
-	Passive.passives["Combat Ingenuity"] = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
+	var artificerPassive = Passive.new("Combat Ingenuity", ArtificerPassiveApply, ArtificerPassiveRemove)
+	artificerPassive.description = "Tinker grants a DEF and RES buff on use, and Brew grants a POW and MAG buff on use."
+	Passive.passives["Combat Ingenuity"] = artificerPassive
 	
 	Classes.LoadAllClasses()
 
@@ -401,8 +437,10 @@ func DruidPassiveApply(e : Entity):
 	e.classE.classVariables["originalOriginalStats"] = e.originalStats
 	e.classE.classVariables["transformMesh"] = null
 	e.classE.classVariables["notOriginal"] = false
-	if e.Type == "Player":
-		e.OnAllyDeath.connect(DruidOnAllyDeath)
+	
+	e.OnAllyDeath.connect(DruidOnAllyDeath)
+	e.OnLevelStart.connect(DruidOnLevelStart)
+	e.OnLevelEnd.connect(DruidOnLevelEnd)
 
 func DruidPassiveRemove(e : Entity):
 	e.classE.classVariables.erase("originalMesh")
@@ -414,11 +452,12 @@ func DruidPassiveRemove(e : Entity):
 		e.mesh.get_node("Armature").visible = true
 		e.animator = e.mesh.get_node("AnimationTree")
 	e.classE.classVariables.erase("notOriginal")
-	if e.Type == "Player":
-		e.OnAllyDeath.disconnect(DruidOnAllyDeath)
+	
+	e.OnAllyDeath.disconnect(DruidOnAllyDeath)
 
 func DruidOnAllyDeath(e : Player, t : Entity):
 	if e.classE.classVariables["notOriginal"]:
+		e.originalStats = e.classE.classVariables["originalOriginalStats"]
 		e.mesh.get_node("Armature").visible = true
 		e.animator = e.mesh.get_node("AnimationTree")
 		e.classE.classVariables["notOriginal"] = false
@@ -426,7 +465,23 @@ func DruidOnAllyDeath(e : Player, t : Entity):
 	if e.classE.classVariables["transformMesh"] != null:
 		e.classE.classVariables["transformMesh"].queue_free()
 		e.classE.classVariables["transformMesh"] = null
+
+func DruidOnLevelStart(e : Player):
+	e.classE.classVariables["originalMesh"] = e.mesh
+	e.classE.classVariables["originalOriginalStats"] = e.originalStats
+	e.classE.classVariables["transformMesh"] = null
+	e.classE.classVariables["notOriginal"] = false
 	
+func DruidOnLevelEnd(e : Player):
+	if e.classE.classVariables["notOriginal"]:
+		e.originalStats = e.classE.classVariables["originalOriginalStats"]
+		e.mesh.get_node("Armature").visible = true
+		e.animator = e.mesh.get_node("AnimationTree")
+		e.classE.classVariables["notOriginal"] = false
+	if e.classE.classVariables["transformMesh"] != null:
+		e.classE.classVariables["transformMesh"].queue_free()
+		e.classE.classVariables["transformMesh"] = null
+
 #HERBALIST
 func Herbalist1(g : Entity, _t = null):
 	if g.Type != "Player":
@@ -470,6 +525,43 @@ func HerbalistAttack(e : Entity, item : Item):
 	if e.Type == "Player":
 		e.skillUI.UpdateAll()
 	e.endTurn.emit()
+
+func HerbalistItem (e : Entity, t : Entity):
+	if e.gridmap.GetMapPos(e.facingPos) == -2 || e.facingPos not in e.gridmap.tileEffects:
+		return
+	var te : TileEffect = e.gridmap.tileEffects[e.facingPos]
+	var numItems : int = randi_range(2, 3) if randf_range(0, 1) < .8 else 4
+	var item : Item
+	var effect : Status
+	var duration : int
+	var message : String
+	if te.effect == TileEffect.Effect.Fire:
+		item = Items.items["Charshroom"]
+		effect = Status.status["Burning"]
+		duration = 2
+		message = "Charshrooms grew from the ashes!\n"
+	elif te.effect == TileEffect.Effect.Frost:
+		item = Items.items["Tarrime Bloom"]
+		effect = Status.status["Frostbite"]
+		duration = 3
+		message = "Tarrime Blooms sprouted through the frost!\n"
+	elif te.effect == TileEffect.Effect.Air:
+		item = Items.items["Windeelion"]
+		effect = Status.status["Disarm"]
+		duration = 2
+		message = "Windeelions sprouted through the breeze!\n"
+	elif te.effect == TileEffect.Effect.Earth:
+		item = Items.items["Pebblepod"]
+		effect = Status.status["Bleed"]
+		duration = 5
+		message = "Pebblepods took root in the earth!\n"
+		
+	for i in range(numItems):
+		e.gridmap.PlaceItem(e.facingPos, item)
+	if t != null:
+		t.AddStatus(effect, duration)
+	e.text.AddLine(message)
+	e.gridmap.RemoveTileEffect(e.facingPos)
 
 #TOTEMCARVER
 func Totemcarver1(e : Entity, t : Entity):
@@ -869,10 +961,10 @@ func Cutthroat1(e : Entity, t : Entity):
 
 func CutthroatOnMoveUse(e : Entity, t : Entity, movename : String):
 	if t != null && e.equipped != 1 && movename == e.inventoryUI.inventory[e.equipped].item.move.name && "Stealth" in e.statuses.keys():
-		var damage : int = int(Stats.GetDamage(e.stats, t.stats) / 2)
+		var damage : int = int(Stats.GetDamage(e.stats, t.stats, true) / 2)
 		if damage <= 0:
 			damage = 1
-		e.text.AddLine(t.GetLogName() + " was surprised and took " + LogText.GetDamageNum(damage) + " damage!\n")
+		e.text.AddLine(t.GetLogName() + " was surprised and took " + LogText.GetDamageNum(damage, true) + " damage!\n")
 		t.TakeDamage(damage, e)
 
 func CutthroatPassiveApply(e : Entity):
@@ -924,6 +1016,8 @@ func WardenPassiveApply(e : Entity):
 	e.OnMoveUse.connect(WardenOnMoveUse)
 	e.OnTame.connect(WardenOnTame)
 	e.OnAllyDeath.connect(WardenOnAllyDeath)
+	for ally in e.allies:
+		WardenOnTame(e, ally)
 	
 func WardenPassiveRemove(e : Entity):
 	e.OnMoveUse.disconnect(WardenOnMoveUse)
@@ -1089,24 +1183,29 @@ func BlighterPassiveRemove(e : Entity):
 	e.classE.classVariables.erase("coatMove")
 	e.classE.classVariables.erase("coatUses")
 
+func BlighterItem(e : Entity, t : Entity):
+	if t != null:
+		e.text.AddLine(t.GetLogName() + " was pincushioned by toxic spikes for " + LogText.GetDamageNum(3) + " damage!\n")
+		t.TakeDamage(3, e)
+
 #THIEF
 func Thief1(e : Entity, t : Entity):
 	var pierce : int = 2 if t.Type == "AI" && t.inventory.size() == 0 else 0
 	var damage : int = Stats.GetDamage(e.stats, t.stats, false, pierce)
 	e.text.AddLine(e.GetLogName() + " pilfered " + t.GetLogName() + " for " + LogText.GetDamageNum(damage) + " damage!" + "\n")
 	t.TakeDamage(damage, e)
-	
+
 func ThiefOnMoveUse(e : Entity, t : Entity, movename : String):
-	if t != null && t.Type == "AI" && e.equippedMove != null && movename == e.equippedMove.name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
+	if t != null && t.Type == "AI" && e.GetEquippedMove() != null && movename == e.GetEquippedMove().name && "Stealth" in e.statuses.keys() && t.inventory.size() > 0:
 		var removeSpot = t.inventory.size() - 1
 		var item : Item = t.inventory[removeSpot]
-		var uses : int = t.useMeta[removeSpot]
+		var uses : int = t.useMeta[removeSpot] if removeSpot in t.useMeta else 0
 		if e.IsInventoryFull():
 			e.gridmap.PlaceItem(t.gridPos, item, uses)
-			e.text.AddLine(item.name + " fell to the floor!\n")
+			e.text.AddLine(item.GetLogName() + " fell to the floor!\n")
 		else:
 			e.inventoryUI.AddItem(item, uses)
-			e.text.AddLine(e.GetLogName() + " stole " + item.name + "!\n")
+			e.text.AddLine(e.GetLogName() + " stole " + item.GetLogName() + "!\n")
 		t.RemoveItemAt(removeSpot)
 		
 func ThiefPassiveApply(e : Entity):

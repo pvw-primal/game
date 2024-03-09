@@ -13,13 +13,18 @@ var animator : Animator
 
 @onready var map : TreeGridMap = get_node("/root/root/GridMap")
 
-func _ready():
-	var s = preload("res://Assets/Enemy/Cinch/Cinch.tscn")
-	mesh = s.instantiate()
-	add_child(mesh)
+func init():
+	if Global.playerMesh == null:
+		var s = preload("res://Assets/Enemy/Cinch/Cinch.tscn")
+		mesh = s.instantiate()
+		add_child(mesh)
+		SetColor(Color.MEDIUM_PURPLE, Color.REBECCA_PURPLE, Color.REBECCA_PURPLE)
+	else:
+		mesh = Global.playerMesh
+		mesh.name = "Mesh"
+		add_child(mesh)
 	animator = get_node("Mesh/AnimationTree")
 	mesh.rotation_degrees.y = 90
-	SetColor(Color.MEDIUM_PURPLE, Color.REBECCA_PURPLE, Color.REBECCA_PURPLE)
 
 func _process(delta):
 	if targetPos.x > map.limitsX.y || targetPos.x < map.limitsX.x || targetPos.z > map.limitsY.y || targetPos.z < map.limitsY.x:

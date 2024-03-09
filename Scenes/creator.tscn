@@ -1,0 +1,188 @@
+[gd_scene load_steps=19 format=3 uid="uid://cqfob2ovdllin"]
+
+[ext_resource type="Script" path="res://Scripts/CharacterCreator/CharacterCreator.gd" id="1_rd42w"]
+[ext_resource type="Theme" uid="uid://c6lcjyg56bap4" path="res://Scripts/UI/Theme.tres" id="1_wdicl"]
+[ext_resource type="Script" path="res://Scripts/CharacterCreator/BasicColorPicker.gd" id="2_f6moo"]
+[ext_resource type="ButtonGroup" uid="uid://cpcm4c7j1i2mq" path="res://Scripts/CharacterCreator/CharacterCreatorButtons.tres" id="3_wqnre"]
+[ext_resource type="FontFile" uid="uid://ku0jnv7864rm" path="res://Assets/Fonts/pixel_dingbats-7.ttf" id="5_53pik"]
+[ext_resource type="Script" path="res://Scripts/CharacterCreator/CharacterCreatorPreview.gd" id="6_255mt"]
+[ext_resource type="Texture2D" uid="uid://dpot35glonewi" path="res://Assets/CCbackground.png" id="8_gtule"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xjn3s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qhvc1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rqtpq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vkwtw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bvdal"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_il7yh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjlbw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vc0j5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1yrj7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1ckxd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bingd"]
+
+[node name="CharacterCreator" type="Node3D"]
+script = ExtResource("1_rd42w")
+
+[node name="Preview" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 916, 224, 0)
+script = ExtResource("6_255mt")
+
+[node name="Camera" type="Camera3D" parent="Preview"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -19.53, 0)
+current = true
+size = 3.0
+
+[node name="Layout" type="Node3D" parent="Preview"]
+transform = Transform3D(-5.79124e-08, -7.87374e-08, -1, 0.890213, 0.455545, -8.74228e-08, 0.455545, -0.890213, 4.37114e-08, 0, -21, 0.18)
+
+[node name="LayoutRotate" type="Node3D" parent="Preview/Layout"]
+
+[node name="TabBar" type="TabBar" parent="Preview"]
+offset_left = 555.0
+offset_top = 69.0
+offset_right = 1382.0
+offset_bottom = 173.0
+theme = ExtResource("1_wdicl")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/tab_unselected = SubResource("StyleBoxEmpty_xjn3s")
+tab_alignment = 1
+scrolling_enabled = false
+
+[node name="ColorPicker" type="Node2D" parent="."]
+position = Vector2(150, 569)
+
+[node name="ColorPickerButtonR" type="ColorPickerButton" parent="ColorPicker"]
+offset_right = 290.0
+offset_bottom = 52.0
+theme = ExtResource("1_wdicl")
+button_group = ExtResource("3_wqnre")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+text = "red"
+edit_alpha = false
+script = ExtResource("2_f6moo")
+
+[node name="Randomize" type="Button" parent="ColorPicker/ColorPickerButtonR"]
+texture_filter = 3
+layout_mode = 0
+offset_left = -62.0
+offset_top = -15.0
+offset_right = 11.0
+offset_bottom = 60.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = ExtResource("5_53pik")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qhvc1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_rqtpq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vkwtw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bvdal")
+text = "o"
+
+[node name="ColorPickerButtonG" type="ColorPickerButton" parent="ColorPicker"]
+offset_top = 100.0
+offset_right = 290.0
+offset_bottom = 150.0
+theme = ExtResource("1_wdicl")
+button_group = ExtResource("3_wqnre")
+edit_alpha = false
+script = ExtResource("2_f6moo")
+
+[node name="Randomize" type="Button" parent="ColorPicker/ColorPickerButtonG"]
+texture_filter = 3
+layout_mode = 0
+offset_left = -62.0
+offset_top = -15.0
+offset_right = 11.0
+offset_bottom = 60.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = ExtResource("5_53pik")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qhvc1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_rqtpq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vkwtw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bvdal")
+text = "p"
+
+[node name="ColorPickerButtonB" type="ColorPickerButton" parent="ColorPicker"]
+offset_top = 200.0
+offset_right = 290.0
+offset_bottom = 250.0
+theme = ExtResource("1_wdicl")
+button_group = ExtResource("3_wqnre")
+edit_alpha = false
+script = ExtResource("2_f6moo")
+
+[node name="Randomize" type="Button" parent="ColorPicker/ColorPickerButtonB"]
+texture_filter = 3
+layout_mode = 0
+offset_left = -62.0
+offset_top = -15.0
+offset_right = 11.0
+offset_bottom = 60.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = ExtResource("5_53pik")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qhvc1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_rqtpq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vkwtw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bvdal")
+text = "q"
+
+[node name="NameField" type="Node2D" parent="."]
+position = Vector2(126, 488)
+
+[node name="LineEdit" type="LineEdit" parent="NameField"]
+texture_filter = 3
+texture_repeat = 1
+offset_left = 95.0
+offset_right = 351.0
+offset_bottom = 44.0
+theme = ExtResource("1_wdicl")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_il7yh")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hjlbw")
+text = "Player"
+placeholder_text = "enter the name"
+max_length = 10
+
+[node name="Label" type="Label" parent="NameField"]
+texture_filter = 3
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("1_wdicl")
+text = "Name:"
+
+[node name="Proceed" type="Button" parent="."]
+offset_left = 1508.0
+offset_top = 837.0
+offset_right = 1912.0
+offset_bottom = 1061.0
+theme_override_fonts/font = ExtResource("5_53pik")
+theme_override_font_sizes/font_size = 100
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vc0j5")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_1yrj7")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_1ckxd")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bingd")
+text = "ÌÈ"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(0.431373, 0.431373, 0.431373, 1)
+z_index = -4
+texture_filter = 3
+scale = Vector2(10, 10)
+texture = ExtResource("8_gtule")
+centered = false
+region_rect = Rect2(0, 0, 192, 1080)

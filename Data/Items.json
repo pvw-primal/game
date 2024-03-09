@@ -85,27 +85,30 @@
 			"recipe": ["Adhesive", "Sharp"],
 			"requires": ["Machining"]
 		},
-	"Fibrous Net":
+	"Bandage":
 		{
-			"name": "Fibrous Net",
-			"description": "Throw to ensnare a creature, paralyzing them.",
-			"flavor": "",
-			"mesh": null,
-			"consumable": 2,
+			"name": "Bandage",
+			"description": "Wrap your wounds in bandages, healing 2HP for the next 7 turns.",
+			"flavor": "Simple fibrous wrappings have always been a foundational part of triage.",
+			"mesh": "res://Assets/Items/Machining/Bandage.tscn",
+			"topdown": true,
+			"invHeight": 0.215,
+			"invRotation": 180,
+			"consumable": 1,
 			"move":{
-				"useTooltip": "Throw",
-				"message" : "was ensnared!",
+				"useTooltip": "Apply",
+				"message": "applied bandages!",
+				"playAnimation": false,
+				"noTargets": true,
+				"reveals": false,
 				"effects":{
-					"projectile":{
-						"range": 7
-					},
-					"debuff":{
-						"type" : "Paralysis",
-						"duration" : 3,
+					"buff":{
+						"type" : "Regen",
+						"duration" : 7
 					}
 				}
 			},
-			"recipe": ["Adhesive", "Fiber"],
+			"recipe":["Adhesive", "Fiber"],
 			"requires": ["Machining"]
 		},
 	"Salvager":
@@ -366,7 +369,6 @@
 			"recipe":["Reagent", "Stone"],
 			"requires":["Alchemy", "Arcana"]
 		},
-	
 	
 	"Totem":
 		{

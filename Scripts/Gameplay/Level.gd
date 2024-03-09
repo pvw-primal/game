@@ -9,13 +9,20 @@ var floorPrefix : String
 var goalName : String
 var enemies : Dictionary
 
+var difficulty : int
+var difficultyName : String
+var numEnemies : int
+var statDistribution : int
+var spawnChance : float
+var goal : int
+
 var commonItems : Array
 var rareItems : Array
 var materials : Array
 
 var color : Color
 
-func _init(type : String, variant : String = ""):
+func _init(type : String, difficult : int = 0, variant : String = ""):
 	var levelDetails : Dictionary = Loader.GetLevelData(type)
 	var variants = levelDetails["variant"]
 	var v : String = variants.keys()[randi_range(0, variants.size() - 1)] if variant == "" else variant
@@ -52,7 +59,38 @@ func _init(type : String, variant : String = ""):
 	var colorG = levelDetails["variant"][v]["color"]["G"]
 	var colorB = levelDetails["variant"][v]["color"]["B"]
 	color = Color(randf_range(colorR[0], colorR[1]), randf_range(colorG[0], colorG[1]), randf_range(colorB[0], colorB[1]))
-				
+	
+	SetDifficulty(difficult)
+
+func SetDifficulty(difficult : int):
+	difficulty = difficult
+	statDistribution = difficult + Global.stage
+	numEnemies = 6 + floor(difficult / 2.0)
+	spawnChance = .004 * (floor(difficult / 2.0) - 1)
+	goal = randi_range(2 + floor(difficult / 2.0), 2 + (difficult * 2))
+
+static func GetDifficultyName(difficult : int):
+	match(difficult):
+		0: return "Trivial"
+		1: return "Simple"
+		2: return "Normal"
+		3: return "Tough"
+		4: return "Hard"
+		5: return "Insane"
+		6: return "Maddening"
+		7: return "Lunacy"
+		8: return "Abyssal"
+		_: return "Impossible"
+	
+func IncreaseDifficulty():
+	var chance = randf_range(0, 1)
+	if chance > .7:
+		statDistribution += 1
+	elif chance > .5:
+		numEnemies += 1
+	else:
+		spawnChance += .004
+
 func GetRandomEnemyColor(enemyName : String):
 	return enemies[enemyName][randi_range(0, NUM_COLOR_VARIATIONS - 1)]
 

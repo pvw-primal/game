@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cojw4j806yn07"]
+[gd_scene load_steps=34 format=3 uid="uid://cojw4j806yn07"]
 
 [ext_resource type="MeshLibrary" uid="uid://cx0l4lvu0bxrt" path="res://Scripts/Gridmap/ColorMeshLibrary.tres" id="1_kttnh"]
 [ext_resource type="Script" path="res://Scripts/Gridmap/MapGenerator.gd" id="2_0q6lt"]
@@ -6,17 +6,21 @@
 [ext_resource type="Script" path="res://Scripts/UI/Minimap/Minimap.gd" id="4_ygptq"]
 [ext_resource type="Theme" uid="uid://c6lcjyg56bap4" path="res://Scripts/UI/Theme.tres" id="5_vcpus"]
 [ext_resource type="Script" path="res://Scripts/UI/LogText.gd" id="6_5so1c"]
+[ext_resource type="Script" path="res://Scripts/UI/MenuUI.gd" id="7_3elt0"]
 [ext_resource type="Script" path="res://Scripts/UI/InventoryViewport.gd" id="7_lttdc"]
 [ext_resource type="Theme" uid="uid://brd5tnqyudafv" path="res://Scripts/UI/InventoryWindowTheme.tres" id="8_xg64j"]
+[ext_resource type="Texture2D" uid="uid://clni8ji0ujn4w" path="res://Assets/NinePatchRect.png" id="9_fomy6"]
 [ext_resource type="Script" path="res://Scripts/UI/OptionMenu.gd" id="9_lwjwy"]
 [ext_resource type="Script" path="res://Scripts/Entities/EntityHandler.gd" id="10_4k3c4"]
+[ext_resource type="Script" path="res://Scripts/UI/StatsUI.gd" id="10_s2220"]
 [ext_resource type="Texture2D" uid="uid://cog3t7wiana11" path="res://Assets/SkillUI.png" id="11_2oyvs"]
+[ext_resource type="Script" path="res://Scenes/MovesUI.gd" id="12_d8ya3"]
 [ext_resource type="Script" path="res://Scripts/UI/SkillUI.gd" id="12_n4v2w"]
 [ext_resource type="Script" path="res://Scripts/UI/SkillIconUI.gd" id="13_ixgt7"]
-[ext_resource type="FontFile" uid="uid://ku0jnv7864rm" path="res://Assets/Fonts/pixel_dingbats-7.ttf" id="14_57ada"]
 [ext_resource type="Texture2D" uid="uid://djm6tr6hge4tj" path="res://Assets/Icons/Move/Locked.png" id="15_idvoq"]
 [ext_resource type="Script" path="res://Scripts/Entities/TurnHandler.gd" id="16_ffo0x"]
 [ext_resource type="Script" path="res://Scripts/Controller.gd" id="17_n13gr"]
+[ext_resource type="LabelSettings" uid="uid://c2hb17e1eki7e" path="res://Scripts/UI/CDTooltipLabelSettings.tres" id="18_bn35g"]
 [ext_resource type="Script" path="res://Scripts/UI/TransitionScreen.gd" id="18_v6pb6"]
 [ext_resource type="FontFile" uid="uid://bqto4t50l7ac8" path="res://Assets/Fonts/atlantis.text-bold.ttf" id="19_0i674"]
 
@@ -24,11 +28,34 @@
 reflected_light_source = 1
 adjustment_enabled = true
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cgvk1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lp51j"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5iw37"]
+texture = ExtResource("9_fomy6")
+texture_margin_left = 30.0
+texture_margin_top = 30.0
+texture_margin_right = 30.0
+texture_margin_bottom = 36.0
+expand_margin_bottom = 10.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mp285"]
 bg_color = Color(0.364706, 0.364706, 0.364706, 0.615686)
 
 [sub_resource type="Theme" id="Theme_4tn8l"]
 Panel/styles/panel = SubResource("StyleBoxFlat_mp285")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glsdv"]
+bg_color = Color(0.266667, 0.764706, 0.239216, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kldej"]
+line_spacing = 0.0
+font = ExtResource("19_0i674")
+font_size = 125
+shadow_size = 13
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(4, 4)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ivaej"]
 load_path = "res://.godot/imported/Russ_Leg.png-066e62dbea36eeab151b8706a9b0a559.ctex"
@@ -36,23 +63,6 @@ load_path = "res://.godot/imported/Russ_Leg.png-066e62dbea36eeab151b8706a9b0a559
 [sub_resource type="LabelSettings" id="LabelSettings_smqny"]
 font = ExtResource("19_0i674")
 font_size = 64
-
-[sub_resource type="LabelSettings" id="LabelSettings_3bqn8"]
-line_spacing = 0.0
-font = ExtResource("14_57ada")
-font_size = 8
-shadow_color = Color(0, 0, 0, 0.956863)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glsdv"]
-bg_color = Color(0.901961, 0, 0.14902, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_kldej"]
-line_spacing = 0.0
-font = ExtResource("14_57ada")
-font_size = 60
-shadow_size = 13
-shadow_color = Color(0, 0, 0, 1)
-shadow_offset = Vector2(4, 4)
 
 [node name="Root" type="Node3D"]
 
@@ -101,13 +111,6 @@ position = Vector2(160, 160)
 rotation = 3.14159
 tile_set = ExtResource("3_cod4t")
 format = 2
-layer_1/name = ""
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
-layer_1/tile_data = PackedInt32Array()
 script = ExtResource("4_ygptq")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="MinimapContainer"]
@@ -144,16 +147,27 @@ scroll_following = true
 autowrap_mode = 0
 script = ExtResource("6_5so1c")
 
-[node name="InventoryUI3D" type="AspectRatioContainer" parent="."]
-offset_right = 1900.0
-offset_bottom = 1048.0
+[node name="MenuUI" type="TabContainer" parent="."]
+offset_left = 500.0
+offset_top = 150.0
+offset_right = 2419.0
+offset_bottom = 202.0
+theme = ExtResource("5_vcpus")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_cgvk1")
+theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_lp51j")
+use_hidden_tabs_for_min_size = true
+script = ExtResource("7_3elt0")
+
+[node name="Inventory" type="Control" parent="MenuUI"]
+layout_mode = 2
+
+[node name="InventoryWindow" type="Node2D" parent="MenuUI/Inventory"]
+position = Vector2(-40, 25)
 script = ExtResource("7_lttdc")
 
-[node name="InventoryWindow" type="Node2D" parent="InventoryUI3D"]
-position = Vector2(406, 175)
-
-[node name="Description" type="RichTextLabel" parent="InventoryUI3D/InventoryWindow"]
+[node name="Description" type="RichTextLabel" parent="MenuUI/Inventory/InventoryWindow"]
 y_sort_enabled = true
+texture_filter = 3
 offset_left = 340.0
 offset_right = 1000.0
 theme = ExtResource("5_vcpus")
@@ -166,17 +180,21 @@ bbcode_enabled = true
 fit_content = true
 shortcut_keys_enabled = false
 
-[node name="Panel" type="Panel" parent="InventoryUI3D/InventoryWindow/Description"]
+[node name="NinePatchRect" type="NinePatchRect" parent="MenuUI/Inventory/InventoryWindow/Description"]
 show_behind_parent = true
 z_index = -1
-custom_minimum_size = Vector2(634, 700)
 layout_mode = 0
-offset_left = -20.0
-offset_right = 656.0
-offset_bottom = 700.0
-theme = SubResource("Theme_4tn8l")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_fomy6")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
 
-[node name="BottomBar" type="RichTextLabel" parent="InventoryUI3D/InventoryWindow"]
+[node name="BottomBar" type="RichTextLabel" parent="MenuUI/Inventory/InventoryWindow"]
+y_sort_enabled = true
+texture_filter = 3
 offset_left = 340.0
 offset_top = 450.0
 offset_right = 974.0
@@ -190,62 +208,157 @@ theme_override_constants/shadow_outline_size = 5
 theme_override_font_sizes/normal_font_size = 38
 bbcode_enabled = true
 fit_content = true
-scroll_active = false
 shortcut_keys_enabled = false
 
-[node name="Panel" type="Panel" parent="InventoryUI3D/InventoryWindow/BottomBar"]
+[node name="NinePatchRect" type="NinePatchRect" parent="MenuUI/Inventory/InventoryWindow/BottomBar"]
 show_behind_parent = true
 z_index = -1
-custom_minimum_size = Vector2(634, 700)
 layout_mode = 0
-offset_left = -20.0
-offset_right = 656.0
-offset_bottom = 700.0
-theme = SubResource("Theme_4tn8l")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_fomy6")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
 
-[node name="PopUp" type="ItemList" parent="InventoryUI3D/InventoryWindow"]
-offset_left = -230.0
-offset_right = 13.0
-offset_bottom = 347.0
+[node name="PopUp" type="ItemList" parent="MenuUI/Inventory/InventoryWindow"]
+texture_filter = 3
+clip_contents = false
+offset_left = -253.0
+offset_top = 10.0
+offset_right = 12.0
+offset_bottom = 357.0
 theme = ExtResource("5_vcpus")
 allow_search = false
 
-[node name="ItemList" type="ItemList" parent="InventoryUI3D/InventoryWindow"]
+[node name="ItemList" type="ItemList" parent="MenuUI/Inventory/InventoryWindow"]
 offset_left = 45.0
+offset_top = 15.0
 offset_right = 345.001
-offset_bottom = 800.0
+offset_bottom = 815.0
 theme = ExtResource("8_xg64j")
+theme_override_styles/selected = SubResource("StyleBoxTexture_5iw37")
+theme_override_styles/selected_focus = SubResource("StyleBoxTexture_5iw37")
 allow_search = false
 max_columns = 3
 same_column_width = true
 fixed_icon_size = Vector2i(82, 82)
 
-[node name="InventoryViewportContainer" type="SubViewportContainer" parent="InventoryUI3D/InventoryWindow"]
+[node name="InventoryViewportContainer" type="SubViewportContainer" parent="MenuUI/Inventory/InventoryWindow"]
+offset_top = 15.0
 offset_right = 1048.0
-offset_bottom = 1048.0
+offset_bottom = 1063.0
 mouse_filter = 2
 
-[node name="InventoryViewport" type="SubViewport" parent="InventoryUI3D/InventoryWindow/InventoryViewportContainer"]
+[node name="InventoryViewport" type="SubViewport" parent="MenuUI/Inventory/InventoryWindow/InventoryViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
 debug_draw = 1
 render_target_update_mode = 4
 
-[node name="InventoryCamera" type="Camera3D" parent="InventoryUI3D/InventoryWindow/InventoryViewportContainer/InventoryViewport"]
+[node name="InventoryCamera" type="Camera3D" parent="MenuUI/Inventory/InventoryWindow/InventoryViewportContainer/InventoryViewport"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -20, 0)
 projection = 1
 current = true
 size = 3.0
 
-[node name="InventoryLayout" type="Node3D" parent="InventoryUI3D/InventoryWindow/InventoryViewportContainer/InventoryViewport"]
+[node name="InventoryLayout" type="Node3D" parent="MenuUI/Inventory/InventoryWindow/InventoryViewportContainer/InventoryViewport"]
 transform = Transform3D(1.91069e-15, -4.37114e-08, 1, -1, -4.37114e-08, 0, 4.37114e-08, -1, -4.37114e-08, -1, -21, -1)
 
+[node name="VNPR" type="Node2D" parent="MenuUI/Inventory/InventoryWindow"]
+
+[node name="ViewportNinePatchRect" type="NinePatchRect" parent="MenuUI/Inventory/InventoryWindow/VNPR"]
+show_behind_parent = true
+z_index = -1
+custom_minimum_size = Vector2(300, 475)
+offset_left = 23.305
+offset_right = 323.305
+offset_bottom = 475.0
+pivot_offset = Vector2(-4.305, 0)
+texture = ExtResource("9_fomy6")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="Map" type="Control" parent="MenuUI"]
+visible = false
+layout_mode = 2
+
+[node name="Stats" type="Control" parent="MenuUI"]
+visible = false
+layout_mode = 2
+script = ExtResource("10_s2220")
+
+[node name="Description" type="RichTextLabel" parent="MenuUI/Stats"]
+y_sort_enabled = true
+layout_mode = 0
+offset_top = 25.0
+offset_right = 660.0
+offset_bottom = 25.0
+theme = ExtResource("5_vcpus")
+theme_override_colors/default_color = Color(0.796078, 0.796078, 0.796078, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 5
+theme_override_font_sizes/bold_italics_font_size = 20
+bbcode_enabled = true
+fit_content = true
+shortcut_keys_enabled = false
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MenuUI/Stats/Description"]
+show_behind_parent = true
+z_index = -1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_fomy6")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="Skills" type="Control" parent="MenuUI"]
+visible = false
+layout_mode = 2
+script = ExtResource("12_d8ya3")
+
+[node name="Description" type="RichTextLabel" parent="MenuUI/Skills"]
+y_sort_enabled = true
+layout_mode = 0
+offset_top = 25.0
+offset_right = 900.0
+offset_bottom = 25.0
+theme = ExtResource("5_vcpus")
+theme_override_colors/default_color = Color(0.796078, 0.796078, 0.796078, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 5
+theme_override_font_sizes/bold_italics_font_size = 20
+bbcode_enabled = true
+fit_content = true
+shortcut_keys_enabled = false
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MenuUI/Skills/Description"]
+show_behind_parent = true
+z_index = -1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_fomy6")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
 [node name="OptionUI" type="HBoxContainer" parent="."]
-clip_contents = true
 offset_left = 619.0
 offset_top = 385.0
-offset_right = 1634.0
-offset_bottom = 415.0
+offset_right = 1629.0
+offset_bottom = 566.0
 script = ExtResource("9_lwjwy")
 
 [node name="ItemList" type="ItemList" parent="OptionUI"]
@@ -282,41 +395,6 @@ script = ExtResource("10_4k3c4")
 unique_name_in_owner = true
 script = ExtResource("16_ffo0x")
 
-[node name="Controller" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("17_n13gr")
-
-[node name="TransitionScreen" type="Sprite2D" parent="Controller"]
-visible = false
-modulate = Color(1, 1, 1, 0)
-top_level = true
-z_index = 2
-position = Vector2(962.5, 545)
-scale = Vector2(15.1016, 8.57813)
-texture = SubResource("CompressedTexture2D_ivaej")
-script = ExtResource("18_v6pb6")
-
-[node name="Label" type="Label" parent="Controller/TransitionScreen"]
-top_level = true
-z_index = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -81.5
-offset_top = -81.0
-offset_right = 81.5
-offset_bottom = 81.0
-grow_horizontal = 2
-grow_vertical = 2
-label_settings = SubResource("LabelSettings_smqny")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Timer" type="Timer" parent="Controller/TransitionScreen"]
-one_shot = true
-
 [node name="SkillUI" type="Sprite2D" parent="."]
 position = Vector2(1660, 784)
 scale = Vector2(4, 4)
@@ -338,10 +416,11 @@ script = ExtResource("13_ixgt7")
 layout_mode = 0
 offset_left = 3.75
 offset_top = 2.75
-offset_right = 21.75
-offset_bottom = 22.75
-text = "1"
-label_settings = SubResource("LabelSettings_3bqn8")
+offset_right = 12.75
+offset_bottom = 12.75
+scale = Vector2(0.88, 0.88)
+text = "2"
+label_settings = ExtResource("18_bn35g")
 
 [node name="SkillIcon" type="Sprite2D" parent="SkillUI/CDBar2"]
 show_behind_parent = true
@@ -370,8 +449,9 @@ offset_left = 3.75
 offset_top = 2.75
 offset_right = 21.75
 offset_bottom = 22.75
+scale = Vector2(0.88, 0.88)
 text = "2"
-label_settings = SubResource("LabelSettings_3bqn8")
+label_settings = ExtResource("18_bn35g")
 
 [node name="CDBar4" type="ProgressBar" parent="SkillUI"]
 offset_left = 2.0
@@ -395,8 +475,9 @@ offset_left = 3.5
 offset_top = 2.75
 offset_right = 21.5
 offset_bottom = 22.75
+scale = Vector2(0.88, 0.88)
 text = "3"
-label_settings = SubResource("LabelSettings_3bqn8")
+label_settings = ExtResource("18_bn35g")
 
 [node name="CDBar5" type="ProgressBar" parent="SkillUI"]
 offset_left = 22.0
@@ -420,8 +501,9 @@ offset_left = 3.5
 offset_top = 2.75
 offset_right = 21.5
 offset_bottom = 22.75
+scale = Vector2(0.88, 0.88)
 text = "1"
-label_settings = SubResource("LabelSettings_3bqn8")
+label_settings = ExtResource("18_bn35g")
 
 [node name="HPBar" type="ProgressBar" parent="SkillUI"]
 show_behind_parent = true
@@ -436,12 +518,49 @@ show_percentage = false
 
 [node name="HPText" type="Label" parent="SkillUI/HPBar"]
 modulate = Color(1, 1, 1, 0.815686)
+show_behind_parent = true
 z_index = 2
 layout_mode = 0
-offset_left = 32.0
-offset_top = 1.25
-offset_right = 582.0
-offset_bottom = 127.25
+offset_left = -27.75
+offset_top = -5.75
+offset_right = 917.25
+offset_bottom = 182.25
 scale = Vector2(0.1, 0.1)
-text = "90Û90"
+text = "123456789/20"
 label_settings = SubResource("LabelSettings_kldej")
+horizontal_alignment = 2
+
+[node name="Controller" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("17_n13gr")
+
+[node name="TransitionScreen" type="Sprite2D" parent="Controller"]
+visible = false
+modulate = Color(1, 1, 1, 0)
+top_level = true
+z_index = 3
+position = Vector2(962.5, 545)
+scale = Vector2(15.1016, 8.57813)
+texture = SubResource("CompressedTexture2D_ivaej")
+script = ExtResource("18_v6pb6")
+
+[node name="Label" type="Label" parent="Controller/TransitionScreen"]
+top_level = true
+z_index = 4
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.5
+offset_top = -81.0
+offset_right = 81.5
+offset_bottom = 81.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_smqny")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="Controller/TransitionScreen"]
+one_shot = true

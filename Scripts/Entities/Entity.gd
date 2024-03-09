@@ -264,7 +264,7 @@ func SetColor(cR : Color, cG : Color, cB: Color):
 		child.set_instance_shader_parameter("replaceG", cG)
 		child.set_instance_shader_parameter("replaceB", cB)
 			
-func SetSize(s : float = randf_range(.8, 1.2)):
+func SetSize(s : float = randf_range(.9, 1.1)):
 	mesh.scale = Vector3(s, s, s)
 
 func UpdateStats():

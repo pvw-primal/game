@@ -8,6 +8,8 @@ var player : Player
 var selected
 
 signal OptionSelected(e : Entity, id : int)
+signal OnWindowOpen()
+signal OnWindowClose()
 var disable : Dictionary = {}
 
 var descriptions : Array[String]
@@ -17,8 +19,7 @@ func _ready():
 	list.item_selected.connect(Display)
 	list.item_activated.connect(ItemActivated)
 	
-
-func _process(_delta):
+func Process(_delta):
 	if visible:
 		if Input.is_action_just_pressed("MoveDown"):
 			selected = 0 if selected + 1 >= list.item_count else selected + 1
@@ -62,19 +63,21 @@ func Open(options : Array[String], disabled : Dictionary = {}, OWidth : float = 
 	list.custom_minimum_size.x = OWidth
 	list.select(selected)
 	list.item_selected.emit(selected)
+	OnWindowOpen.emit()
 		
 func Close():
 	visible = false
 	player.ignoreInput = false
 	list.clear()
+	OnWindowClose.emit()
 	
 func ItemActivated(id : int):
 	if id not in disable:
 		if id == list.item_count - 1:
 			OptionSelected.emit(player, -1)
-			Close()
+			Close.call_deferred()
 		else:
 			OptionSelected.emit(player, id)
-			Close()
+			Close.call_deferred()
 		
 	

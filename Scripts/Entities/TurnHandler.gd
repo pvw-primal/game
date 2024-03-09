@@ -43,8 +43,9 @@ func HandleNextTurn(skipDisconnect : bool = false):
 			TurnOrder.erase(remove)
 			Entities.erase(remove)
 		ReorderTurns()
-		if randf_range(0, 1) > .8 && randf_range(0, 1) < spawnChance:
+		if randf() < spawnChance:
 			entityhandler.SpawnAIOffscreen()
+			Entities[player].text.AddLine(Entities[player].GetLogName() + " shuddered!\n")
 		EndTurnOrder.emit()
 	else:
 		currentTurn += 1

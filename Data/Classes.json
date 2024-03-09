@@ -56,7 +56,7 @@
 		"moves": ["Tinker"],
 		"class": ["Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin"]
 	},
 	"Sorcerer":
 	{
@@ -112,7 +112,7 @@
 		"passives": ["Totemcraft"],
 		"class": ["Shamanism", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin", "Totem"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin", "Totem"]
 	},
 	"War Caster":
 	{
@@ -154,17 +154,17 @@
 	"Enchanter":
 	{
 		"name": "Enchanter",
-		"description": "Arcane artisan capable altering foci to serve their needs.",
+		"description": "Arcane artisan capable of altering foci with elemental effects.",
 		"moves": ["Aspected Blast", "Tinker", "Disenchanting Surge"],
 		"passives": ["Aspect Enchantment"],
 		"class": ["Arcana", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "FocusAdvanced", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin", "Enchanted Attuner"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin", "Enchanted Attuner"]
 	},
 	"Cutthroat":
 	{
 		"name": "Cutthroat",
-		"description": "",
+		"description": "Strikes from the dark to eliminate foes in one fell swoop.",
 		"moves": ["Skilled Strike", "Stealth", "Ambush"],
 		"passives": ["Sneak Attack"],
 		"class": ["Arms", "Technique"],
@@ -173,7 +173,7 @@
 	"Warden":
 	{
 		"name": "Warden",
-		"description": "",
+		"description": "Empowers wild strength with martial proficiency.",
 		"moves": ["Skilled Strike", "Tame", "Wild Composure"],
 		"passives": ["Forgotten Bond", "Combative Adaptation"],
 		"class": ["Arms", "Beastmastery"],
@@ -184,6 +184,7 @@
 		"name": "Tuner",
 		"description": "",
 		"moves": ["Skilled Strike", "Brew", "Tune Up"],
+		"passives": ["Synthetic Honing"],
 		"class": ["Arms", "Alchemy"],
 		"prof": ["WeaponBasic", "WeaponMartial", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught", "Whetstone Oil"]
@@ -191,16 +192,17 @@
 	"Weaponsmith":
 	{
 		"name": "Weaponsmith",
-		"description": "",
+		"description": "Expert craftsman capable of modifying weapons to serve their needs.",
 		"moves": ["Skilled Strike", "Tinker", "Abrading Assault"],
+		"passives": ["Modulation"],
 		"class": ["Arms", "Machining"],
 		"prof": ["WeaponBasic", "WeaponMartial", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin", "Smithing Gear"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin", "Smithing Gear"]
 	},
 	"Ranger":
 	{
 		"name": "Ranger",
-		"description": "",
+		"description": "Marks foes from a distance to deal huge damage.",
 		"moves": ["Stealth", "Tame", "Hunter's Mark"],
 		"passives": ["Forgotten Bond", "Shadow's Shadow"],
 		"class": ["Technique", "Beastmastery"],
@@ -209,7 +211,7 @@
 	"Blighter":
 	{
 		"name": "Blighter",
-		"description": "",
+		"description": "Coats weapons with deadly poisons.",
 		"moves": ["Stealth", "Brew", "Weapon Coating"],
 		"passives": ["Poison Proficiency"],
 		"class": ["Technique", "Alchemy"],
@@ -224,7 +226,7 @@
 		"passives": ["Pickpocketing"],
 		"class": ["Technique", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin"]
 	},
 	"Imbuer":
 	{
@@ -239,22 +241,22 @@
 	"Scavenger":
 	{
 		"name": "Scavenger",
-		"description": "",
+		"description": "Efficient scrap-finder that gets the most out of their materials.",
 		"moves": ["Tame", "Tinker", "Scour"],
 		"passives": ["Forgotten Bond", "Resourcefulness"],
 		"class": ["Beastmastery", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin"]
 	},
 	"Artificer":
 	{
 		"name": "Artificer",
-		"description": "",
+		"description": "Crafting extradinaire; builds constructs to do their bidding.",
 		"moves": ["Brew", "Tinker", "Mechanical User"],
 		"passives": ["Combat Ingenuity"],
 		"class": ["Alchemy", "Machining"],
 		"prof": ["WeaponBasic", "FocusBasic", "Tool"],
 		"craftBrew": ["Healing Potion", "Flamefroth Tincture", "Paralysis Draught"],
-		"craftTinker": ["Salvager", "Fibrous Net", "Javelin"]
+		"craftTinker": ["Salvager", "Bandage", "Javelin"]
 	}
 }

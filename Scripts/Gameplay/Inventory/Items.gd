@@ -72,7 +72,7 @@ static func RandomRarity() -> Rarity:
 		return Rarity.Mythic
 	elif chance <= 7:
 		return Rarity.Rare
-	elif chance <= 47:
+	elif chance <= 57:
 		return Rarity.Uncommon
 	else:
 		return Rarity.Common
@@ -195,7 +195,6 @@ static var equipmentData : Dictionary
 
 func _ready():
 	equipmentData = Loader.GetEquipmentData()
-	
 	var escape = func(e : Entity, _t : Entity):
 		await e.gridmap.controller.NextLevel()
 	var escapeMove = Move.new("Escape", escape)
@@ -228,52 +227,6 @@ func _ready():
 	salvageMove.noTargets = true
 	Move.moves["Salvage"] = salvageMove
 	
-	var bloom = func (e : Entity, t : Entity):
-		if e.gridmap.GetMapPos(e.facingPos) == -2 || e.facingPos not in e.gridmap.tileEffects:
-			return
-		var te : TileEffect = e.gridmap.tileEffects[e.facingPos]
-		var numItems : int = randi_range(2, 3) if randf_range(0, 1) < .8 else 4
-		var item : Item
-		var effect : Status
-		var duration : int
-		var message : String
-		if te.effect == TileEffect.Effect.Fire:
-			item = items["Charshroom"]
-			effect = Status.status["Burning"]
-			duration = 2
-			message = "Charshrooms grew from the ashes!\n"
-		elif te.effect == TileEffect.Effect.Frost:
-			item = items["Tarrime Bloom"]
-			effect = Status.status["Frostbite"]
-			duration = 3
-			message = "Tarrime Blooms sprouted through the frost!\n"
-		elif te.effect == TileEffect.Effect.Air:
-			item = items["Windeelion"]
-			effect = Status.status["Disarm"]
-			duration = 2
-			message = "Windeelions sprouted through the breeze!\n"
-		elif te.effect == TileEffect.Effect.Earth:
-			item = items["Pebblepod"]
-			effect = Status.status["Bleed"]
-			duration = 5
-			message = "Pebblepods took root in the earth!\n"
-			
-		for i in range(numItems):
-			e.gridmap.PlaceItem(e.facingPos, item)
-		if t != null:
-			t.AddStatus(effect, duration)
-		e.text.AddLine(message)
-		e.gridmap.RemoveTileEffect(e.facingPos)
-	var bloommove = Move.new("Blooming Brew", bloom)
-	bloommove.noTargets = true
-	Move.moves["Blooming Brew"] = bloommove
-
-	var blight = func(e : Entity, t : Entity):
-		if t != null:
-			e.text.AddLine(t.GetLogName() + " was pincushioned by toxic spikes for " + LogText.GetDamageNum(3) + " damage!\n")
-			t.TakeDamage(3, e)
-	Move.moves["Blighter's Brew"] = Move.new("Blighter's Brew", blight)
-	
 	LoadItems()
 	
 func Add(i : Item):
@@ -296,6 +249,8 @@ func LoadItems():
 			item.topdown = itemData["topdown"]
 		if "invHeight" in itemData:
 			item.invHeight = itemData["invHeight"]
+		if "invRotation" in itemData:
+			item.invRotation = itemData["invRotation"]
 		if "recipe" in itemData:
 			for r in itemData["recipe"]:
 				item.crafting.recipe.append(r)

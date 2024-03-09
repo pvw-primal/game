@@ -1,8 +1,6 @@
 class_name Player
 extends Entity
 
-const inputCooldown : float = .05
-var inputCD : float = 0
 var ignoreInput = false
 var action = false
 
@@ -11,10 +9,14 @@ var allies : Array[Entity]
 
 signal OnTame(player : Player, ally : Entity)
 signal OnAllyDeath(player : Player, ally : Entity)
+signal OnFloorStart(player : Player)
+signal OnLevelStart(player : Player)
+signal OnLevelEnd(player : Player)
 
 var inventoryUI : InventoryViewport
 var option : OptionMenu
 var skillUI : SkillUI
+var input : PlayerInput
 
 var equipped : int = -1
 
@@ -22,7 +24,6 @@ var equipped : int = -1
 func _ready():
 	Initialize()
 	Type = "Player"
-	Name = "Player"
 	nameColor = Color.DEEP_SKY_BLUE
 	startTurn.connect(Start)
 	onDeath.connect(Die)
@@ -41,8 +42,8 @@ func init(pos : Vector2i, num : int, i : bool = false):
 		if Global.initInventory:
 			var inventory : Array[Item] = [Items.items["Fulminating Gravel"], Items.items["Eidolon Mass"], Items.items["Charshroom"]]
 			inventoryUI.init(inventory, 12)
-			PickupItem(Items.items["Salvager"], -2)
-			PickupItem(Items.items["Totem"], -2)
+			PickupItem(Items.items["Smithing Gear"], -2)
+			PickupItem(Items.items["Bandage"], -2)
 			var e : int = PickupItem(Items.RandomEquipment(false, Items.Rarity.Common, false))
 			inventoryUI.Equip(e)
 			Global.initInventory = false
@@ -51,6 +52,10 @@ func init(pos : Vector2i, num : int, i : bool = false):
 			inventoryUI.Equip(equipped)
 		option = get_node("/root/Root/OptionUI")
 		skillUI = get_node("/root/Root/SkillUI")
+		input = get_node("Input")
+		input.init()
+	statuses.clear()
+	statusDuration.clear()
 	move.connect(gridmap.minimap.OnMove)
 	move.connect(gridmap.ExitCheck)
 	HPChange.connect(skillUI.UpdateHP)
@@ -81,9 +86,9 @@ func SetClass(c : Class):
 
 func _process(delta):
 	Update(delta)
-	if inputCD > 0:
-		inputCD -= delta
-	elif turn && !moving && !ignoreInput && !action && stats.CanAttack:
+
+func Process(_delta):
+	if turn && !moving && !action && stats.CanAttack && !ignoreInput:
 		if Input.is_action_just_pressed("EquipAttack") && equipped != -1:
 			action = true
 			var e = GetEntity(facingPos)
@@ -154,7 +159,6 @@ func _process(delta):
 			var pos = gridPos + dir
 			if gridmap.CanMove(gridPos, pos):
 				MoveGrid(pos)
-				inputCD = inputCooldown
 			elif GetEntity(pos) != null && GetEntity(pos).Type == "Ally":
 				Swap(pos)
 			else:
@@ -164,6 +168,11 @@ func _process(delta):
 
 func GetItem(i : int) -> Item:
 	return inventoryUI.inventory[i].item
+
+func GetEquippedMove() -> Move:
+	if equipped == -1:
+		return null
+	return GetItem(equipped).move
 
 func Die():
 	get_tree().quit()

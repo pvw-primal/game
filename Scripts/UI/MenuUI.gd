@@ -6,27 +6,34 @@ extends TabContainer
 @onready var statsUI : StatsUI = get_node("Stats")
 @onready var movesUI : MovesUI = get_node("Skills")
 
+signal OnWindowOpen()
+signal OnWindowClose()
+
 var locked : bool = false
 
 func _ready():
 	visible = false
 	
-func _process(_delta):
-	if inventory.player.turn && !inventory.player.action:
-		if Input.is_action_just_pressed("Inventory"):
-			UIInput(0)
-		elif Input.is_action_just_pressed("Map") && !locked:
-			UIInput(1)
-		elif Input.is_action_just_pressed("Stats") && !locked:
-			UIInput(2)
-		elif Input.is_action_just_pressed("Moves") && !locked:
+func Process(delta):
+	if Input.is_action_just_pressed("TabLeft") && !locked && visible:
+		if current_tab - 1 < 0:
 			UIInput(3)
-		elif Input.is_action_just_pressed("UIClose"):
-			if visible:
-				if locked:
-					inventory.Close(false)
-					return
-				UIInput(current_tab)
+		else:
+			UIInput(current_tab - 1)
+	elif Input.is_action_just_pressed("TabRight") && !locked && visible:
+		if current_tab + 1 > 3:
+			UIInput(0)
+		else:
+			UIInput(current_tab + 1)
+	elif Input.is_action_just_pressed("UIClose"):
+		if visible:
+			if locked:
+				inventory.Close(false)
+				OnWindowClose.emit()
+				return
+			UIInput(current_tab)
+	if current_tab == 0:
+		inventory.Process(delta)
 
 func UIInput(id : int):
 	if visible:
@@ -37,6 +44,7 @@ func UIInput(id : int):
 			if !locked:
 				tab_changed.disconnect(TabChanged)
 			statsUI.changed = true
+			OnWindowClose.emit()
 		else:
 			current_tab = id
 	else:
@@ -45,6 +53,7 @@ func UIInput(id : int):
 		TabChanged(id, false)
 		tab_changed.connect(TabChanged)
 		locked = false
+		OnWindowOpen.emit()
 
 func TabChanged(id : int, close : bool = true):
 	if close:
@@ -68,7 +77,7 @@ func CloseTab(id : int):
 	match id:
 		0:
 			inventory.OnWindowClose.disconnect(OnClose)
-			inventory.Close(false)
+			inventory.Close.call_deferred(false)
 		1:
 			minimap.ToggleMaximize(false)
 		2:
@@ -82,6 +91,7 @@ func OtherInventoryOpen():
 	tabs_visible = false
 	inventory.OnWindowClose.connect(OnClose)
 	visible = true
+	OnWindowOpen.emit()
 
 func OnClose():
 	if inventory.visible:
@@ -92,4 +102,4 @@ func OnClose():
 		if !locked:
 			tab_changed.disconnect(TabChanged)
 		locked = false
-			
+	OnWindowClose.emit()
